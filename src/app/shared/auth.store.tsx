@@ -1,20 +1,23 @@
 import { create } from "zustand";
 import { authRepository } from "../../core/auth/infrastructure/auth.repository";
 
-import { loginUseCase, registerUseCase } from "../../core/auth/application";
+import { loginUseCase, registerUseCase, verifyUseCase } from "../../core/auth/application";
 import { ILoginReq, ILoginRes } from "../../core/auth/domain/login";
 import { IRegisterReq } from "../../core/auth/domain/register";
+import { IVerifyRes } from "@/core/auth/domain/verify";
 
 type State = {
   user: ILoginRes | null;
   token: string | null;
   loginError: string | null;
   registerError: string | null;
+  role: string | null;
 };
 
 type Actions = {
   login: (data: ILoginReq) => Promise<void>;
   register: (data: IRegisterReq) => Promise<void>;
+  verify: () => Promise<IVerifyRes | null>;
   logout: () => void;
 };
 
@@ -25,12 +28,31 @@ export const useAuthStore = create<Store>((set) => ({
   token: null,
   registerError: null,
   loginError: null,
+  role: null,
+  globalUser: null,
+
+  verify: async () => {
+    try {
+      const response = await verifyUseCase(authRepository)();
+      set({ user: response, role: response.role });
+      return response;
+    } catch (error) {
+      if (error instanceof Error) {
+        set({ loginError: error.message });
+      } else {
+        set({ loginError: "An unknown error occurred" });
+      }
+    } 
+    return null;
+  },
+
+
 
   login: async (data: ILoginReq) => {
     try {
       const response = await loginUseCase(authRepository)(data);
       sessionStorage.setItem("token", response.token);
-      set({ user: response, token: response.token, loginError: null });
+      set({ user: response, token: response.token, loginError: null, role: response.role });
     } catch (error) {
       if (error instanceof Error && (error as any).response?.data?.message) {
         set({ loginError: (error as any).response.data.message });
@@ -39,6 +61,7 @@ export const useAuthStore = create<Store>((set) => ({
       }
     }
   },
+
   register: async (data: IRegisterReq) => {
     try {
       await registerUseCase(authRepository)(data);
@@ -53,6 +76,6 @@ export const useAuthStore = create<Store>((set) => ({
   },
   logout: () => {
     sessionStorage.removeItem("token");
-    set({ token: null, user: null });
+    set({ token: null, user: null, loginError: null, registerError: null, role: null });
   },
 }));

@@ -25,7 +25,6 @@ export function UploadConvocatoriaForm({ userId }: { userId: string }) {
       onReset={() => reset()}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h1 className="text-2xl font-bold mb-4">Subir Convocatoria</h1>
 
       <Input
         isRequired
@@ -116,17 +115,23 @@ export function UploadConvocatoriaForm({ userId }: { userId: string }) {
         {...register("fecha_fin")}
       />
 
+      {/* <Textarea
+      //   label="Observaciones (opcional)"
+      //   placeholder="Escribe alguna observación"
+      //   variant="bordered"
+      //   {...register("observaciones")}
+      // /> */}
+
       <Textarea
         label="Observaciones (opcional)"
         placeholder="Escribe alguna observación"
         variant="bordered"
         {...register("observaciones")}
       />
-
       {error && <span className="text-danger text-sm -mt-2">{error}</span>}
 
       <div className="flex gap-4">
-        <Button color="primary" isDisabled={isLoading}  type="submit" >
+        <Button color="primary" isDisabled={isLoading} type="submit" >
           {isLoading ? "Cargando..." : "Subir"}
         </Button>
         <Button type="reset" variant="bordered">

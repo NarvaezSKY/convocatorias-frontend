@@ -27,6 +27,8 @@ export function LoginForm() {
       <div className="flex flex-col gap-4 rounded-lg p-4">
         <h1 className="text-3xl font-bold mb-2">Iniciar Sesión</h1>
 
+        <p className="text-sm text-gray-500 mb-2">Si no estás registrado, <a href="/register" className="text-primary"> registrate aquí </a></p>
+
         <Input
           isRequired
           label="Nombre de usuario"

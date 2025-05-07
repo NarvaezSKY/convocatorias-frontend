@@ -2,8 +2,22 @@ import { Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
 import Login from "../app/login";
 import { Home } from "@/app/home";
+import Register from "@/app/register";
+import { useEffect } from "react";
+import { useAuthStore } from "@/app/shared/auth.store";
 
 function App() {
+
+  const { verify } = useAuthStore();
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      verify();
+    } else {
+      sessionStorage.removeItem("token");
+    }
+  }, [verify]);
+
   return (
     <Routes>
       <Route
@@ -15,6 +29,7 @@ function App() {
         path="/home"
       />
       <Route element={<Login />} path="/" />
+      <Route element={<Register />} path="/register" />
     </Routes>
   );
 }

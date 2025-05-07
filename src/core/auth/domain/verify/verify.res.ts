@@ -1,4 +1,4 @@
-export interface ILoginRes{
+export interface IVerifyRes {
     token: string
     userid: string
     role: string

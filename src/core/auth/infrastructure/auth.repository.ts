@@ -20,7 +20,7 @@ const login = async (data: ILoginReq) => {
 
 const adminRegister = async (data: IRegisterReq) => {
     try {
-        const response = await axiosInstance.post("/auth/register/user", data);
+        const response = await axiosInstance.post("/auth/register/admin", data);
         return response.data;
 
     } catch (error) {
@@ -40,8 +40,19 @@ const userRegister = async (data: IRegisterReq) => {
     }
 }
 
+const verify = async () => {
+    try {
+        const response = await axiosInstance.get("/auth/verify");
+        return response.data;
+    } catch (error) {
+        console.error("Error during verification:", error);
+        throw error;
+    }
+}
+
 export const authRepository: IAuthRepository = {
     login,
     adminRegister,
-    userRegister
+    userRegister,
+    verify
 }
