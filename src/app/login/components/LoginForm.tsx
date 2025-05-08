@@ -2,7 +2,6 @@ import { Form, Input, Button } from "@heroui/react";
 import { useForm } from "react-hook-form";
 import { useLogin } from "../hooks/UseLogin";
 import { ILoginReq } from "@/core/auth/domain/login";
-import { Toaster } from "sonner";
 
 export function LoginForm() {
   const { login, isLoading, loginError } = useLogin();
@@ -27,7 +26,13 @@ export function LoginForm() {
       <div className="flex flex-col gap-4 rounded-lg p-4">
         <h1 className="text-3xl font-bold mb-2">Iniciar Sesión</h1>
 
-        <p className="text-sm text-gray-500 mb-2">Si no estás registrado, <a href="/register" className="text-primary"> registrate aquí </a></p>
+        <p className="text-sm text-gray-500 mb-2">
+          Si no estás registrado,{" "}
+          <a className="text-primary" href="/register">
+            {" "}
+            registrate aquí{" "}
+          </a>
+        </p>
 
         <Input
           isRequired
@@ -35,7 +40,9 @@ export function LoginForm() {
           labelPlacement="outside"
           placeholder="Ingresa tu nombre de usuario"
           variant="bordered"
-          {...register("username", { required: "El nombre de usuario es obligatorio" })}
+          {...register("username", {
+            required: "El nombre de usuario es obligatorio",
+          })}
           errorMessage={errors.username?.message}
           isInvalid={!!errors.username}
         />
@@ -47,7 +54,9 @@ export function LoginForm() {
           placeholder="Ingresa tu contraseña"
           type="password"
           variant="bordered"
-          {...register("password", { required: "La contraseña es obligatoria" })}
+          {...register("password", {
+            required: "La contraseña es obligatoria",
+          })}
           errorMessage={errors.password?.message}
           isInvalid={!!errors.password}
         />
@@ -71,7 +80,6 @@ export function LoginForm() {
           </Button>
         </div>
       </div>
-      <Toaster />
     </Form>
   );
 }

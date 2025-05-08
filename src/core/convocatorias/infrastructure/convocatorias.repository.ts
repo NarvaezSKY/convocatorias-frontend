@@ -1,7 +1,7 @@
+import axiosInstance from "@/config/axios/instance";
 import { IConvocatoriasRepository } from "../domain/convocatorias.repository";
 import { IGetAllConvocatoriasRes } from "../domain/get-all-convocatorias";
 import { ISearchConvocatoriasReq } from "../domain/search-convocatorias";
-import axiosInstance from "@/config/axios/instance";
 import { IUploadConvocatoriaReq } from "../domain/upload-convocatorias";
 
 const getAllConvocatorias = async (): Promise<IGetAllConvocatoriasRes[]> => {
@@ -28,7 +28,9 @@ const searchConvocatorias = async (
     data: ISearchConvocatoriasReq
 ): Promise<IGetAllConvocatoriasRes[]> => {
     try {
-        const response = await axiosInstance.post("/convocatorias/search", data);
+        const response = await axiosInstance.get(`/convocatorias/filter`, {
+            params: data,
+        });
         return response.data;
     } catch (error) {
         console.error("Error searching convocatorias:", error);
@@ -36,8 +38,19 @@ const searchConvocatorias = async (
     }
 };
 
+const deleteConvocatorias = async (id: number): Promise<any> => {
+    try {
+        const response = await axiosInstance.delete(`/convocatorias/delete/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting convocatorias:", error);
+        throw error;
+    }
+};
+
 export const convocatoriasRepository: IConvocatoriasRepository = {
     getAllConvocatorias,
     searchConvocatorias,
-    uploadConvocatorias
+    uploadConvocatorias,
+    deleteConvocatorias,
 };

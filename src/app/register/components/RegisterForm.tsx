@@ -2,7 +2,6 @@ import { Form, Input, Button } from "@heroui/react";
 import { useForm } from "react-hook-form";
 import { useRegister } from "../hooks/UseRegister";
 import { IRegisterReq } from "@/core/auth/domain/register";
-import { Toaster } from "sonner";
 
 interface FormValues extends IRegisterReq {
   confirmPassword: string;
@@ -41,7 +40,9 @@ export function RegisterForm() {
           labelPlacement="outside"
           placeholder="Ingresa tu nombre de usuario"
           variant="bordered"
-          {...register("username", { required: "El nombre de usuario es obligatorio" })}
+          {...register("username", {
+            required: "El nombre de usuario es obligatorio",
+          })}
           errorMessage={errors.username?.message}
           isInvalid={!!errors.username}
         />
@@ -71,7 +72,9 @@ export function RegisterForm() {
           placeholder="Ingresa tu contraseña"
           type="password"
           variant="bordered"
-          {...register("password", { required: "La contraseña es obligatoria" })}
+          {...register("password", {
+            required: "La contraseña es obligatoria",
+          })}
           errorMessage={errors.password?.message}
           isInvalid={!!errors.password}
         />
@@ -85,7 +88,8 @@ export function RegisterForm() {
           variant="bordered"
           {...register("confirmPassword", {
             required: "Confirma tu contraseña",
-            validate: value => value === password || "Las contraseñas no coinciden",
+            validate: (value) =>
+              value === password || "Las contraseñas no coinciden",
           })}
           errorMessage={errors.confirmPassword?.message}
           isInvalid={!!errors.confirmPassword}
@@ -110,7 +114,6 @@ export function RegisterForm() {
           </Button>
         </div>
       </div>
-      <Toaster />
     </Form>
   );
 }

@@ -12,4 +12,5 @@ export interface IGetAllConvocatoriasRes {
     fecha_fin: string | null;
     observaciones: string | null;
     user_id: number;
+    url: string;
 }

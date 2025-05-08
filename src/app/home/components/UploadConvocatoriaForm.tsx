@@ -1,8 +1,7 @@
 import { Form, Input, Button, Textarea } from "@heroui/react";
 import { useForm } from "react-hook-form";
 import { useUploadConvocatoria } from "../hooks/UseUploadForm";
-import { Toaster } from "sonner";
-import { IUploadConvocatoriaReq } from '../../../core/convocatorias/domain/upload-convocatorias/upload-convocatoria.req';
+import { IUploadConvocatoriaReq } from "../../../core/convocatorias/domain/upload-convocatorias/upload-convocatoria.req";
 
 export function UploadConvocatoriaForm({ userId }: { userId: string }) {
   const {
@@ -25,7 +24,6 @@ export function UploadConvocatoriaForm({ userId }: { userId: string }) {
       onReset={() => reset()}
       onSubmit={handleSubmit(onSubmit)}
     >
-
       <Input
         isRequired
         label="Convocatoria"
@@ -52,7 +50,9 @@ export function UploadConvocatoriaForm({ userId }: { userId: string }) {
         label="Dirección Oficina Regional"
         placeholder="Ej: Dirección General"
         variant="bordered"
-        {...register("direccion_oficina_regional", { required: "Este campo es obligatorio" })}
+        {...register("direccion_oficina_regional", {
+          required: "Este campo es obligatorio",
+        })}
         errorMessage={errors.direccion_oficina_regional?.message}
         isInvalid={!!errors.direccion_oficina_regional}
       />
@@ -62,7 +62,9 @@ export function UploadConvocatoriaForm({ userId }: { userId: string }) {
         label="Tipo de Postulación"
         placeholder="Ej: Interna, Externa"
         variant="bordered"
-        {...register("tipo_postulacion", { required: "Este campo es obligatorio" })}
+        {...register("tipo_postulacion", {
+          required: "Este campo es obligatorio",
+        })}
         errorMessage={errors.tipo_postulacion?.message}
         isInvalid={!!errors.tipo_postulacion}
       />
@@ -115,31 +117,30 @@ export function UploadConvocatoriaForm({ userId }: { userId: string }) {
         {...register("fecha_fin")}
       />
 
-      {/* <Textarea
-      //   label="Observaciones (opcional)"
-      //   placeholder="Escribe alguna observación"
-      //   variant="bordered"
-      //   {...register("observaciones")}
-      // /> */}
-
       <Textarea
         label="Observaciones (opcional)"
         placeholder="Escribe alguna observación"
         variant="bordered"
         {...register("observaciones")}
       />
+      <Input
+        label="URL (opcional)"
+        placeholder="Ej: https://www.ejemplo.com"
+        type="url"
+        variant="bordered"
+        {...register("url")}
+      />
+
       {error && <span className="text-danger text-sm -mt-2">{error}</span>}
 
       <div className="flex gap-4">
-        <Button color="primary" isDisabled={isLoading} type="submit" >
+        <Button color="primary" isDisabled={isLoading} type="submit">
           {isLoading ? "Cargando..." : "Subir"}
         </Button>
         <Button type="reset" variant="bordered">
           Limpiar
         </Button>
       </div>
-
-      <Toaster />
     </Form>
   );
 }

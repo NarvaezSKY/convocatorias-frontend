@@ -8,6 +8,7 @@ import {
   getAllConvocatoriasUseCase,
   uploadConvocatoriasUseCase,
 } from "@/core/convocatorias/application";
+import { deleteConvocatoriasUseCase } from "@/core/convocatorias/application/deleteConvocatorias.use-case";
 
 type State = {
   convocatorias: IGetAllConvocatoriasRes[];
@@ -19,6 +20,7 @@ type Actions = {
   getAllConvocatorias: () => Promise<IGetAllConvocatoriasRes[]>;
   uploadConvocatoria: (data: IUploadConvocatoriaReq) => Promise<void>;
   searchConvocatorias: (data: ISearchConvocatoriasReq) => Promise<void>;
+  deleteConvocatorias: (id: number) => Promise<void>;
 };
 
 type Store = State & Actions;
@@ -66,6 +68,23 @@ export const useConvocatoriasStore = create<Store>((set) => ({
     } catch (error) {
       console.error("Error searching convocatorias:", error);
       set({ error: "Error searching convocatorias" });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  deleteConvocatorias: async (id) => {
+    set({ loading: true, error: null });
+    try {
+      await deleteConvocatoriasUseCase(convocatoriasRepository)(id);
+      set((state) => ({
+        convocatorias: state.convocatorias.filter(
+          (convocatoria) => convocatoria.id !== id
+        ),
+      }));
+    } catch (error) {
+      console.error("Error deleting convocatoria:", error);
+      set({ error: "Error deleting convocatoria" });
     } finally {
       set({ loading: false });
     }

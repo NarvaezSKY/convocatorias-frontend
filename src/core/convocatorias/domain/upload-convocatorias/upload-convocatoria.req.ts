@@ -11,4 +11,5 @@ export interface IUploadConvocatoriaReq{
     fecha_fin?: string;
     observaciones?: string;
     user_id: string;
+    url: string;
 }

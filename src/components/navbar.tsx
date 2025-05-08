@@ -1,6 +1,4 @@
-
 import { Link } from "@heroui/link";
-
 import {
   Navbar as HeroUINavbar,
   NavbarBrand,
@@ -10,19 +8,28 @@ import {
   NavbarMenu,
   NavbarMenuItem,
 } from "@heroui/navbar";
-import { link as linkStyles } from "@heroui/theme";
 import clsx from "clsx";
-
+import { toast } from "sonner";
+import { link as linkStyles } from "@heroui/theme";
 import { siteConfig } from "../config/site";
 import { ThemeSwitch } from "./theme-switch";
-import {
-  TwitterIcon,
-  GithubIcon,
-  DiscordIcon,
-} from "./icons";
+import { TwitterIcon, GithubIcon, DiscordIcon } from "./icons";
 import { Logo } from "./icons";
+import { useAuthStore } from "@/app/shared/auth.store";
+import { FaUserAlt } from "react-icons/fa";
 
 export const Navbar = () => {
+  const { user, logout } = useAuthStore();
+
+  const isAuthenticated = !!user;
+  console.log("User in navbar", user);
+  console.log("isAuthenticated in navbar", isAuthenticated);
+
+  const handleLogout = () => {
+    logout();
+    toast.success("Sesión cerrada correctamente");
+  };
+
   return (
     <HeroUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -33,24 +40,37 @@ export const Navbar = () => {
             href="/"
           >
             <Logo />
-            <p className="font-bold text-inherit">ACME</p>
+            <p className="font-bold text-inherit">Convocatorias</p>
           </Link>
         </NavbarBrand>
         <div className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
+          {!isAuthenticated ? (
+            siteConfig.navItems.map((item, index) => (
               <Link
-                className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium",
-                )}
-                color="foreground"
+                key={index}
+                className={clsx(linkStyles({ color: "foreground" }))}
                 href={item.href}
               >
                 {item.label}
               </Link>
-            </NavbarItem>
-          ))}
+            ))
+          ) : (
+            <div className="flex gap-4">
+              <div className="flex items-center gap-2">
+               <FaUserAlt /> <p>Bienvenido, {user?.username}</p>
+              </div>
+            
+            <Link
+              className={clsx(
+                linkStyles({ color: "danger" }),
+                "cursor-pointer"
+              )}
+              onClick={handleLogout}
+            >
+              Cerrar sesión
+            </Link>
+            </div>
+          )}
         </div>
       </NavbarContent>
 
@@ -82,23 +102,34 @@ export const Navbar = () => {
 
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                      ? "danger"
-                      : "foreground"
-                }
-                href="#"
-                size="lg"
+          {!isAuthenticated ? (
+            siteConfig.navMenuItems.map((item, index) => (
+              <NavbarMenuItem key={`${item}-${index}`}>
+                <Link
+                  color={
+                    index === 2
+                      ? "primary"
+                      : index === siteConfig.navMenuItems.length - 1
+                        ? "danger"
+                        : "foreground"
+                  }
+                  href={item.href}
+                  size="lg"
+                >
+                  {item.label}
+                </Link>
+              </NavbarMenuItem>
+            ))
+          ) : (
+            <NavbarMenuItem>
+              <button
+                className="text-danger text-lg text-left w-full"
+                onClick={handleLogout}
               >
-                {item.label}
-              </Link>
+                Cerrar sesión
+              </button>
             </NavbarMenuItem>
-          ))}
+          )}
         </div>
       </NavbarMenu>
     </HeroUINavbar>
