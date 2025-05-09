@@ -26,7 +26,11 @@ type Actions = {
   searchConvocatorias: (data: ISearchConvocatoriasReq) => Promise<void>;
   deleteConvocatorias: (id: number) => Promise<void>;
   getSingleConvocatoria: (id: number) => Promise<IGetAllConvocatoriasRes>;
-  patchConvocatorias: (id: number, data: IPatchConvocatoriasReq) => Promise<void>;
+  patchConvocatorias: (
+    id: number,
+    data: IPatchConvocatoriasReq
+  ) => Promise<void>;
+  clearSingleConvocatoria: () => void;
 };
 
 type Store = State & Actions;
@@ -75,6 +79,10 @@ export const useConvocatoriasStore = create<Store>((set) => ({
     }
   },
 
+  clearSingleConvocatoria: () => {
+    set({ singleConvocatoria: null });
+  },
+
   uploadConvocatoria: async (data) => {
     set({ loading: true, error: null });
     try {
@@ -98,7 +106,6 @@ export const useConvocatoriasStore = create<Store>((set) => ({
       set({ loading: false });
     }
   },
-
 
   searchConvocatorias: async (data) => {
     set({ loading: true, error: null });

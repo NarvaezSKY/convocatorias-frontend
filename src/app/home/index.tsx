@@ -11,6 +11,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import Filtros from "./components/Filters";
 import { useConvocatorias } from "./hooks/UseConvocatorias";
 import { MdFileUpload } from "react-icons/md";
+import { toast } from "sonner";
 
 export const Home = () => {
   const [filtros, setFiltros] = useState<ISearchConvocatoriasReq>({});
@@ -36,7 +37,9 @@ export const Home = () => {
       <div className="flex items-center justify-center flex-col gap-4">
         <div className="w-full flex justify-between items-center">
           <div className="flex gap-2">
-            <h1 className="text-3xl font-bold">Seguimiento Innovación Y Competitividad</h1>
+            <h1 className="text-3xl font-bold">
+              Seguimiento Innovación Y Competitividad
+            </h1>
             <Button
               isIconOnly
               className="mb-4"
@@ -48,7 +51,6 @@ export const Home = () => {
             >
               {mostrarFiltros ? <IoMdCloseCircle /> : <FaSearch />}
             </Button>
-
           </div>
           {role && role === "superadmin" && (
             <Button
@@ -63,14 +65,16 @@ export const Home = () => {
           )}
         </div>
         {mostrarFiltros && (
-              <Filtros
-                filtros={filtros}
-                onChange={(nuevoFiltro: Partial<ISearchConvocatoriasReq>) =>
-                  setFiltros((prev) => ({ ...prev, ...nuevoFiltro }))
-                }
-                onReset={() => setFiltros({})}
-              />
-            )}
+          <Filtros
+            filtros={filtros}
+            onChange={(nuevoFiltro: Partial<ISearchConvocatoriasReq>) =>
+              setFiltros((prev) => ({ ...prev, ...nuevoFiltro }))
+            }
+            onReset={() => {
+              toast.success("Filtros reseteados"), setFiltros({});
+            }}
+          />
+        )}
         <ConvocatoriasTable />
         <ReusableModal
           isOpen={isOpen}
@@ -79,7 +83,7 @@ export const Home = () => {
           onSubmit={() => {}}
         >
           {user ? (
-            <UploadConvocatoriaForm userId={user.userid} />
+            <UploadConvocatoriaForm method="upload" userId={user.userid} />
           ) : (
             <p>Usuario no autenticado, por favor inicie sesión.</p>
           )}

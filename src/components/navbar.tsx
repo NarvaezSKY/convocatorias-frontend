@@ -22,8 +22,6 @@ export const Navbar = () => {
   const { user, logout } = useAuthStore();
 
   const isAuthenticated = !!user;
-  console.log("User in navbar", user);
-  console.log("isAuthenticated in navbar", isAuthenticated);
 
   const handleLogout = () => {
     logout();
@@ -57,18 +55,18 @@ export const Navbar = () => {
           ) : (
             <div className="flex gap-4">
               <div className="flex items-center gap-2">
-               <FaUserAlt /> <p>Bienvenido, {user?.username}</p>
+                <FaUserAlt /> <p>Bienvenido, {user?.username}</p>
               </div>
-            
-            <Link
-              className={clsx(
-                linkStyles({ color: "danger" }),
-                "cursor-pointer"
-              )}
-              onClick={handleLogout}
-            >
-              Cerrar sesión
-            </Link>
+
+              <Link
+                className={clsx(
+                  linkStyles({ color: "danger" }),
+                  "cursor-pointer"
+                )}
+                onClick={handleLogout}
+              >
+                Cerrar sesión
+              </Link>
             </div>
           )}
         </div>

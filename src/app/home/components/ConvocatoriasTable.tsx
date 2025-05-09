@@ -8,6 +8,7 @@ import {
   Spinner,
   getKeyValue,
   Button,
+  Pagination,
 } from "@heroui/react";
 import { useConvocatorias } from "../hooks/UseConvocatorias";
 import { useAuthStore } from "@/app/shared/auth.store";
@@ -15,7 +16,9 @@ import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin2Line } from "react-icons/ri";
 import { UploadConvocatoriaForm } from "./UploadConvocatoriaForm";
 import { IUploadConvocatoriaReq } from "@/core/convocatorias/domain/upload-convocatorias";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import ReusableModal from "@/app/shared/components/Modal";
+import { useConvocatoriasStore } from "@/app/shared/convocatorias.store";
 
 const columns = [
   { key: "convocatoria", label: "Convocatoria" },
@@ -35,59 +38,67 @@ const columns = [
   { key: "acciones", label: "Acciones" },
 ];
 
-export default function ConvocatoriasTable() {
-  const [editingConvocatoria, setEditingConvocatoria] = useState<IUploadConvocatoriaReq | null>(null);
+const rowsPerPage = 10;
 
-  const {
-    convocatorias,
-    loaderRef,
-    scrollerRef,
-    handleDelete,
-  } = useConvocatorias();
+export default function ConvocatoriasTable() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [page, setPage] = useState(1);
+
+  const { convocatorias, handleDelete } = useConvocatorias();
   const { user } = useAuthStore();
+  const { getSingleConvocatoria, singleConvocatoria } = useConvocatoriasStore();
+
+  const handleEdit = async (id: number) => {
+    await getSingleConvocatoria(id);
+    setIsOpen(true);
+  };
+
+  const pages = useMemo(() => {
+    return convocatorias?.length ? Math.ceil(convocatorias.length / rowsPerPage) : 0;
+  }, [convocatorias]);
+
+  const paginatedData = useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    return convocatorias.slice(start, start + rowsPerPage);
+  }, [page, convocatorias]);
 
   return (
     <>
       <Table
-        isHeaderSticky
-        aria-label="Tabla de Convocatorias"
-        baseRef={scrollerRef}
+        aria-label="Tabla de Convocatorias con paginación"
         bottomContent={
-          <div className="flex w-full justify-center">
-            <Spinner ref={loaderRef} color="white" />
-          </div>
+          pages > 0 ? (
+            <div className="flex w-full justify-center">
+              <Pagination
+                isCompact
+                showControls
+                showShadow
+                color="primary"
+                page={page}
+                total={pages}
+                onChange={(page) => setPage(page)}
+              />
+            </div>
+          ) : null
         }
         classNames={{
-          base: "max-h-[520px] overflow-scroll",
           table: "min-h-[400px]",
         }}
       >
         <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn key={column.key}>{column.label}</TableColumn>
-          )}
+          {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
         </TableHeader>
         <TableBody
-          emptyContent={
-            <TableRow>
-              <TableCell colSpan={columns.length}>
-                <div className="text-center py-4 text-neutral-400">
-                  No se encontraron convocatorias
-                </div>
-              </TableCell>
-            </TableRow>
-          }
-          isLoading={false}
-          items={convocatorias}
+          emptyContent={"No se encontraron convocatorias"}
+          items={paginatedData}
           loadingContent={<Spinner color="white" />}
+          loadingState={convocatorias.length === 0 ? "loading" : "idle"}
         >
           {(item) => (
-            <TableRow key={item.id} className="hover:bg-white">
+            <TableRow key={item.id}>
               {(columnKey) => (
                 <TableCell>
-                  {columnKey === "acciones" &&
-                    user &&
-                    user.role === "superadmin" ? (
+                  {columnKey === "acciones" && user?.role === "superadmin" ? (
                     <div className="flex gap-2">
                       <Button
                         isIconOnly
@@ -95,7 +106,7 @@ export default function ConvocatoriasTable() {
                         radius="full"
                         size="md"
                         variant="bordered"
-                        onClick={() => setEditingConvocatoria(item as unknown as IUploadConvocatoriaReq)}
+                        onClick={() => handleEdit(item.id)}
                       >
                         <FaEdit className="text-neutral-200" />
                       </Button>
@@ -119,17 +130,25 @@ export default function ConvocatoriasTable() {
           )}
         </TableBody>
       </Table>
-      {user && user.role === "superadmin" && editingConvocatoria && (
-        <div className="flex justify-end mt-4">
-          <UploadConvocatoriaForm
-            userId={user.userid}
-            method="edit"
-            initialValues={editingConvocatoria}
-          />
-        </div>
+
+      {user?.role === "superadmin" && singleConvocatoria && (
+        <ReusableModal
+          isOpen={isOpen}
+          modalTitle="Editar Convocatoria"
+          onClose={() => setIsOpen(false)}
+        >
+          <div className="flex justify-end mt-4">
+            <UploadConvocatoriaForm
+              convocatoriaId={singleConvocatoria.id}
+              initialValues={
+                singleConvocatoria as unknown as IUploadConvocatoriaReq
+              }
+              method="edit"
+              userId={user.userid}
+            />
+          </div>
+        </ReusableModal>
       )}
-
-
     </>
   );
 }
