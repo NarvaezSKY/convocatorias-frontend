@@ -3,6 +3,7 @@ import { IConvocatoriasRepository } from "../domain/convocatorias.repository";
 import { IGetAllConvocatoriasRes } from "../domain/get-all-convocatorias";
 import { ISearchConvocatoriasReq } from "../domain/search-convocatorias";
 import { IUploadConvocatoriaReq } from "../domain/upload-convocatorias";
+import { IPatchConvocatoriasReq } from "../domain/patch-convocatorias";
 
 const getAllConvocatorias = async (): Promise<IGetAllConvocatoriasRes[]> => {
     try {
@@ -48,9 +49,31 @@ const deleteConvocatorias = async (id: number): Promise<any> => {
     }
 };
 
+const getSingleConvocatoria= async (id: number): Promise<IGetAllConvocatoriasRes> => {
+    try {
+        const response = await axiosInstance.get(`/convocatorias/get/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching convocatoria by ID:", error);
+        throw error;
+    }
+}
+
+const patchConvocatorias = async (id: number, data: IPatchConvocatoriasReq): Promise<any> => {
+    try {
+        const response = await axiosInstance.patch(`/convocatorias/update/${id}`, data);
+        return response.data;
+    } catch (error) {
+        console.error("Error updating convocatorias:", error);
+        throw error;
+    }
+};
+
 export const convocatoriasRepository: IConvocatoriasRepository = {
     getAllConvocatorias,
     searchConvocatorias,
     uploadConvocatorias,
     deleteConvocatorias,
+    getSingleConvocatoria,
+    patchConvocatorias
 };

@@ -36,7 +36,7 @@ export const Home = () => {
       <div className="flex items-center justify-center flex-col gap-4">
         <div className="w-full flex justify-between items-center">
           <div className="flex gap-2">
-            <h1 className="text-3xl font-bold">Convocatorias</h1>
+            <h1 className="text-3xl font-bold">Seguimiento Innovación Y Competitividad</h1>
             <Button
               isIconOnly
               className="mb-4"

@@ -1,3 +1,6 @@
 export * from './getAllConvocatorias.use-case'
 export * from './searchConvocatorias.use-case'
 export * from './uploadConvocatoria.use-case'
+export * from './getSingleConvocatoria.use-case'
+export * from './deleteConvocatorias.use-case'
+export * from './patchConvocatoria.use-case'

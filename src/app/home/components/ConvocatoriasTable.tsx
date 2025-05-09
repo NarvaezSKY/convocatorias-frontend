@@ -13,20 +13,20 @@ import { useConvocatorias } from "../hooks/UseConvocatorias";
 import { useAuthStore } from "@/app/shared/auth.store";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin2Line } from "react-icons/ri";
-// import { useEffect, useState } from "react";
-// import Filtros from "./Filters";
-// import { ISearchConvocatoriasReq } from "../../../core/convocatorias/domain/search-convocatorias";
-// import { FaSearch } from "react-icons/fa";
-// import { IoMdCloseCircle } from "react-icons/io";
+import { UploadConvocatoriaForm } from "./UploadConvocatoriaForm";
+import { IUploadConvocatoriaReq } from "@/core/convocatorias/domain/upload-convocatorias";
+import { useState } from "react";
 
 const columns = [
   { key: "convocatoria", label: "Convocatoria" },
   { key: "consecutivo", label: "Consecutivo" },
   { key: "direccion_oficina_regional", label: "Dirección" },
-  { key: "tipo_postulacion", label: "Tipo de Postulación" },
+  { key: "tipo_postulacion", label: "Mecanismo" },
   { key: "nuevo_estado", label: "Estado" },
   { key: "nombre", label: "Nombre" },
-  { key: "valor", label: "Valor" },
+  { key: "valor_solicitado", label: "Valor Solicitado" },
+  { key: "valor_aprobado", label: "Valor Aprobado" },
+  { key: "diferencia_presupuesto", label: "Diferencia Presupuesto" },
   { key: "fecha_aprobacion", label: "Fecha Aprobación" },
   { key: "fecha_inicio", label: "Fecha Inicio" },
   { key: "fecha_fin", label: "Fecha Fin" },
@@ -36,54 +36,18 @@ const columns = [
 ];
 
 export default function ConvocatoriasTable() {
-  // const [filtros, setFiltros] = useState<ISearchConvocatoriasReq>({});
+  const [editingConvocatoria, setEditingConvocatoria] = useState<IUploadConvocatoriaReq | null>(null);
 
   const {
     convocatorias,
-    // loading,
     loaderRef,
     scrollerRef,
     handleDelete,
-    // handleSearch,
   } = useConvocatorias();
   const { user } = useAuthStore();
 
-  // useEffect(() => {
-  //   const delayDebounce = setTimeout(() => {
-  //     const filtrosLimpios = Object.fromEntries(
-  //       Object.entries(filtros).filter(([_, v]) => v?.toString().trim() !== "")
-  //     );
-
-  //     handleSearch(filtrosLimpios);
-  //   }, 500);
-
-  //   return () => clearTimeout(delayDebounce);
-  // }, [filtros]);
-
-  // const [mostrarFiltros, setMostrarFiltros] = useState(false);
-
   return (
     <>
-      {/* <Button
-        isIconOnly
-        className="mb-4"
-        color="primary"
-        radius="full"
-        size="md"
-        variant="bordered"
-        onClick={() => setMostrarFiltros((prev) => !prev)}
-      >
-        {mostrarFiltros ? <IoMdCloseCircle /> : <FaSearch />}
-      </Button>
-      {mostrarFiltros && (
-        <Filtros
-          filtros={filtros}
-          onChange={(nuevoFiltro: Partial<ISearchConvocatoriasReq>) =>
-            setFiltros((prev) => ({ ...prev, ...nuevoFiltro }))
-          }
-        />
-      )} */}
-
       <Table
         isHeaderSticky
         aria-label="Tabla de Convocatorias"
@@ -122,8 +86,8 @@ export default function ConvocatoriasTable() {
               {(columnKey) => (
                 <TableCell>
                   {columnKey === "acciones" &&
-                  user &&
-                  user.role === "superadmin" ? (
+                    user &&
+                    user.role === "superadmin" ? (
                     <div className="flex gap-2">
                       <Button
                         isIconOnly
@@ -131,7 +95,7 @@ export default function ConvocatoriasTable() {
                         radius="full"
                         size="md"
                         variant="bordered"
-                        onClick={() => alert(`Editando ${item.id}`)}
+                        onClick={() => setEditingConvocatoria(item as unknown as IUploadConvocatoriaReq)}
                       >
                         <FaEdit className="text-neutral-200" />
                       </Button>
@@ -155,6 +119,17 @@ export default function ConvocatoriasTable() {
           )}
         </TableBody>
       </Table>
+      {user && user.role === "superadmin" && editingConvocatoria && (
+        <div className="flex justify-end mt-4">
+          <UploadConvocatoriaForm
+            userId={user.userid}
+            method="edit"
+            initialValues={editingConvocatoria}
+          />
+        </div>
+      )}
+
+
     </>
   );
 }

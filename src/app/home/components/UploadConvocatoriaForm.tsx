@@ -1,22 +1,53 @@
 import { Form, Input, Button, Textarea } from "@heroui/react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useUploadConvocatoria } from "../hooks/UseUploadForm";
-import { IUploadConvocatoriaReq } from "../../../core/convocatorias/domain/upload-convocatorias/upload-convocatoria.req";
+import { IUploadConvocatoriaReq } from "../../../core/convocatorias/domain/upload-convocatorias";
+import { useEditConvocatorias } from "../hooks/UseEditConvocatorias";
 
-export function UploadConvocatoriaForm({ userId }: { userId: string }) {
+
+interface Props {
+  userId: string;
+  method: "upload" | "edit";
+  initialValues?: Partial<IUploadConvocatoriaReq>;
+  convocatoriaId?: number;
+}
+
+
+export function UploadConvocatoriaForm({ userId, method, convocatoriaId, initialValues }: Props) {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
+    setValue,
   } = useForm<IUploadConvocatoriaReq>();
 
-  const { uploadConvocatoria, isLoading, error } = useUploadConvocatoria();
+  const { uploadConvocatoria, isLoading: isUploading, error: uploadError } = useUploadConvocatoria();
+  const { handlePatchConvocatorias, loading: isPatching, error: patchError } = useEditConvocatorias();
 
   const onSubmit = async (data: IUploadConvocatoriaReq) => {
-    await uploadConvocatoria({ ...data, user_id: userId });
+    const payload = { ...data, user_id: userId };
+
+    if (method === "upload") {
+      await uploadConvocatoria(payload);
+    } else if (method === "edit" && convocatoriaId !== undefined) {
+      await handlePatchConvocatorias(convocatoriaId, payload);
+    }
+
     reset();
   };
+
+  useEffect(() => {
+    if (initialValues) {
+      Object.entries(initialValues).forEach(([key, value]) => {
+        setValue(key as keyof IUploadConvocatoriaReq, value as any);
+      });
+    }
+  }, [initialValues, setValue]);
+
+  const isLoading = isUploading || isPatching;
+  const error = uploadError || patchError;
 
   return (
     <Form
@@ -88,12 +119,22 @@ export function UploadConvocatoriaForm({ userId }: { userId: string }) {
 
       <Input
         isRequired
-        label="Valor"
+        label="Valor solicitado"
         placeholder="Ej: 10000000"
         variant="bordered"
-        {...register("valor", { required: "Este campo es obligatorio" })}
-        errorMessage={errors.valor?.message}
-        isInvalid={!!errors.valor}
+        {...register("valor_solicitado", { required: "Este campo es obligatorio" })}
+        errorMessage={errors.valor_solicitado?.message}
+        isInvalid={!!errors.valor_solicitado}
+      />
+
+      <Input
+        isRequired
+        label="Valor_aprobado"
+        placeholder="Ej: 10000000"
+        variant="bordered"
+        {...register("valor_aprobado", { required: "Este campo es obligatorio" })}
+        errorMessage={errors.valor_aprobado?.message}
+        isInvalid={!!errors.valor_aprobado}
       />
 
       <Input
@@ -135,7 +176,7 @@ export function UploadConvocatoriaForm({ userId }: { userId: string }) {
 
       <div className="flex gap-4">
         <Button color="primary" isDisabled={isLoading} type="submit">
-          {isLoading ? "Cargando..." : "Subir"}
+          {isLoading ? "Cargando..." : method === "edit" ? "Actualizar" : "Subir"}
         </Button>
         <Button type="reset" variant="bordered">
           Limpiar

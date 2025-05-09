@@ -3,15 +3,19 @@ import { convocatoriasRepository } from "../../core/convocatorias/infrastructure
 import { IGetAllConvocatoriasRes } from "@/core/convocatorias/domain/get-all-convocatorias";
 import { IUploadConvocatoriaReq } from "../../core/convocatorias/domain/upload-convocatorias";
 import { ISearchConvocatoriasReq } from "../../core/convocatorias/domain/search-convocatorias";
+import { IPatchConvocatoriasReq } from "@/core/convocatorias/domain/patch-convocatorias";
 import {
   searchConvocatoriasUseCase,
   getAllConvocatoriasUseCase,
   uploadConvocatoriasUseCase,
+  getSingleConvocatoriaUseCase,
+  deleteConvocatoriasUseCase,
+  patchConvocatoriasUseCase,
 } from "@/core/convocatorias/application";
-import { deleteConvocatoriasUseCase } from "@/core/convocatorias/application/deleteConvocatorias.use-case";
 
 type State = {
   convocatorias: IGetAllConvocatoriasRes[];
+  singleConvocatoria: IGetAllConvocatoriasRes | null;
   loading: boolean;
   error: string | null;
 };
@@ -21,12 +25,15 @@ type Actions = {
   uploadConvocatoria: (data: IUploadConvocatoriaReq) => Promise<void>;
   searchConvocatorias: (data: ISearchConvocatoriasReq) => Promise<void>;
   deleteConvocatorias: (id: number) => Promise<void>;
+  getSingleConvocatoria: (id: number) => Promise<IGetAllConvocatoriasRes>;
+  patchConvocatorias: (id: number, data: IPatchConvocatoriasReq) => Promise<void>;
 };
 
 type Store = State & Actions;
 
 export const useConvocatoriasStore = create<Store>((set) => ({
   convocatorias: [],
+  singleConvocatoria: null,
   loading: false,
   error: null,
   getAllConvocatorias: async () => {
@@ -43,7 +50,29 @@ export const useConvocatoriasStore = create<Store>((set) => ({
       throw error;
     } finally {
       set({ loading: false });
-    }   
+    }
+  },
+
+  getSingleConvocatoria: async (id) => {
+    set({ loading: true, error: null });
+    try {
+      const convocatoria = await getSingleConvocatoriaUseCase(
+        convocatoriasRepository
+      )(id);
+
+      if (!convocatoria) {
+        throw new Error("Convocatoria not found");
+      }
+
+      set({ singleConvocatoria: convocatoria });
+      return convocatoria;
+    } catch (error) {
+      console.error("Error fetching single convocatoria:", error);
+      set({ error: "Error fetching single convocatoria" });
+      throw error;
+    } finally {
+      set({ loading: false });
+    }
   },
 
   uploadConvocatoria: async (data) => {
@@ -57,6 +86,19 @@ export const useConvocatoriasStore = create<Store>((set) => ({
       set({ loading: false });
     }
   },
+
+  patchConvocatorias: async (id, data) => {
+    set({ loading: true, error: null });
+    try {
+      await patchConvocatoriasUseCase(convocatoriasRepository)(id, data);
+    } catch (error) {
+      console.error("Error updating convocatoria:", error);
+      set({ error: "Error updating convocatoria" });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
 
   searchConvocatorias: async (data) => {
     set({ loading: true, error: null });
