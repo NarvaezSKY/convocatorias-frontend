@@ -16,6 +16,7 @@ import { ThemeSwitch } from "./theme-switch";
 import { Logo } from "./icons";
 import { useAuthStore } from "@/app/shared/auth.store";
 import { FaUserAlt } from "react-icons/fa";
+import { PiSignOutBold } from "react-icons/pi";
 import { Button } from "@heroui/button";
 
 export const Navbar = () => {
@@ -79,7 +80,7 @@ export const Navbar = () => {
                 variant="bordered"
                 onClick={handleLogout}
               >
-                Cerrar sesión
+                <PiSignOutBold /> Cerrar sesión
               </Button>
             </div>
           )}
@@ -121,7 +122,7 @@ export const Navbar = () => {
                 variant="bordered"
                 onClick={handleLogout}
               >
-                Cerrar sesión
+                <PiSignOutBold /> Cerrar sesión
               </Button>
             </NavbarMenuItem>
           )}

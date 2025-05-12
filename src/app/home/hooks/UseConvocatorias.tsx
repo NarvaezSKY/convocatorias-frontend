@@ -54,6 +54,7 @@ export const useConvocatorias = () => {
 
     try {
       await downloadReport({ ...filtrosLimpios, report: "true" } as ISearchConvocatoriasReq);
+      toast.success("Reporte generado correctamente");
     } catch (error) {
       console.error(error);
       alert("Ocurrió un error al generar el reporte.");

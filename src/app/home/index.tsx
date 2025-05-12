@@ -11,6 +11,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import Filtros from "./components/Filters";
 import { useConvocatorias } from "./hooks/UseConvocatorias";
 import { MdFileUpload } from "react-icons/md";
+import { FaUserAlt } from "react-icons/fa";
 import { toast } from "sonner";
 import { Divider } from "@heroui/react";
 
@@ -54,14 +55,22 @@ export const Home = () => {
             </Button>
           </div>
           {role && role === "superadmin" && (
-            <Button
-              color="primary"
-              size="md"
-              variant="bordered"
-              onClick={() => setIsOpen(true)}
-            >
-              <MdFileUpload /> Subir Convocatoria
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button
+                color="primary"
+                size="md"
+                variant="bordered"
+                onClick={() => setIsOpen(true)}
+              >
+                <MdFileUpload /> Subir Convocatoria
+              </Button>
+              <Button
+                color="primary"
+                size="md"
+                variant="bordered">
+                <FaUserAlt /> Ver Usuarios
+              </Button>
+            </div>
           )}
         </div>
         {mostrarFiltros && (
