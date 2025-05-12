@@ -10,4 +10,5 @@ export interface IConvocatoriasRepository {
   deleteConvocatorias(id: number): Promise<any>;
   getSingleConvocatoria (id: number): Promise<IGetAllConvocatoriasRes>
   patchConvocatorias(id: number, data: IPatchConvocatoriasReq): Promise<any>;
+  downloadReport(data: ISearchConvocatoriasReq): Promise<Blob>;
 }

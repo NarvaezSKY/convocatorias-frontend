@@ -11,6 +11,7 @@ export const useConvocatorias = () => {
     loading,
     deleteConvocatorias,
     searchConvocatorias,
+    downloadReport,
   } = useConvocatoriasStore();
 
   useEffect(() => {
@@ -39,11 +40,23 @@ export const useConvocatorias = () => {
         ([_, v]) => v?.toString().trim() !== ""
       )
     );
-
     if (Object.keys(filtrosLimpios).length > 0) {
       searchConvocatorias(filtrosLimpios);
     } else {
       getAllConvocatorias();
+    }
+  };
+
+  const generarReporte = async (filtros: ISearchConvocatoriasReq) => {
+    const filtrosLimpios = Object.fromEntries(
+      Object.entries(filtros).filter(([_, v]) => v?.toString().trim() !== "")
+    );
+
+    try {
+      await downloadReport({ ...filtrosLimpios, report: "true" } as ISearchConvocatoriasReq);
+    } catch (error) {
+      console.error(error);
+      alert("Ocurrió un error al generar el reporte.");
     }
   };
 
@@ -54,5 +67,6 @@ export const useConvocatorias = () => {
     scrollerRef,
     handleDelete,
     handleSearch,
+    generarReporte,
   };
 };

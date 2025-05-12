@@ -31,6 +31,7 @@ type Actions = {
     data: IPatchConvocatoriasReq
   ) => Promise<void>;
   clearSingleConvocatoria: () => void;
+  downloadReport: (data: ISearchConvocatoriasReq) => Promise<void>;
 };
 
 type Store = State & Actions;
@@ -52,6 +53,25 @@ export const useConvocatoriasStore = create<Store>((set) => ({
       console.error("Error fetching convocatorias:", error);
       set({ error: "Error fetching convocatorias", loading: false });
       throw error;
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  downloadReport: async (data) => {
+    set({ loading: true, error: null });
+    try {
+      const report = await convocatoriasRepository.downloadReport(data);
+      const blob = new Blob([report], { type: "application/xlsx" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "convocatorias_report.xlsx";
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading report:", error);
+      set({ error: "Error downloading report" });
     } finally {
       set({ loading: false });
     }

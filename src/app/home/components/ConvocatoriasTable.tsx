@@ -38,7 +38,7 @@ const columns = [
   { key: "acciones", label: "Acciones" },
 ];
 
-const rowsPerPage = 10;
+const rowsPerPage = 5;
 
 export default function ConvocatoriasTable() {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,7 +54,9 @@ export default function ConvocatoriasTable() {
   };
 
   const pages = useMemo(() => {
-    return convocatorias?.length ? Math.ceil(convocatorias.length / rowsPerPage) : 0;
+    return convocatorias?.length
+      ? Math.ceil(convocatorias.length / rowsPerPage)
+      : 0;
   }, [convocatorias]);
 
   const paginatedData = useMemo(() => {
@@ -86,7 +88,9 @@ export default function ConvocatoriasTable() {
         }}
       >
         <TableHeader columns={columns}>
-          {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+          {(column) => (
+            <TableColumn key={column.key}>{column.label}</TableColumn>
+          )}
         </TableHeader>
         <TableBody
           emptyContent={"No se encontraron convocatorias"}
@@ -121,6 +125,18 @@ export default function ConvocatoriasTable() {
                         <RiDeleteBin2Line className="text-neutral-200" />
                       </Button>
                     </div>
+                  ) : columnKey === "url" ? (
+                    <a
+                      className="text-primary underline"
+                      href={getKeyValue(
+                        item as { [key: string]: any },
+                        columnKey
+                      )}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      {getKeyValue(item as { [key: string]: any }, columnKey)}
+                    </a>
                   ) : (
                     getKeyValue(item as { [key: string]: any }, columnKey)
                   )}
@@ -136,6 +152,7 @@ export default function ConvocatoriasTable() {
           isOpen={isOpen}
           modalTitle="Editar Convocatoria"
           onClose={() => setIsOpen(false)}
+          onSubmit={() => setIsOpen(false)}
         >
           <div className="flex justify-end mt-4">
             <UploadConvocatoriaForm

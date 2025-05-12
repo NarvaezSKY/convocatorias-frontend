@@ -12,6 +12,7 @@ import Filtros from "./components/Filters";
 import { useConvocatorias } from "./hooks/UseConvocatorias";
 import { MdFileUpload } from "react-icons/md";
 import { toast } from "sonner";
+import { Divider } from "@heroui/react";
 
 export const Home = () => {
   const [filtros, setFiltros] = useState<ISearchConvocatoriasReq>({});
@@ -54,7 +55,6 @@ export const Home = () => {
           </div>
           {role && role === "superadmin" && (
             <Button
-              className="w-full max-w-xs"
               color="primary"
               size="md"
               variant="bordered"
@@ -65,22 +65,27 @@ export const Home = () => {
           )}
         </div>
         {mostrarFiltros && (
-          <Filtros
-            filtros={filtros}
-            onChange={(nuevoFiltro: Partial<ISearchConvocatoriasReq>) =>
-              setFiltros((prev) => ({ ...prev, ...nuevoFiltro }))
-            }
-            onReset={() => {
-              toast.success("Filtros reseteados"), setFiltros({});
-            }}
-          />
+          <>
+            <Divider />
+            <Filtros
+              filtros={filtros}
+              onChange={(nuevoFiltro: Partial<ISearchConvocatoriasReq>) =>
+                setFiltros((prev) => ({ ...prev, ...nuevoFiltro }))
+              }
+              onReset={() => {
+                toast.success("Filtros reseteados"), setFiltros({});
+              }}
+            />
+          </>
         )}
+        <Divider />
         <ConvocatoriasTable />
+        <Divider />
         <ReusableModal
           isOpen={isOpen}
           modalTitle="Subir Convocatoria"
           onClose={() => setIsOpen(false)}
-          onSubmit={() => {}}
+          onSubmit={() => setIsOpen(false)}
         >
           {user ? (
             <UploadConvocatoriaForm method="upload" userId={user.userid} />

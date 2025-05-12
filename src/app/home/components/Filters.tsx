@@ -2,6 +2,8 @@ import { Button, Input } from "@heroui/react";
 import React from "react";
 import { ISearchConvocatoriasReq } from "../../../core/convocatorias/domain/search-convocatorias";
 import { CiEraser } from "react-icons/ci";
+import { PiMicrosoftExcelLogoBold } from "react-icons/pi";
+import { useConvocatorias } from "../hooks/UseConvocatorias";
 
 interface FiltrosProps {
   filtros: ISearchConvocatoriasReq;
@@ -14,6 +16,7 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
     const { name, value } = e.target;
     onChange({ [name]: value });
   };
+  const { generarReporte } = useConvocatorias();
 
   return (
     <div>
@@ -26,7 +29,7 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
           <Input
             id="convocatoria"
             name="convocatoria"
-            placeholder="Buscar por convocatoria"
+            placeholder="ej. 1"
             size="sm"
             type="number"
             value={filtros.convocatoria || ""}
@@ -97,6 +100,18 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
           />
         </div>
 
+        <div className="flex flex-col justify-end">
+          <Button
+            color="success"
+            radius="sm"
+            size="sm"
+            type="button"
+            variant="bordered"
+            onClick={() => generarReporte(filtros)}
+          >
+            <PiMicrosoftExcelLogoBold className="mr-2" /> Generar reporte
+          </Button>
+        </div>
         <div className="flex flex-col justify-end">
           <Button
             color="danger"

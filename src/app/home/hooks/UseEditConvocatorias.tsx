@@ -8,6 +8,7 @@ export const useEditConvocatorias = () => {
     error,
     singleConvocatoria,
     clearSingleConvocatoria,
+    getAllConvocatorias,
   } = useConvocatoriasStore();
 
   const handlePatchConvocatorias = async (id: number, data: any) => {
@@ -15,6 +16,8 @@ export const useEditConvocatorias = () => {
       await patchConvocatorias(id, data);
       toast.success(`Convocatoria ${id} actualizada`);
       clearSingleConvocatoria();
+      getAllConvocatorias();
+
     } catch (error) {
       console.error("Error updating convocatoria:", error);
     }

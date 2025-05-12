@@ -39,6 +39,21 @@ const searchConvocatorias = async (
     }
 };
 
+const downloadReport = async (
+  data: ISearchConvocatoriasReq
+): Promise<Blob> => {
+  try {
+    const response = await axiosInstance.get(`/convocatorias/filter`, {
+      params: { ...data, report: true },
+      responseType: "blob",
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error descargando reporte:", error);
+    throw error;
+  }
+};
+
 const deleteConvocatorias = async (id: number): Promise<any> => {
     try {
         const response = await axiosInstance.delete(`/convocatorias/delete/${id}`);
@@ -75,5 +90,6 @@ export const convocatoriasRepository: IConvocatoriasRepository = {
     uploadConvocatorias,
     deleteConvocatorias,
     getSingleConvocatoria,
-    patchConvocatorias
+    patchConvocatorias,
+    downloadReport
 };

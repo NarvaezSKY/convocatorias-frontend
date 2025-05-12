@@ -13,10 +13,10 @@ import { toast } from "sonner";
 import { link as linkStyles } from "@heroui/theme";
 import { siteConfig } from "../config/site";
 import { ThemeSwitch } from "./theme-switch";
-import { TwitterIcon, GithubIcon, DiscordIcon } from "./icons";
 import { Logo } from "./icons";
 import { useAuthStore } from "@/app/shared/auth.store";
 import { FaUserAlt } from "react-icons/fa";
+import { Button } from "@heroui/button";
 
 export const Navbar = () => {
   const { user, logout } = useAuthStore();
@@ -29,7 +29,12 @@ export const Navbar = () => {
   };
 
   return (
-    <HeroUINavbar maxWidth="xl" position="sticky">
+    <HeroUINavbar
+      className="border-b border-neutral-400"
+      isBlurred={true}
+      maxWidth="xl"
+      position="sticky"
+    >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand className="gap-3 max-w-fit">
           <Link
@@ -42,6 +47,19 @@ export const Navbar = () => {
           </Link>
         </NavbarBrand>
         <div className="hidden lg:flex gap-4 justify-start ml-2">
+          {isAuthenticated && (
+            <div className="flex items-center gap-2">
+              <FaUserAlt /> <p>Bienvenido, {user?.username}</p>
+            </div>
+          )}
+        </div>
+      </NavbarContent>
+
+      <NavbarContent
+        className="hidden sm:flex basis-1/5 sm:basis-full"
+        justify="end"
+      >
+        <NavbarItem className="hidden sm:flex gap-2">
           {!isAuthenticated ? (
             siteConfig.navItems.map((item, index) => (
               <Link
@@ -54,46 +72,22 @@ export const Navbar = () => {
             ))
           ) : (
             <div className="flex gap-4">
-              <div className="flex items-center gap-2">
-                <FaUserAlt /> <p>Bienvenido, {user?.username}</p>
-              </div>
-
-              <Link
-                className={clsx(
-                  linkStyles({ color: "danger" }),
-                  "cursor-pointer"
-                )}
+              <Button
+                className="w-full"
+                color="danger"
+                size="sm"
+                variant="bordered"
                 onClick={handleLogout}
               >
                 Cerrar sesión
-              </Link>
+              </Button>
             </div>
           )}
-        </div>
-      </NavbarContent>
-
-      <NavbarContent
-        className="hidden sm:flex basis-1/5 sm:basis-full"
-        justify="end"
-      >
-        <NavbarItem className="hidden sm:flex gap-2">
-          <Link isExternal href={siteConfig.links.twitter} title="Twitter">
-            <TwitterIcon className="text-default-500" />
-          </Link>
-          <Link isExternal href={siteConfig.links.discord} title="Discord">
-            <DiscordIcon className="text-default-500" />
-          </Link>
-          <Link isExternal href={siteConfig.links.github} title="GitHub">
-            <GithubIcon className="text-default-500" />
-          </Link>
           <ThemeSwitch />
         </NavbarItem>
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Link isExternal href={siteConfig.links.github}>
-          <GithubIcon className="text-default-500" />
-        </Link>
         <ThemeSwitch />
         <NavbarMenuToggle />
       </NavbarContent>
@@ -120,12 +114,15 @@ export const Navbar = () => {
             ))
           ) : (
             <NavbarMenuItem>
-              <button
-                className="text-danger text-lg text-left w-full"
+              <Button
+                className="w-full"
+                color="danger"
+                size="lg"
+                variant="bordered"
                 onClick={handleLogout}
               >
                 Cerrar sesión
-              </button>
+              </Button>
             </NavbarMenuItem>
           )}
         </div>
