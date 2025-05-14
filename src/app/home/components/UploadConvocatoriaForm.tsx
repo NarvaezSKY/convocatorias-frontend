@@ -131,7 +131,7 @@ export function UploadConvocatoriaForm({
 
       <Select
         isRequired
-        label="Tipo de Postulación"
+        label="Mecanismo"
         variant="bordered"
         {...register("tipo_postulacion", {
           required: "Este campo es obligatorio",
@@ -148,13 +148,24 @@ export function UploadConvocatoriaForm({
         <SelectItem key="Proyecto IAP">Proyecto IAP</SelectItem>
       </Select>
 
-      <Input
+      <Select
         isRequired
         label="Estado"
-        placeholder="Nuevo estado"
         variant="bordered"
-        {...register("nuevo_estado")}
-      />
+        {...register("nuevo_estado", {
+          required: "Este campo es obligatorio",
+        })}
+        errorMessage={errors.nuevo_estado?.message}
+        isInvalid={!!errors.nuevo_estado}
+      >
+        <SelectItem key="Postulaciones en recomendación de continuidad">
+          Postulaciones en recomendación de continuidad
+        </SelectItem>
+        <SelectItem key="Postulaciones con observaciones">
+          Postulaciones con observaciones
+        </SelectItem>
+        <SelectItem key="En ejecución">En ejecución</SelectItem>
+      </Select>
 
       <Input
         isRequired
