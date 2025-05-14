@@ -20,8 +20,10 @@ export default function DefaultLayout({
           href="https://heroui.com"
           title="heroui.com homepage"
         >
-          <span className="text-default-600">Powered by</span>
-          <p className="text-primary">HeroUI</p>
+          <span>
+            © Seguimiento Innovación y Competitividad -{" "}
+            <span className="font-bold">SENA</span> Regional Cauca - 2025
+          </span>
         </Link>
       </footer>
     </div>

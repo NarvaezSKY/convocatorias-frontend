@@ -48,7 +48,7 @@ export default function ConvocatoriasTable() {
   const { user } = useAuthStore();
   const { getSingleConvocatoria, singleConvocatoria } = useConvocatoriasStore();
 
-  const handleEdit = async (id: number) => {
+  const handleEdit = async (id: string) => {
     await getSingleConvocatoria(id);
     setIsOpen(true);
   };

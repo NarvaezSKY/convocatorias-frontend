@@ -54,7 +54,7 @@ const downloadReport = async (
   }
 };
 
-const deleteConvocatorias = async (id: number): Promise<any> => {
+const deleteConvocatorias = async (id: string): Promise<any> => {
     try {
         const response = await axiosInstance.delete(`/convocatorias/delete/${id}`);
         return response.data;
@@ -64,7 +64,7 @@ const deleteConvocatorias = async (id: number): Promise<any> => {
     }
 };
 
-const getSingleConvocatoria= async (id: number): Promise<IGetAllConvocatoriasRes> => {
+const getSingleConvocatoria= async (id: string): Promise<IGetAllConvocatoriasRes> => {
     try {
         const response = await axiosInstance.get(`/convocatorias/get/${id}`);
         return response.data;
@@ -74,7 +74,7 @@ const getSingleConvocatoria= async (id: number): Promise<IGetAllConvocatoriasRes
     }
 }
 
-const patchConvocatorias = async (id: number, data: IPatchConvocatoriasReq): Promise<any> => {
+const patchConvocatorias = async (id: string, data: IPatchConvocatoriasReq): Promise<any> => {
     try {
         const response = await axiosInstance.patch(`/convocatorias/update/${id}`, data);
         return response.data;

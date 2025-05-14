@@ -24,10 +24,10 @@ type Actions = {
   getAllConvocatorias: () => Promise<IGetAllConvocatoriasRes[]>;
   uploadConvocatoria: (data: IUploadConvocatoriaReq) => Promise<void>;
   searchConvocatorias: (data: ISearchConvocatoriasReq) => Promise<void>;
-  deleteConvocatorias: (id: number) => Promise<void>;
-  getSingleConvocatoria: (id: number) => Promise<IGetAllConvocatoriasRes>;
+  deleteConvocatorias: (id: string) => Promise<void>;
+  getSingleConvocatoria: (id: string) => Promise<IGetAllConvocatoriasRes>;
   patchConvocatorias: (
-    id: number,
+    id: string,
     data: IPatchConvocatoriasReq
   ) => Promise<void>;
   clearSingleConvocatoria: () => void;
@@ -148,7 +148,7 @@ export const useConvocatoriasStore = create<Store>((set) => ({
       await deleteConvocatoriasUseCase(convocatoriasRepository)(id);
       set((state) => ({
         convocatorias: state.convocatorias.filter(
-          (convocatoria) => convocatoria._id !== id
+          (convocatoria) => (convocatoria._id) !== id
         ),
       }));
     } catch (error) {

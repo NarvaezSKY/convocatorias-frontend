@@ -11,7 +11,7 @@ export const useEditConvocatorias = () => {
     getAllConvocatorias,
   } = useConvocatoriasStore();
 
-  const handlePatchConvocatorias = async (id: number, data: any) => {
+  const handlePatchConvocatorias = async (id: string, data: any) => {
     try {
       await patchConvocatorias(id, data);
       toast.success(`Convocatoria ${id} actualizada`);

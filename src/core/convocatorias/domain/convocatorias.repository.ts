@@ -7,8 +7,8 @@ export interface IConvocatoriasRepository {
   getAllConvocatorias(): Promise<IGetAllConvocatoriasRes[]>;
   searchConvocatorias(data: ISearchConvocatoriasReq): Promise<IGetAllConvocatoriasRes[]>;
   uploadConvocatorias(data: IUploadConvocatoriaReq): Promise<any>;
-  deleteConvocatorias(id: number): Promise<any>;
-  getSingleConvocatoria (id: number): Promise<IGetAllConvocatoriasRes>
-  patchConvocatorias(id: number, data: IPatchConvocatoriasReq): Promise<any>;
+  deleteConvocatorias(id: string): Promise<any>;
+  getSingleConvocatoria (id: string): Promise<IGetAllConvocatoriasRes>
+  patchConvocatorias(id: string, data: IPatchConvocatoriasReq): Promise<any>;
   downloadReport(data: ISearchConvocatoriasReq): Promise<Blob>;
 }

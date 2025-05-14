@@ -41,7 +41,7 @@ export const Navbar = () => {
           <Link
             className="flex justify-start items-center gap-1"
             color="foreground"
-            href="/"
+            href="/home"
           >
             <Logo />
             <p className="font-bold text-inherit">Convocatorias</p>

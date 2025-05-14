@@ -23,8 +23,8 @@ export const useConvocatorias = () => {
     onLoadMore: () => {},
   });
 
-  const handleDelete = (id: number) => {
-    deleteConvocatorias(Number(id))
+  const handleDelete = (id: string) => {
+    deleteConvocatorias(id)
       .then(() => {
         getAllConvocatorias();
         toast.success("Convocatoria eliminada");

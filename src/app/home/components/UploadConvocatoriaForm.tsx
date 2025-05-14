@@ -1,4 +1,11 @@
-import { Form, Input, Button, Textarea, Select, SelectItem } from "@heroui/react";
+import {
+  Form,
+  Input,
+  Button,
+  Textarea,
+  Select,
+  SelectItem,
+} from "@heroui/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useUploadConvocatoria } from "../hooks/UseUploadForm";
@@ -9,7 +16,7 @@ interface Props {
   userId: string;
   method: "upload" | "edit";
   initialValues?: Partial<IUploadConvocatoriaReq>;
-  convocatoriaId?: number;
+  convocatoriaId?: string;
 }
 
 export function UploadConvocatoriaForm({
@@ -66,7 +73,7 @@ export function UploadConvocatoriaForm({
       onReset={() => reset()}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <Input
+      {/* <Input
         isRequired
         label="Convocatoria"
         placeholder="Nombre de la convocatoria"
@@ -75,7 +82,22 @@ export function UploadConvocatoriaForm({
         errorMessage={errors.convocatoria?.message}
         isInvalid={!!errors.convocatoria}
         type="number"
-      />
+      /> */}
+
+      <Select
+        isRequired
+        label="Convocatoria"
+        placeholder="Selecciona una convocatoria"
+        variant="bordered"
+        {...register("convocatoria", { required: "Este campo es obligatorio" })}
+        errorMessage={errors.convocatoria?.message}
+        isInvalid={!!errors.convocatoria}
+      >
+        <SelectItem key="1">1</SelectItem>
+        <SelectItem key="2">2</SelectItem>
+        <SelectItem key="3">3</SelectItem>
+        <SelectItem key="4">4</SelectItem>
+      </Select>
 
       <Input
         isRequired
@@ -123,14 +145,12 @@ export function UploadConvocatoriaForm({
         <SelectItem key="Proyecto externo I+D+I">
           Proyecto externo I+D+I
         </SelectItem>
-        <SelectItem key="Proyecto IAP">
-          Proyecto IAP
-        </SelectItem>
+        <SelectItem key="Proyecto IAP">Proyecto IAP</SelectItem>
       </Select>
 
       <Input
-        label="Estado"
         isRequired
+        label="Estado"
         placeholder="Nuevo estado"
         variant="bordered"
         {...register("nuevo_estado")}

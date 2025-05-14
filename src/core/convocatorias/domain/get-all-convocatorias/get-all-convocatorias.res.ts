@@ -1,5 +1,5 @@
 export interface IGetAllConvocatoriasRes {
-    _id: number;
+    _id: string;
     convocatoria: number;
     consecutivo: string;
     direccion_oficina_regional: string;

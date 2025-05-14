@@ -1,5 +1,5 @@
 export interface ISearchConvocatoriasReq {
-    id?: string;
+    _id?: string;
     convocatoria?: string;
     consecutivo?: string;
     direccion_oficina_regional?: string;
