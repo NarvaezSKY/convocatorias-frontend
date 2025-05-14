@@ -1,4 +1,4 @@
-import { Form, Input, Button, Textarea } from "@heroui/react";
+import { Form, Input, Button, Textarea, Select, SelectItem } from "@heroui/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useUploadConvocatoria } from "../hooks/UseUploadForm";
@@ -86,33 +86,51 @@ export function UploadConvocatoriaForm({
         errorMessage={errors.consecutivo?.message}
         isInvalid={!!errors.consecutivo}
       />
-
-      <Input
+      <Select
         isRequired
-        label="Dirección Oficina Regional"
-        placeholder="Ej: Dirección General"
+        label="Direccion oficina regional"
         variant="bordered"
         {...register("direccion_oficina_regional", {
           required: "Este campo es obligatorio",
         })}
         errorMessage={errors.direccion_oficina_regional?.message}
         isInvalid={!!errors.direccion_oficina_regional}
-      />
+      >
+        <SelectItem key="9307 - CENTRO DE COMERCIO Y SERVICIOS">
+          9307 - CENTRO DE COMERCIO Y SERVICIOS
+        </SelectItem>
+        <SelectItem key="9221 - CENTRO DE TELEINFORMATICA Y PRODUCCIÓN INDUSTRIAL">
+          9221 - CENTRO DE TELEINFORMATICA Y PRODUCCIÓN INDUSTRIAL
+        </SelectItem>
+        <SelectItem key="9113 - CENTRO AGROPECUARIO">
+          9113 - CENTRO AGROPECUARIO
+        </SelectItem>
+      </Select>
 
-      <Input
+      <Select
         isRequired
         label="Tipo de Postulación"
-        placeholder="Ej: Interna, Externa"
         variant="bordered"
         {...register("tipo_postulacion", {
           required: "Este campo es obligatorio",
         })}
-        errorMessage={errors.tipo_postulacion?.message}
-        isInvalid={!!errors.tipo_postulacion}
-      />
+        errorMessage={errors.direccion_oficina_regional?.message}
+        isInvalid={!!errors.direccion_oficina_regional}
+      >
+        <SelectItem key="Proyecto interno I+D+I">
+          Proyecto interno I+D+I
+        </SelectItem>
+        <SelectItem key="Proyecto externo I+D+I">
+          Proyecto externo I+D+I
+        </SelectItem>
+        <SelectItem key="Proyecto IAP">
+          Proyecto IAP
+        </SelectItem>
+      </Select>
 
       <Input
-        label="Estado (opcional)"
+        label="Estado"
+        isRequired
         placeholder="Nuevo estado"
         variant="bordered"
         {...register("nuevo_estado")}
@@ -153,21 +171,21 @@ export function UploadConvocatoriaForm({
       />
 
       <Input
-        label="Fecha de Aprobación (opcional)"
+        label="Fecha de Aprobación"
         type="date"
         variant="bordered"
         {...register("fecha_aprobacion")}
       />
 
       <Input
-        label="Fecha de Inicio (opcional)"
+        label="Fecha de Inicio"
         type="date"
         variant="bordered"
         {...register("fecha_inicio")}
       />
 
       <Input
-        label="Fecha de Finalización (opcional)"
+        label="Fecha de Finalización"
         type="date"
         variant="bordered"
         {...register("fecha_fin")}
@@ -180,7 +198,7 @@ export function UploadConvocatoriaForm({
         {...register("observaciones")}
       />
       <Input
-        label="URL (opcional)"
+        label="URL"
         placeholder="Ej: https://www.ejemplo.com"
         type="url"
         variant="bordered"

@@ -4,6 +4,7 @@ import { ISearchConvocatoriasReq } from "../../../core/convocatorias/domain/sear
 import { CiEraser } from "react-icons/ci";
 import { PiMicrosoftExcelLogoBold } from "react-icons/pi";
 import { useConvocatorias } from "../hooks/UseConvocatorias";
+import { useAuthStore } from "@/app/shared/auth.store";
 
 interface FiltrosProps {
   filtros: ISearchConvocatoriasReq;
@@ -12,6 +13,7 @@ interface FiltrosProps {
 }
 
 export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
+  const { user } = useAuthStore();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     onChange({ [name]: value });
@@ -99,19 +101,36 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
             onChange={handleChange}
           />
         </div>
+        {user?.role === "superadmin" && (
+          <div className="flex flex-col justify-end">
+            <Button
+              color="success"
+              radius="sm"
+              size="sm"
+              type="button"
+              variant="bordered"
+              onClick={() => generarReporte(filtros)}
+            >
+              <PiMicrosoftExcelLogoBold className="mr-2" /> Generar reporte
+            </Button>
+          </div>
+        )}
 
-        <div className="flex flex-col justify-end">
-          <Button
-            color="success"
-            radius="sm"
-            size="sm"
-            type="button"
-            variant="bordered"
-            onClick={() => generarReporte(filtros)}
-          >
-            <PiMicrosoftExcelLogoBold className="mr-2" /> Generar reporte
-          </Button>
-        </div>
+        {user?.role === "admin" && (
+          <div className="flex flex-col justify-end">
+            <Button
+              color="success"
+              radius="sm"
+              size="sm"
+              type="button"
+              variant="bordered"
+              onClick={() => generarReporte(filtros)}
+            >
+              <PiMicrosoftExcelLogoBold className="mr-2" /> Generar reporte
+            </Button>
+          </div>
+        )}
+
         <div className="flex flex-col justify-end">
           <Button
             color="danger"

@@ -14,10 +14,12 @@ import { MdFileUpload } from "react-icons/md";
 import { FaUserAlt } from "react-icons/fa";
 import { toast } from "sonner";
 import { Divider } from "@heroui/react";
+import { UserList } from "./components/UserList";
 
 export const Home = () => {
   const [filtros, setFiltros] = useState<ISearchConvocatoriasReq>({});
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isUsersOpen, setIsUsersOpen] = React.useState(false);
   const { role, user } = useAuthStore();
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
   const { handleSearch } = useConvocatorias();
@@ -65,14 +67,25 @@ export const Home = () => {
                 <MdFileUpload /> Subir Convocatoria
               </Button>
               <Button
+                onClick={() => setIsUsersOpen(prev => !prev)}
                 color="primary"
                 size="md"
                 variant="bordered">
-                <FaUserAlt /> Ver Usuarios
+
+                {isUsersOpen ? <IoMdCloseCircle /> : <FaUserAlt />}
+                {isUsersOpen ? "Cerrar Usuarios" : "Usuarios"}
               </Button>
             </div>
           )}
         </div>
+        {
+          isUsersOpen && user?.role === "superadmin" && (
+            <div className=" w-full flex flex-col gap-2">
+              <Divider />
+              <UserList />
+            </div>
+          )
+        }
         {mostrarFiltros && (
           <>
             <Divider />
@@ -87,6 +100,7 @@ export const Home = () => {
             />
           </>
         )}
+
         <Divider />
         <ConvocatoriasTable />
         <Divider />
