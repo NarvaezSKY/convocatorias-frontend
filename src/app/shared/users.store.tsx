@@ -43,7 +43,7 @@ export const useUsersStore = create<Store>((set) => ({
 
             set((state) => ({
                 users: state.users.map((user) =>
-                    user.id === String(data.userId) ? { ...user, role: data.newRole } : user
+                    user._id === String(data.userId) ? { ...user, role: data.newRole } : user
                 ),
                 loading: false,
             }));

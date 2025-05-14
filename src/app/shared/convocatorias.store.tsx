@@ -148,7 +148,7 @@ export const useConvocatoriasStore = create<Store>((set) => ({
       await deleteConvocatoriasUseCase(convocatoriasRepository)(id);
       set((state) => ({
         convocatorias: state.convocatorias.filter(
-          (convocatoria) => convocatoria.id !== id
+          (convocatoria) => convocatoria._id !== id
         ),
       }));
     } catch (error) {
