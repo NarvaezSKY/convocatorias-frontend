@@ -10,7 +10,7 @@ export const useUserList = () => {
     getAllUsers();
   }, []);
 
-  const handleEditRole = (userId: number, newRole: string) => {
+  const handleEditRole = (userId: string, newRole: string) => {
 
     const data = {
       userId,

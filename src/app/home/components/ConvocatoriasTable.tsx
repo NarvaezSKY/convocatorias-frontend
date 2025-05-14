@@ -99,7 +99,7 @@ export default function ConvocatoriasTable() {
           loadingState={convocatorias.length === 0 ? "loading" : "idle"}
         >
           {(item) => (
-            <TableRow key={item.id}>
+            <TableRow key={item._id}>
               {(columnKey) => (
                 <TableCell>
                   {columnKey === "acciones" && user?.role === "superadmin" ? (
@@ -110,7 +110,7 @@ export default function ConvocatoriasTable() {
                         radius="full"
                         size="md"
                         variant="bordered"
-                        onClick={() => handleEdit(item.id)}
+                        onClick={() => handleEdit(item._id)}
                       >
                         <FaEdit className="text-neutral-200" />
                       </Button>
@@ -120,7 +120,7 @@ export default function ConvocatoriasTable() {
                         radius="full"
                         size="md"
                         variant="bordered"
-                        onClick={() => handleDelete(item.id)}
+                        onClick={() => handleDelete(item._id)}
                       >
                         <RiDeleteBin2Line className="text-neutral-200" />
                       </Button>
@@ -156,7 +156,7 @@ export default function ConvocatoriasTable() {
         >
           <div className="flex justify-end mt-4">
             <UploadConvocatoriaForm
-              convocatoriaId={singleConvocatoria.id}
+              convocatoriaId={singleConvocatoria._id}
               initialValues={
                 singleConvocatoria as unknown as IUploadConvocatoriaReq
               }

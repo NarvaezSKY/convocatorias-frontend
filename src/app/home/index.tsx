@@ -67,10 +67,10 @@ export const Home = () => {
                 <MdFileUpload /> Subir Convocatoria
               </Button>
               <Button
-                onClick={() => setIsUsersOpen(prev => !prev)}
                 color="primary"
                 size="md"
-                variant="bordered">
+                variant="bordered"
+                onClick={() => setIsUsersOpen(prev => !prev)}>
 
                 {isUsersOpen ? <IoMdCloseCircle /> : <FaUserAlt />}
                 {isUsersOpen ? "Cerrar Usuarios" : "Usuarios"}

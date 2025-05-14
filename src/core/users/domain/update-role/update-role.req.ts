@@ -1,4 +1,4 @@
 export interface IUpdateRoleReq {
-  userId: number;
+  userId: string;
   newRole: string;
 }

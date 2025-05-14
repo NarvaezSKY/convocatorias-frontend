@@ -8,7 +8,7 @@ import {
   Skeleton,
   Button,
   Select,
-  SelectItem
+  SelectItem,
 } from "@heroui/react";
 import { useUserList } from "../hooks/UseUserList";
 import ReusableModal from "@/app/shared/components/Modal";
@@ -17,13 +17,14 @@ import { IGetAllUsersRes } from "@/core/users/domain/get-all-users";
 
 const roles = [
   { key: "user", label: "Usuario" },
-  { key: "admin", label: "Administrador" }
+  { key: "admin", label: "Administrador" },
 ];
 
 export const UserList = () => {
   const { users, loading, handleEditRole } = useUserList();
   const [isOpen, setIsOpen] = React.useState(false);
-  const [selectedUser, setSelectedUser] = React.useState<IGetAllUsersRes | null>(null);
+  const [selectedUser, setSelectedUser] =
+    React.useState<IGetAllUsersRes | null>(null);
   const [selectedRole, setSelectedRole] = React.useState<string | null>(null);
 
   return (
@@ -39,43 +40,58 @@ export const UserList = () => {
         <TableBody>
           {loading
             ? Array.from({ length: 4 }).map((_, index) => (
-              <TableRow key={`skeleton-${index}`}>
-                <TableCell>
-                  <Skeleton className="w-24 h-4 rounded-md bg-default-300" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="w-32 h-4 rounded-md bg-default-300" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="w-20 h-4 rounded-md bg-default-300" />
-                </TableCell>
-                <TableCell>
-                  <div className="flex gap-2">
-                    <Skeleton className="w-16 h-6 rounded-md bg-default-300" />
-                    <Skeleton className="w-20 h-6 rounded-md bg-default-300" />
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))
+                <TableRow key={`skeleton-${index}`}>
+                  <TableCell>
+                    <Skeleton className="w-24 h-4 rounded-md bg-default-300" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="w-32 h-4 rounded-md bg-default-300" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="w-20 h-4 rounded-md bg-default-300" />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-2">
+                      <Skeleton className="w-16 h-6 rounded-md bg-default-300" />
+                      <Skeleton className="w-20 h-6 rounded-md bg-default-300" />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
             : users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.username}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell>
-                  <div className="flex gap-2">
-
-                    <Button isDisabled={user.role === "superadmin"} variant="bordered" color="warning" size="sm" onClick={() => { setIsOpen(true); setSelectedUser(user); }} >
-                      Cambiar rol
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+                <TableRow key={user._id}>
+                  <TableCell>{user.username}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-2">
+                      <Button
+                        color="warning"
+                        isDisabled={user.role === "superadmin"}
+                        size="sm"
+                        variant="bordered"
+                        onClick={() => {
+                          setIsOpen(true);
+                          setSelectedUser(user);
+                        }}
+                      >
+                        Cambiar rol
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
         </TableBody>
       </Table>
 
-      <ReusableModal isOpen={isOpen} onClose={() => { setIsOpen(false); setSelectedUser(null); }} modalTitle="Cambiar rol" >
+      <ReusableModal
+        isOpen={isOpen}
+        modalTitle="Cambiar rol"
+        onClose={() => {
+          setIsOpen(false);
+          setSelectedUser(null);
+        }}
+      >
         <div className="flex flex-col gap-4">
           <label className="text-sm text-neutral-700" htmlFor="rol">
             Usuario seleccionado:
@@ -85,9 +101,23 @@ export const UserList = () => {
             Rol actual:
             <div className="font-semibold">{selectedUser?.role}</div>
           </label>
-          <Select className="max-w-xs" label="Selecciona un rol" onChange={(e) => setSelectedRole(e.target.value)}>
+          <Select
+            className="max-w-xs"
+            label="Selecciona un rol"
+            onChange={(e) => setSelectedRole(e.target.value)}
+          >
             {roles.map((role) => (
-              <SelectItem isDisabled={role.key === selectedUser?.role} onSelect={() => { setSelectedUser(selectedUser ? { ...selectedUser, role: role.key } : null); }} key={role.key}>{role.label}</SelectItem>
+              <SelectItem
+                key={role.key}
+                isDisabled={role.key === selectedUser?.role}
+                onSelect={() => {
+                  setSelectedUser(
+                    selectedUser ? { ...selectedUser, role: role.key } : null
+                  );
+                }}
+              >
+                {role.label}
+              </SelectItem>
             ))}
           </Select>
 
@@ -98,11 +128,11 @@ export const UserList = () => {
               variant="bordered"
               onClick={() => {
                 if (selectedUser) {
-                  handleEditRole(parseInt(selectedUser.id), selectedRole || "");
+                  handleEditRole(selectedUser._id, selectedRole || "");
                 }
                 setIsOpen(false);
                 setSelectedUser(null);
-              }}
+              }}  
             >
               Guardar
             </Button>
@@ -110,7 +140,10 @@ export const UserList = () => {
               color="danger"
               size="md"
               variant="bordered"
-              onClick={() => { setIsOpen(false); setSelectedUser(null); }}
+              onClick={() => {
+                setIsOpen(false);
+                setSelectedUser(null);
+              }}
             >
               Cancelar
             </Button>
