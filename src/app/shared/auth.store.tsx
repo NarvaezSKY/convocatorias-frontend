@@ -68,6 +68,7 @@ export const useAuthStore = create<Store>((set) => ({
       set({ registerError: null });
     } catch (error) {
       if (error instanceof Error) {
+        console.error(error.message);
         set({ registerError: error.message });
       } else {
         set({ registerError: "An unknown error occurred" });

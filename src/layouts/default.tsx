@@ -15,10 +15,8 @@ export default function DefaultLayout({
       </main>
       <footer className="w-full flex items-center justify-center py-3">
         <Link
-          isExternal
           className="flex items-center gap-1 text-current"
-          href="https://heroui.com"
-          title="heroui.com homepage"
+          href="https://seguimiento-innovacion-y-competitividad.vercel.app/home"
         >
           <span>
             © Seguimiento Innovación y Competitividad -{" "}

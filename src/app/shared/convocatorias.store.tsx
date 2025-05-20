@@ -18,6 +18,7 @@ type State = {
   singleConvocatoria: IGetAllConvocatoriasRes | null;
   loading: boolean;
   error: string | null;
+  filterLoading: boolean;
 };
 
 type Actions = {
@@ -41,6 +42,7 @@ export const useConvocatoriasStore = create<Store>((set) => ({
   singleConvocatoria: null,
   loading: false,
   error: null,
+  filterLoading: false,
   getAllConvocatorias: async () => {
     set({ loading: true, error: null });
     try {
@@ -128,7 +130,7 @@ export const useConvocatoriasStore = create<Store>((set) => ({
   },
 
   searchConvocatorias: async (data) => {
-    set({ loading: true, error: null });
+    set({ filterLoading: true, error: null });
     try {
       const convocatorias = await searchConvocatoriasUseCase(
         convocatoriasRepository
@@ -138,7 +140,7 @@ export const useConvocatoriasStore = create<Store>((set) => ({
       console.error("Error searching convocatorias:", error);
       set({ error: "Error searching convocatorias" });
     } finally {
-      set({ loading: false });
+      set({ filterLoading: false });
     }
   },
 

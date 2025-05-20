@@ -18,7 +18,7 @@ import { UserList } from "./components/UserList";
 
 export const Home = () => {
   const [filtros, setFiltros] = useState<ISearchConvocatoriasReq>({});
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [isUsersOpen, setIsUsersOpen] = React.useState(false);
   const { role, user } = useAuthStore();
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
@@ -111,7 +111,7 @@ export const Home = () => {
           onSubmit={() => setIsOpen(false)}
         >
           {user ? (
-            <UploadConvocatoriaForm method="upload" userId={user.userid} />
+            <UploadConvocatoriaForm method="upload" userId={user.userid} onClose={() => setIsOpen(false)} />
           ) : (
             <p>Usuario no autenticado, por favor inicie sesión.</p>
           )}

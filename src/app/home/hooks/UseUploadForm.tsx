@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { IUploadConvocatoriaReq } from "../../../core/convocatorias/domain/upload-convocatorias/upload-convocatoria.req";
+import { IUploadConvocatoriaReq } from "../../../core/convocatorias/domain/upload-convocatorias";
 import { useConvocatoriasStore } from "@/app/shared/convocatorias.store";
 
 export const useUploadConvocatoria = () => {

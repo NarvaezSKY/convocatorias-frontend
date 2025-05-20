@@ -3,6 +3,7 @@ import axiosInstance from '../../../config/axios/instance';
 import { IAuthRepository } from '../domain/auth.repository';
 import { ILoginReq } from '../domain/login';
 import { IRegisterReq } from '../domain/register';
+import axios from 'axios';
 
 
 const login = async (data: ILoginReq) => {
@@ -33,12 +34,18 @@ const userRegister = async (data: IRegisterReq) => {
     try {
         const response = await axiosInstance.post("/auth/register/user", data);
         return response.data;
-
     } catch (error) {
         console.error("Error during register:", error);
-        throw error;
+
+        if (axios.isAxiosError(error)) {
+            const message = error.response?.data?.message || "Unknown error";
+            throw new Error(message);
+        }
+
+        throw new Error("Unexpected error occurred");
     }
 }
+
 
 const verify = async () => {
     try {

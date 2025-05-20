@@ -17,6 +17,7 @@ interface Props {
   method: "upload" | "edit";
   initialValues?: Partial<IUploadConvocatoriaReq>;
   convocatoriaId?: string;
+  onClose?: () => void;
 }
 
 export function UploadConvocatoriaForm({
@@ -24,6 +25,7 @@ export function UploadConvocatoriaForm({
   method,
   convocatoriaId,
   initialValues,
+  onClose,
 }: Props) {
   const {
     register,
@@ -50,6 +52,9 @@ export function UploadConvocatoriaForm({
 
     if (method === "upload") {
       await uploadConvocatoria(payload);
+      if (onClose) {
+        onClose();
+      }
     } else if (method === "edit" && convocatoriaId !== undefined) {
       await handlePatchConvocatorias(convocatoriaId, payload);
     }
@@ -73,17 +78,6 @@ export function UploadConvocatoriaForm({
       onReset={() => reset()}
       onSubmit={handleSubmit(onSubmit)}
     >
-      {/* <Input
-        isRequired
-        label="Convocatoria"
-        placeholder="Nombre de la convocatoria"
-        variant="bordered"
-        {...register("convocatoria", { required: "Este campo es obligatorio" })}
-        errorMessage={errors.convocatoria?.message}
-        isInvalid={!!errors.convocatoria}
-        type="number"
-      /> */}
-
       <Select
         isRequired
         label="Convocatoria"
@@ -111,6 +105,7 @@ export function UploadConvocatoriaForm({
       <Select
         isRequired
         label="Direccion oficina regional"
+        placeholder="Selecciona un centro"
         variant="bordered"
         {...register("direccion_oficina_regional", {
           required: "Este campo es obligatorio",
@@ -132,6 +127,7 @@ export function UploadConvocatoriaForm({
       <Select
         isRequired
         label="Mecanismo"
+        placeholder="Selecciona tipo de proyecto"
         variant="bordered"
         {...register("tipo_postulacion", {
           required: "Este campo es obligatorio",
@@ -139,17 +135,19 @@ export function UploadConvocatoriaForm({
         errorMessage={errors.direccion_oficina_regional?.message}
         isInvalid={!!errors.direccion_oficina_regional}
       >
-        <SelectItem key="Proyecto interno I+D+I">
-          Proyecto interno I+D+I
+        <SelectItem key="ACTUALIZACION_EQUIPO">
+          ACTUALIZACION_EQUIPO
         </SelectItem>
-        <SelectItem key="Proyecto externo I+D+I">
-          Proyecto externo I+D+I
+        <SelectItem key="P_METODOLOGIA_GENERAL_AJUSTADA">
+          P_METODOLOGIA_GENERAL_AJUSTADA
         </SelectItem>
-        <SelectItem key="Proyecto IAP">Proyecto IAP</SelectItem>
+        <SelectItem key="PLAN DE ACCIÓN">PLAN DE ACCIÓN</SelectItem>
+        <SelectItem key="PLANES_OPERATIVO">PLANES_OPERATIVO</SelectItem>
       </Select>
 
       <Select
         isRequired
+        placeholder="Selecciona un estado"
         label="Estado"
         variant="bordered"
         {...register("nuevo_estado", {
@@ -161,9 +159,16 @@ export function UploadConvocatoriaForm({
         <SelectItem key="Postulaciones en recomendación de continuidad">
           Postulaciones en recomendación de continuidad
         </SelectItem>
+        <SelectItem key="Postulaciones en revisión">
+          Postulaciones en revisión
+        </SelectItem>
+        <SelectItem key="Postulaciones en revisión del validador">
+          Postulaciones en revisión del validador
+        </SelectItem>
         <SelectItem key="Postulaciones con observaciones">
           Postulaciones con observaciones
         </SelectItem>
+        <SelectItem key="AVAL REGIONAL">AVAL REGIONAL</SelectItem>
         <SelectItem key="En ejecución">En ejecución</SelectItem>
       </Select>
 

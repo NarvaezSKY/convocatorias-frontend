@@ -2,7 +2,6 @@ import { Form, Input, Button } from "@heroui/react";
 import { useForm } from "react-hook-form";
 import { useRegister } from "../hooks/UseRegister";
 import { IRegisterReq } from "@/core/auth/domain/register";
-
 interface FormValues extends IRegisterReq {
   confirmPassword: string;
 }
@@ -33,6 +32,14 @@ export function RegisterForm() {
     >
       <div className="flex flex-col gap-4 rounded-lg p-4">
         <h1 className="text-3xl font-bold mb-2">Registrarse</h1>
+
+        <p className="text-sm text-gray-500 mb-2">
+          Si ya tienes una cuenta,{" "}
+          <a className="text-primary" href="/">
+            {" "}
+            inicia sesión aqui{" "}
+          </a>
+        </p>
 
         <Input
           isRequired

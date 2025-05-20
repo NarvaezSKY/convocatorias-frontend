@@ -5,6 +5,7 @@ import { Home } from "@/app/home";
 import Register from "@/app/register";
 import { useEffect } from "react";
 import { useAuthStore } from "@/app/shared/auth.store";
+import { NotFound } from "@/layouts/404";
 
 function App() {
 
@@ -30,6 +31,8 @@ function App() {
       />
       <Route element={<Login />} path="/" />
       <Route element={<Register />} path="/register" />
+      <Route path="*" element={<NotFound />}> </Route>
+
     </Routes>
   );
 }

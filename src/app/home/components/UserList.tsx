@@ -29,8 +29,8 @@ export const UserList = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Lista de Usuarios</h2>
-      <Table aria-label="Tabla de usuarios">
+      <h2 className="text-2xl font-bold mb-2">Lista de Usuarios</h2>
+      <Table aria-label="Tabla de usuarios" >
         <TableHeader>
           <TableColumn>NOMBRE</TableColumn>
           <TableColumn>CORREO</TableColumn>
@@ -40,47 +40,47 @@ export const UserList = () => {
         <TableBody>
           {loading
             ? Array.from({ length: 4 }).map((_, index) => (
-                <TableRow key={`skeleton-${index}`}>
-                  <TableCell>
-                    <Skeleton className="w-24 h-4 rounded-md bg-default-300" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="w-32 h-4 rounded-md bg-default-300" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="w-20 h-4 rounded-md bg-default-300" />
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Skeleton className="w-16 h-6 rounded-md bg-default-300" />
-                      <Skeleton className="w-20 h-6 rounded-md bg-default-300" />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
+              <TableRow key={`skeleton-${index}`}>
+                <TableCell>
+                  <Skeleton className="w-24 h-4 rounded-md bg-default-300" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-32 h-4 rounded-md bg-default-300" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-20 h-4 rounded-md bg-default-300" />
+                </TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    <Skeleton className="w-16 h-6 rounded-md bg-default-300" />
+                    <Skeleton className="w-20 h-6 rounded-md bg-default-300" />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
             : users.map((user) => (
-                <TableRow key={user._id}>
-                  <TableCell>{user.username}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.role}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button
-                        color="warning"
-                        isDisabled={user.role === "superadmin"}
-                        size="sm"
-                        variant="bordered"
-                        onClick={() => {
-                          setIsOpen(true);
-                          setSelectedUser(user);
-                        }}
-                      >
-                        Cambiar rol
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+              <TableRow key={user._id}>
+                <TableCell>{user.username}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.role}</TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    <Button
+                      color="warning"
+                      isDisabled={user.role === "superadmin"}
+                      size="sm"
+                      variant="bordered"
+                      onClick={() => {
+                        setIsOpen(true);
+                        setSelectedUser(user);
+                      }}
+                    >
+                      Cambiar rol
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
 
@@ -132,7 +132,7 @@ export const UserList = () => {
                 }
                 setIsOpen(false);
                 setSelectedUser(null);
-              }}  
+              }}
             >
               Guardar
             </Button>

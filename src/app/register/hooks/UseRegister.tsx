@@ -13,11 +13,19 @@ export const useRegister = () => {
     setIsLoading(true);
     try {
       await register(data);
-      const currentUser = useAuthStore.getState().user;
-      if (currentUser) {
+      const currentError = useAuthStore.getState().registerError;
+      if (!currentError) {
         toast.success("Registro exitoso");
         navigate("/home", { replace: true });
       }
+
+      else {
+        toast.error("Error al registrarse");
+      }
+
+
+
+
     } catch (e) {
       toast.error("Ocurrió un error al registrarse");
       console.error(e);

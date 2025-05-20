@@ -19,6 +19,8 @@ import { IUploadConvocatoriaReq } from "@/core/convocatorias/domain/upload-convo
 import { useState, useMemo } from "react";
 import ReusableModal from "@/app/shared/components/Modal";
 import { useConvocatoriasStore } from "@/app/shared/convocatorias.store";
+import { ConfirmDelete } from "./ConfirmDelete";
+import { formatCurrency } from "../utils/FormatCurrency";
 
 const columns = [
   { key: "convocatoria", label: "Convocatoria" },
@@ -42,15 +44,21 @@ const rowsPerPage = 5;
 
 export default function ConvocatoriasTable() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [page, setPage] = useState(1);
 
-  const { convocatorias, handleDelete } = useConvocatorias();
+  const { convocatorias } = useConvocatorias();
   const { user } = useAuthStore();
   const { getSingleConvocatoria, singleConvocatoria } = useConvocatoriasStore();
 
   const handleEdit = async (id: string) => {
     await getSingleConvocatoria(id);
     setIsOpen(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    await getSingleConvocatoria(id);
+    setIsDeleteOpen(true);
   };
 
   const pages = useMemo(() => {
@@ -68,6 +76,7 @@ export default function ConvocatoriasTable() {
     <>
       <Table
         aria-label="Tabla de Convocatorias con paginación"
+        isStriped
         bottomContent={
           pages > 0 ? (
             <div className="flex w-full justify-center">
@@ -120,7 +129,9 @@ export default function ConvocatoriasTable() {
                         radius="full"
                         size="md"
                         variant="bordered"
-                        onClick={() => handleDelete(item._id)}
+                        onClick={() => {
+                          handleDelete(item._id);
+                        }}
                       >
                         <RiDeleteBin2Line className="text-neutral-200" />
                       </Button>
@@ -137,6 +148,8 @@ export default function ConvocatoriasTable() {
                     >
                       {getKeyValue(item as { [key: string]: any }, columnKey)}
                     </a>
+                  ) : columnKey === "diferencia_presupuesto" || columnKey === "valor_solicitado" || columnKey === "valor_aprobado" ? (
+                    formatCurrency(getKeyValue(item as { [key: string]: any }, columnKey))
                   ) : (
                     getKeyValue(item as { [key: string]: any }, columnKey)
                   )}
@@ -166,6 +179,22 @@ export default function ConvocatoriasTable() {
           </div>
         </ReusableModal>
       )}
+
+      {isDeleteOpen && user?.role === "superadmin" && singleConvocatoria && (
+        <ReusableModal
+          isOpen={isDeleteOpen}
+          modalTitle="Eliminar Convocatoria"
+          onClose={() => setIsDeleteOpen(false)}
+          onSubmit={() => setIsDeleteOpen(false)}
+        >
+          <div className="flex justify-end mt-4">
+            <ConfirmDelete convocatoria={singleConvocatoria} onClose={() => setIsDeleteOpen(false)} />
+          </div>
+        </ReusableModal>
+      )
+
+
+      }
     </>
   );
 }
