@@ -25,22 +25,22 @@ import { formatCurrency } from "../utils/FormatCurrency";
 const columns = [
   { key: "convocatoria", label: "Convocatoria" },
   { key: "consecutivo", label: "Consecutivo" },
-  { key: "direccion_oficina_regional", label: "Dirección" },
+  { key: "direccion_oficina_regional", label: "Dirección (Centro de Formación)" },
   { key: "tipo_postulacion", label: "Mecanismo" },
   { key: "nuevo_estado", label: "Estado" },
-  { key: "nombre", label: "Nombre" },
+  { key: "nombre", label: "Nombre de la convocatoria" },
   { key: "valor_solicitado", label: "Valor Solicitado" },
   { key: "valor_aprobado", label: "Valor Aprobado" },
   { key: "diferencia_presupuesto", label: "Diferencia Presupuesto" },
   { key: "fecha_aprobacion", label: "Fecha Aprobación" },
   { key: "fecha_inicio", label: "Fecha Inicio" },
   { key: "fecha_fin", label: "Fecha Fin" },
-  { key: "observaciones", label: "Observaciones" },
+  { key: "observaciones", label: "Observaciones de la convocatoria (en caso de que aplique)" },
   { key: "url", label: "URL" },
   { key: "acciones", label: "Acciones" },
 ];
 
-const rowsPerPage = 5;
+const rowsPerPage = 10;
 
 export default function ConvocatoriasTable() {
   const [isOpen, setIsOpen] = useState(false);
@@ -75,8 +75,8 @@ export default function ConvocatoriasTable() {
   return (
     <>
       <Table
-        aria-label="Tabla de Convocatorias con paginación"
         isStriped
+        aria-label="Tabla de Convocatorias con paginación"
         bottomContent={
           pages > 0 ? (
             <div className="flex w-full justify-center">
@@ -93,12 +93,23 @@ export default function ConvocatoriasTable() {
           ) : null
         }
         classNames={{
-          table: "min-h-[400px]",
+          table: "min-h-[400px] table-auto",
         }}
       >
         <TableHeader columns={columns}>
           {(column) => (
-            <TableColumn key={column.key}>{column.label}</TableColumn>
+            <TableColumn
+              key={column.key}
+              className={
+                column.key === "nombre"
+                  ? "min-w-[300px] w-[350px] truncate"
+                  : column.key === "observaciones"
+                    ? "min-w-[400px] w-[450px] truncate"
+                    : ""
+              }
+            >
+              {column.label}
+            </TableColumn>
           )}
         </TableHeader>
         <TableBody
@@ -110,7 +121,13 @@ export default function ConvocatoriasTable() {
           {(item) => (
             <TableRow key={item._id}>
               {(columnKey) => (
-                <TableCell>
+                <TableCell
+                  className={
+                    columnKey === "nombre" || columnKey === "observaciones"
+                      ? "whitespace-normal break-words"
+                      : ""
+                  }
+                >
                   {columnKey === "acciones" && user?.role === "superadmin" ? (
                     <div className="flex gap-2">
                       <Button
@@ -148,8 +165,12 @@ export default function ConvocatoriasTable() {
                     >
                       {getKeyValue(item as { [key: string]: any }, columnKey)}
                     </a>
-                  ) : columnKey === "diferencia_presupuesto" || columnKey === "valor_solicitado" || columnKey === "valor_aprobado" ? (
-                    formatCurrency(getKeyValue(item as { [key: string]: any }, columnKey))
+                  ) : columnKey === "diferencia_presupuesto" ||
+                    columnKey === "valor_solicitado" ||
+                    columnKey === "valor_aprobado" ? (
+                    formatCurrency(
+                      getKeyValue(item as { [key: string]: any }, columnKey)
+                    )
                   ) : (
                     getKeyValue(item as { [key: string]: any }, columnKey)
                   )}
@@ -188,13 +209,13 @@ export default function ConvocatoriasTable() {
           onSubmit={() => setIsDeleteOpen(false)}
         >
           <div className="flex justify-end mt-4">
-            <ConfirmDelete convocatoria={singleConvocatoria} onClose={() => setIsDeleteOpen(false)} />
+            <ConfirmDelete
+              convocatoria={singleConvocatoria}
+              onClose={() => setIsDeleteOpen(false)}
+            />
           </div>
         </ReusableModal>
-      )
-
-
-      }
+      )}
     </>
   );
 }
