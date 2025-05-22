@@ -147,8 +147,8 @@ export function UploadConvocatoriaForm({
 
       <Select
         isRequired
-        placeholder="Selecciona un estado"
         label="Estado"
+        placeholder="Selecciona un estado"
         variant="bordered"
         {...register("nuevo_estado", {
           required: "Este campo es obligatorio",
@@ -168,7 +168,7 @@ export function UploadConvocatoriaForm({
         <SelectItem key="Postulaciones con observaciones">
           Postulaciones con observaciones
         </SelectItem>
-        <SelectItem key="AVAL REGIONAL">AVAL REGIONAL</SelectItem>
+        <SelectItem key="AVAL REGIONAL">Aval Regional</SelectItem>
         <SelectItem key="En ejecución">En ejecución</SelectItem>
       </Select>
 
