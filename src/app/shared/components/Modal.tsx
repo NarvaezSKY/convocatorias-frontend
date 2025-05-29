@@ -13,6 +13,7 @@ interface ReusableModalProps {
   onSubmit?: () => void;
   children: React.ReactNode;
   modalTitle: string;
+  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "full";
 }
 
 export default function ReusableModal({
@@ -20,12 +21,14 @@ export default function ReusableModal({
   onClose,
   children,
   modalTitle,
+  size,
 }: ReusableModalProps) {
   const { onOpenChange } = useDisclosure();
   return (
     <Modal
       isOpen={isOpen}
       scrollBehavior="inside"
+      size={size ? size : "md"}
       onClose={onClose}
       onOpenChange={onOpenChange}
     >

@@ -21,11 +21,16 @@ import ReusableModal from "@/app/shared/components/Modal";
 import { useConvocatoriasStore } from "@/app/shared/convocatorias.store";
 import { ConfirmDelete } from "./ConfirmDelete";
 import { formatCurrency } from "../utils/FormatCurrency";
+import { CiCalendar } from "react-icons/ci";
+import ProjectPlanningGrid from "./planDesarrollo";
 
 const columns = [
   { key: "convocatoria", label: "Convocatoria" },
   { key: "consecutivo", label: "Consecutivo" },
-  { key: "direccion_oficina_regional", label: "Dirección (Centro de Formación)" },
+  {
+    key: "direccion_oficina_regional",
+    label: "Dirección (Centro de Formación)",
+  },
   { key: "tipo_postulacion", label: "Mecanismo" },
   { key: "nuevo_estado", label: "Estado" },
   { key: "nombre", label: "Nombre de la convocatoria" },
@@ -35,7 +40,10 @@ const columns = [
   { key: "fecha_aprobacion", label: "Fecha Aprobación" },
   { key: "fecha_inicio", label: "Fecha Inicio" },
   { key: "fecha_fin", label: "Fecha Fin" },
-  { key: "observaciones", label: "Observaciones de la convocatoria (en caso de que aplique)" },
+  {
+    key: "observaciones",
+    label: "Observaciones de la convocatoria (en caso de que aplique)",
+  },
   { key: "url", label: "URL" },
   { key: "acciones", label: "Acciones" },
 ];
@@ -45,6 +53,7 @@ const rowsPerPage = 10;
 export default function ConvocatoriasTable() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [planningOpen, setPlanningOpen] = useState(false);
   const [page, setPage] = useState(1);
 
   const { convocatorias } = useConvocatorias();
@@ -152,6 +161,19 @@ export default function ConvocatoriasTable() {
                       >
                         <RiDeleteBin2Line className="text-neutral-200" />
                       </Button>
+                      <Button
+                        isIconOnly
+                        color="primary"
+                        radius="full"
+                        size="md"
+                        variant="bordered"
+                        onClick={() => {
+                          setPlanningOpen((prev) => !prev);
+                          getSingleConvocatoria(item._id);
+                        }}
+                      >
+                        <CiCalendar />
+                      </Button>
                     </div>
                   ) : columnKey === "url" ? (
                     <a
@@ -213,6 +235,20 @@ export default function ConvocatoriasTable() {
               convocatoria={singleConvocatoria}
               onClose={() => setIsDeleteOpen(false)}
             />
+          </div>
+        </ReusableModal>
+      )}
+
+      {planningOpen && user?.role === "superadmin"  && singleConvocatoria && (
+        <ReusableModal
+          isOpen={planningOpen}
+          modalTitle="Plan Financiero"
+          size="full"
+          onClose={() => setPlanningOpen(false)}
+          onSubmit={() => setPlanningOpen(false)}
+        >
+          <div className="flex justify-end mt-4">
+            <ProjectPlanningGrid convocatoria={singleConvocatoria} />
           </div>
         </ReusableModal>
       )}

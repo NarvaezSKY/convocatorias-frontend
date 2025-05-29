@@ -66,15 +66,6 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
           >
             Estado
           </label>
-          {/* <Input
-            id="tipo_postulacion"
-            name="tipo_postulacion"
-            placeholder="Tipo de Postulación"
-            size="sm"
-            value={filtros.tipo_postulacion || ""}
-            variant="bordered"
-            onChange={handleChange}
-          /> */}
 
           <Select
             fullWidth
@@ -111,15 +102,7 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
           <label className="text-sm text-neutral-700" htmlFor="nuevo_estado">
             Mecanismo
           </label>
-          {/* <Input
-            id="nuevo_estado"
-            name="nuevo_estado"
-            placeholder="Estado"
-            size="sm"
-            value={filtros.nuevo_estado || ""}
-            variant="bordered"
-            onChange={handleChange}
-          /> */}
+
           <Select
             fullWidth
             multiple
@@ -148,16 +131,7 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
           <label className="text-sm text-neutral-700" htmlFor="nombre">
             Convocatoria
           </label>
-          {/* <Input
-            id="convocatoria"
-            name="convocatoria"
-            placeholder="ej. 1"
-            size="sm"
-            type="number"
-            value={filtros.convocatoria || ""}
-            variant="bordered"
-            onChange={handleChange}
-          /> */}
+
           <Select
             fullWidth
             multiple
