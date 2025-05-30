@@ -1,6 +1,6 @@
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
-import { Card, CardBody, CardHeader } from "@heroui/react";
+import { Card, CardBody, CardHeader, Spinner } from "@heroui/react";
 import { useEffect, useState } from "react";
 
 import { UsePlanFinanciero } from "../hooks/UsePlanFinanciero";
@@ -26,6 +26,7 @@ export default function ProjectPlanningGrid({
     handleGetPlanFinanciero,
     formatPlanFinancieroForInitialValues,
     handleUpdatePlanFinanciero,
+    loading,
     planFinanciero,
   } = UsePlanFinanciero();
 
@@ -229,174 +230,180 @@ export default function ProjectPlanningGrid({
 
   return (
     <div className="p-6 max-w-10xl mx-auto">
-      <Card className="bg-default-50" radius="sm">
-        <CardHeader>
-          <div className="flex items-center justify-between w-full">
-            <div className="text-2xl font-bold">Plan de Desarrollo de Proyecto</div>
-            <div className="flex gap-2 ml-2">
-              <Button
-                className="flex items-center gap-2"
-                color="primary"
-                radius="sm"
-                size="lg"
-                variant="bordered"
-                onClick={saveAsJSON}
-              >
-                Guardar
-              </Button>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <Card className="bg-default-50" radius="sm">
+          <CardHeader>
+            <div className="flex items-center justify-between w-full">
+              <div className="text-2xl font-bold">
+                Plan de Desarrollo de Proyecto (Financiero)
+              </div>
+              <div className="flex gap-2 ml-2">
+                <Button
+                  className="flex items-center gap-2"
+                  color="primary"
+                  radius="sm"
+                  size="lg"
+                  variant="bordered"
+                  onClick={saveAsJSON}
+                >
+                  Guardar
+                </Button>
+              </div>
             </div>
-          </div>
-        </CardHeader>
-        <CardBody>
-          <div className="overflow-auto">
-            <div className="inline-block min-w-full">
-              <table className="border-collapse border border-gray-300">
-                <thead>
-                  <tr>
-                    <th className="border border-gray-300 p-0 bg-gray-100">
-                      <div className="flex">
-                        <div className="flex-1 p-2 font-semibold">
-                          Actividades / Tiempo
+          </CardHeader>
+          <CardBody>
+            <div className="overflow-auto">
+              <div className="inline-block min-w-full">
+                <table className="border-collapse border border-gray-300">
+                  <thead>
+                    <tr>
+                      <th className="border border-gray-300 p-0 bg-gray-100">
+                        <div className="flex">
+                          <div className="flex-1 p-2 font-semibold">
+                            Actividades / Tiempo
+                          </div>
+                          <Button
+                            isIconOnly
+                            className="h-8 w-8 p-0 rounded-none border-l"
+                            color="success"
+                            size="lg"
+                            variant="bordered"
+                            onClick={addRow}
+                          >
+                            <FaRegPlusSquare color="green" />
+                          </Button>
                         </div>
-                        <Button
-                          isIconOnly
-                          className="h-8 w-8 p-0 rounded-none border-l"
-                          color="success"
-                          size="lg"
-                          variant="bordered"
-                          onClick={addRow}
+                      </th>
+                      {columns.slice(1).map((column, index) => (
+                        <th
+                          key={column}
+                          className="border border-gray-300 p-0 bg-gray-100 min-w-32"
                         >
-                          <FaRegPlusSquare color="green" />
-                        </Button>
-                      </div>
-                    </th>
-                    {columns.slice(1).map((column, index) => (
-                      <th
-                        key={column}
-                        className="border border-gray-300 p-0 bg-gray-100 min-w-32"
-                      >
-                        <div className="flex flex-col">
+                          <div className="flex flex-col">
+                            <div className="flex">
+                              <Input
+                                className="border-0 rounded-none bg-transparent font-semibold text-center"
+                                radius="none"
+                                value={editedColumns[column] ?? column}
+                                variant="bordered"
+                                onBlur={() => {
+                                  const newName = editedColumns[column];
+                                  if (newName && newName !== column) {
+                                    updateColumnName(column, newName);
+                                  }
+                                  setEditedColumns((prev) => {
+                                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                                    const { [column]: _, ...rest } = prev;
+                                    return rest;
+                                  });
+                                }}
+                                onChange={(e) =>
+                                  setEditedColumns((prev) => ({
+                                    ...prev,
+                                    [column]: e.target.value,
+                                  }))
+                                }
+                              />
+                              {columns.length > 2 && (
+                                <Button
+                                  isIconOnly
+                                  className="h-8 w-8 p-0 rounded-none border-l text-red-500 hover:text-red-700"
+                                  color="danger"
+                                  size="lg"
+                                  variant="ghost"
+                                  onClick={() => removeColumn(index + 1)}
+                                >
+                                  <RiDeleteBin2Line color="red" />
+                                </Button>
+                              )}
+                            </div>
+                            {index === columns.length - 2 && (
+                              <Button
+                                className="h-6 w-full rounded-none border-t"
+                                color="success"
+                                size="lg"
+                                variant="bordered"
+                                onClick={addColumn}
+                              >
+                                <FaRegPlusSquare color="green" />
+                              </Button>
+                            )}
+                          </div>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((row, rowIndex) => (
+                      <tr key={row}>
+                        <td className="border border-gray-300 p-0 bg-gray-50 min-w-48">
                           <div className="flex">
                             <Input
-                              className="border-0 rounded-none bg-transparent font-semibold text-center"
+                              className="border-0 rounded-none bg-transparent font-medium"
                               radius="none"
-                              value={editedColumns[column] ?? column}
+                              value={editedRows[row] ?? row}
                               variant="bordered"
                               onBlur={() => {
-                                const newName = editedColumns[column];
-                                if (newName && newName !== column) {
-                                  updateColumnName(column, newName);
+                                const newName = editedRows[row];
+                                if (newName && newName !== row) {
+                                  updateRowName(row, newName);
                                 }
-                                setEditedColumns((prev) => {
+                                setEditedRows((prev) => {
                                   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                                  const { [column]: _, ...rest } = prev;
+                                  const { [row]: _, ...rest } = prev;
                                   return rest;
                                 });
                               }}
                               onChange={(e) =>
-                                setEditedColumns((prev) => ({
+                                setEditedRows((prev) => ({
                                   ...prev,
-                                  [column]: e.target.value,
+                                  [row]: e.target.value,
                                 }))
                               }
                             />
-                            {columns.length > 2 && (
+
+                            {rows.length > 1 && (
                               <Button
                                 isIconOnly
                                 className="h-8 w-8 p-0 rounded-none border-l text-red-500 hover:text-red-700"
                                 color="danger"
                                 size="lg"
                                 variant="ghost"
-                                onClick={() => removeColumn(index + 1)}
+                                onClick={() => removeRow(rowIndex)}
                               >
                                 <RiDeleteBin2Line color="red" />
                               </Button>
                             )}
                           </div>
-                          {index === columns.length - 2 && (
-                            <Button
-                              className="h-6 w-full rounded-none border-t"
-                              color="success"
-                              size="lg"
-                              variant="bordered"
-                              onClick={addColumn}
-                            >
-                              <FaRegPlusSquare color="green" />
-                            </Button>
-                          )}
-                        </div>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((row, rowIndex) => (
-                    <tr key={row}>
-                      <td className="border border-gray-300 p-0 bg-gray-50 min-w-48">
-                        <div className="flex">
-                          <Input
-                            className="border-0 rounded-none bg-transparent font-medium"
-                            radius="none"
-                            value={editedRows[row] ?? row}
-                            variant="bordered"
-                            onBlur={() => {
-                              const newName = editedRows[row];
-                              if (newName && newName !== row) {
-                                updateRowName(row, newName);
-                              }
-                              setEditedRows((prev) => {
-                                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                                const { [row]: _, ...rest } = prev;
-                                return rest;
-                              });
-                            }}
-                            onChange={(e) =>
-                              setEditedRows((prev) => ({
-                                ...prev,
-                                [row]: e.target.value,
-                              }))
-                            }
-                          />
-
-                          {rows.length > 1 && (
-                            <Button
-                              isIconOnly
-                              className="h-8 w-8 p-0 rounded-none border-l text-red-500 hover:text-red-700"
-                              color="danger"
-                              size="lg"
-                              variant="ghost"
-                              onClick={() => removeRow(rowIndex)}
-                            >
-                              <RiDeleteBin2Line color="red" />
-                            </Button>
-                          )}
-                        </div>
-                      </td>
-                      {columns.slice(1).map((column) => (
-                        <td
-                          key={`${row}-${column}`}
-                          className="border border-gray-300 p-0"
-                        >
-                          <Input
-                            className="border-0 rounded-none h-10"
-                            placeholder="Ingrese información..."
-                            radius="none"
-                            value={getCellValue(row, column)}
-                            variant="bordered"
-                            onChange={(e) =>
-                              updateCell(row, column, e.target.value)
-                            }
-                          />
                         </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                        {columns.slice(1).map((column) => (
+                          <td
+                            key={`${row}-${column}`}
+                            className="border border-gray-300 p-0"
+                          >
+                            <Input
+                              className="border-0 rounded-none h-10"
+                              placeholder="Ingrese información..."
+                              radius="none"
+                              value={getCellValue(row, column)}
+                              variant="bordered"
+                              onChange={(e) =>
+                                updateCell(row, column, e.target.value)
+                              }
+                            />
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-        </CardBody>
-      </Card>
+          </CardBody>
+        </Card>
+      )}
     </div>
   );
 }

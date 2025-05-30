@@ -9,6 +9,7 @@ export const UsePlanFinanciero = () => {
     getSinglePlanFinanciero,
     updatePlanFinanciero,
     planFinanciero,
+    loading,
   } = usePlanFinancieroStore();
 
   const handleCreatePlanFinanciero = async (data: IUploadPlanFinancieroReq) => {
@@ -21,7 +22,10 @@ export const UsePlanFinanciero = () => {
     }
   };
 
-  const handleUpdatePlanFinanciero = async (id: string, data: IUploadPlanFinancieroReq) => {
+  const handleUpdatePlanFinanciero = async (
+    id: string,
+    data: IUploadPlanFinancieroReq
+  ) => {
     try {
       await updatePlanFinanciero(id, data);
       toast.success("Plan financiero actualizado correctamente");
@@ -42,18 +46,18 @@ export const UsePlanFinanciero = () => {
   };
 
   const formatPlanFinancieroForInitialValues = (
-  data: IGetPlanFinancieroByIdRes
-) => {
-  const rows = data.structure.rows;
-  const columns = data.structure.columns;
-  const gridData = data.data;
+    data: IGetPlanFinancieroByIdRes
+  ) => {
+    const rows = data.structure.rows;
+    const columns = data.structure.columns;
+    const gridData = data.data;
 
-  return {
-    rows,
-    columns,
-    gridData,
+    return {
+      rows,
+      columns,
+      gridData,
+    };
   };
-};
 
   return {
     handleCreatePlanFinanciero,
@@ -61,5 +65,6 @@ export const UsePlanFinanciero = () => {
     handleGetPlanFinanciero,
     formatPlanFinancieroForInitialValues,
     planFinanciero,
+    loading,
   };
 };
