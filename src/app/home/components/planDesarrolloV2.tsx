@@ -240,14 +240,14 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
       data: gridData,
     };
 
-    const dataStr = JSON.stringify(jsonData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: "application/json" });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "plan-desarrollo-proyecto.json";
-    link.click();
-    URL.revokeObjectURL(url);
+    // const dataStr = JSON.stringify(jsonData, null, 2);
+    // const dataBlob = new Blob([dataStr], { type: "application/json" });
+    // const url = URL.createObjectURL(dataBlob);
+    // const link = document.createElement("a");
+    // link.href = url;
+    // link.download = "plan-desarrollo-proyecto.json";
+    // link.click();
+    // URL.revokeObjectURL(url);
 
     if (planFinanciero && planFinanciero._id) {
       handleUpdatePlanFinanciero(planFinanciero._id, {
