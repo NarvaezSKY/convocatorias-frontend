@@ -48,9 +48,9 @@ export const UsePlanFinanciero = () => {
   const formatPlanFinancieroForInitialValues = (
     data: IGetPlanFinancieroByIdRes
   ) => {
-    const rows = data.structure.rows;
-    const columns = data.structure.columns;
-    const gridData = data.data;
+    const rows = data.structure.rows; // ["Actividad 1", ..., "Actividad N"]
+    const columns = data.structure.columns; // ["Mes1", ..., "MesN"]
+    const gridData = data.data; // Objeto anidado {Actividad -> Mes -> datos}
 
     return {
       rows,

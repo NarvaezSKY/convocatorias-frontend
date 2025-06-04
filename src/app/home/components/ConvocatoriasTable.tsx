@@ -22,7 +22,9 @@ import { useConvocatoriasStore } from "@/app/shared/convocatorias.store";
 import { ConfirmDelete } from "./ConfirmDelete";
 import { formatCurrency } from "../utils/FormatCurrency";
 import { CiCalendar } from "react-icons/ci";
-import ProjectPlanningGrid from "./planDesarrollo";
+// import ProjectPlanningGrid from "./planDesarrollo";
+import ProjectPlanningGridV2 from "./planDesarrolloV2";
+
 
 const columns = [
   { key: "convocatoria", label: "Convocatoria" },
@@ -248,7 +250,8 @@ export default function ConvocatoriasTable() {
           onSubmit={() => setPlanningOpen(false)}
         >
           <div className="flex justify-end mt-4">
-            <ProjectPlanningGrid convocatoria={singleConvocatoria} />
+            {/* <ProjectPlanningGrid convocatoria={singleConvocatoria} /> */}
+            <ProjectPlanningGridV2 convocatoria={singleConvocatoria} />
           </div>
         </ReusableModal>
       )}
