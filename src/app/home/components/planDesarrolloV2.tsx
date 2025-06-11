@@ -33,7 +33,6 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
     handleCreatePlanFinanciero,
     handleUpdatePlanFinanciero,
     planFinanciero,
-    // loading,
     handleGetPlanFinanciero,
     formatPlanFinancieroForInitialValues,
   } = UsePlanFinanciero();
@@ -78,11 +77,11 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
 
   const totalExecutionPercentage = totalsByColumn
     .reduce((acc, curr) => acc + curr.ejecutado, 0)
-    .toFixed(1);
+    .toFixed(0);
 
   const totalProyectadoPercentage = totalsByColumn
     .reduce((acc, curr) => acc + curr.proyectado, 0)
-    .toFixed(1);
+    .toFixed(0);
 
   const [rowCounter, setRowCounter] = useState<number>(rows.length + 1);
   const [columnCounter, setColumnCounter] = useState<number>(
@@ -195,7 +194,6 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
           setRowCounter(rows.length + 1);
           setColumnCounter(columns.length + 1);
         } else {
-          // fallback si no hay data
           const defaultRows = ["Actividad 1", "Actividad 2", "Actividad 3"];
           const defaultColumns = ["Mes1", "Mes2", "Mes3"];
           const defaultGridData: {
@@ -277,7 +275,6 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
     return gridData[row]?.[column]?.[type] || "";
   };
 
-  // Porcentaje columna
   const getColumnPercentage = (column: string) => {
     let totalProyectado = 0;
     let totalEjecutado = 0;
@@ -298,13 +295,13 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
       ejecutado: totalEjecutado,
       percentage:
         totalProyectado > 0
-          ? ((totalEjecutado / totalProyectado) * 100).toFixed(1)
+          ? ((totalEjecutado / totalProyectado) * 100).toFixed(0)
           : "0.0",
     };
   };
   const porEjecutar = (
     Number(totalProyectadoPercentage) - Number(totalExecutionPercentage)
-  ).toFixed(1);
+  ).toFixed(0);
   return (
     <div className="p-6 max-w-full mx-auto">
       <Card>
@@ -313,16 +310,50 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
             <div className="text-2xl font-bold">
               Plan de Desarrollo de Proyecto
             </div>
-            <div className="text-lg font-normal text-blue-600 mt-1">
-              Total Ejecutado: {totalExecutionPercentage}%
+
+            <div className="text-lg font-normal mt-1">
+              <p
+                className={
+                  Number(totalExecutionPercentage) < 100
+                    ? "text-warning"
+                    : Number(totalExecutionPercentage) === 100
+                      ? "text-success"
+                      : "text-danger"
+                }
+              >
+                Total Ejecutado: {totalExecutionPercentage}%
+              </p>
             </div>
-            <div className="text-lg font-normal text-blue-600 mt-1">
-              Total Proyectado: {totalProyectadoPercentage}%
+
+            <div className="text-lg font-normal mt-1">
+              <p
+                className={
+                  Number(totalProyectadoPercentage) < 100
+                    ? "text-warning"
+                    : Number(totalProyectadoPercentage) === 100
+                      ? "text-success"
+                      : "text-danger"
+                }
+              >
+                Total Proyectado: {totalProyectadoPercentage}%
+              </p>
             </div>
-            <div className="text-lg font-normal text-blue-600 mt-1">
-              Por ejecutar: {porEjecutar}%
+
+            <div className="text-lg font-normal mt-1">
+              <p
+                className={
+                  Number(porEjecutar) > 0
+                    ? "text-warning"
+                    : Number(porEjecutar) === 0
+                      ? "text-success"
+                      : "text-danger"
+                }
+              >
+                Por ejecutar: {porEjecutar}%
+              </p>
             </div>
           </div>
+
           <div className="flex gap-2">
             <Button
               className="flex items-center gap-2"
@@ -349,9 +380,10 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
                           Actividades/tiempo
                         </div>
                         <Button
-                          className="h-8 w-8 p-0 rounded-none border-l"
+                          className="h-10 w-8 p-0 rounded-none border-l"
                           size="sm"
                           variant="ghost"
+                          color="success"
                           onClick={addRow}
                         >
                           <FaRegPlusSquare className="w-4 h-4" />
@@ -390,15 +422,15 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
                           />
                           {columns.length > 1 && (
                             <Button
-                              className="h-8 w-8 p-0 rounded-none border-l text-red-500 hover:text-red-700"
+                              className="h-10 w-8 p-0 rounded-none border-l text-danger hover:text-white"
                               color="danger"
                               size="sm"
                               variant="ghost"
+
                               onClick={() => removeColumn(index)}
                             >
                               <RiDeleteBin2Line
-                                className="w-5 h-5 text-danger"
-                                color="danger"
+                                className="w-5 h-5"
                               />
                             </Button>
                           )}
@@ -407,10 +439,11 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
                     ))}
                     <th className="border border-gray-300 p-0 bg-gray-100">
                       <Button
-                        className="h-8 w-full rounded-none"
+                        className="h-10 w-full rounded-none"
                         size="sm"
                         variant="ghost"
                         onClick={addColumn}
+                        color="success"
                       >
                         <FaRegPlusSquare className="w-4 h-4" />
                       </Button>
@@ -466,13 +499,13 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
                           />
                           {rows.length > 1 && (
                             <Button
-                              className="h-8 w-8 p-0 rounded-none border-l text-red-500 hover:text-red-700"
+                              className="h-10 w-8 p-0 rounded-none border-l text-danger hover:text-white"
                               color="danger"
                               size="sm"
                               variant="ghost"
                               onClick={() => removeRow(rowIndex)}
                             >
-                              <RiDeleteBin2Line className="w-5 h-5 text-danger" />
+                              <RiDeleteBin2Line className="w-5 h-5" />
                             </Button>
                           )}
                         </div>
@@ -540,13 +573,13 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
                             key={`total-${column}-proyectado`}
                             className="border border-gray-300 p-2 text-center bg-blue-100"
                           >
-                            {stats.proyectado.toFixed(1)}%
+                            {stats.proyectado.toFixed(0)}%
                           </td>
                           <td
                             key={`total-${column}-ejecutado`}
                             className="border border-gray-300 p-2 text-center bg-green-100"
-                          >
-                            {stats.ejecutado.toFixed(1)}%
+                          > 
+                            {stats.ejecutado.toFixed(0)}%
                           </td>
                         </>
                       );
