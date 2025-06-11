@@ -7,6 +7,7 @@ import { Card, CardBody, CardHeader } from "@heroui/react";
 
 import { UsePlanFinanciero } from "@/app/home/hooks/UsePlanFinanciero";
 import { IGetAllConvocatoriasRes } from "@/core/convocatorias/domain/get-all-convocatorias";
+import { toast } from "sonner";
 
 interface GridData {
   [key: string]: {
@@ -37,49 +38,58 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
     formatPlanFinancieroForInitialValues,
   } = UsePlanFinanciero();
 
-  const [rows, setRows] = useState<string[]>([
-    "Actividad 1",
-    "Actividad 2",
-    "Actividad 3",
-    "Actividad 4",
-    "Actividad 5",
-  ]);
-  const [columns, setColumns] = useState<string[]>([
-    "Mes1",
-    "Mes2",
-    "Mes3",
-    "Mes4",
-    "Mes5",
-  ]);
-  const [gridData, setGridData] = useState<GridData>({
-    "Actividad 1": {},
-    "Actividad 2": {},
-    "Actividad 3": {},
-    "Actividad 4": {},
-    "Actividad 5": {},
-  });
+  const [rows, setRows] = useState<string[]>(
+    [
+      "Actividad 1",
+      "Actividad 2",
+      "Actividad 3",
+      "Actividad 4",
+      "Actividad 5",
+    ]
+  );
+  const [columns, setColumns] = useState<string[]>(
+    [
+      "Mes1",
+      "Mes2",
+      "Mes3",
+      "Mes4",
+      "Mes5",
+    ]
+  );
+  const [gridData, setGridData] = useState<GridData>(
+    {
+      "Actividad 1": {},
+      "Actividad 2": {},
+      "Actividad 3": {},
+      "Actividad 4": {},
+      "Actividad 5": {},
+    }
+  );
 
-  const totalExecutionPercentage = useMemo(() => {
-    let totalProyectado = 0;
-    let totalEjecutado = 0;
-
-    rows.forEach((row) => {
-      columns.forEach((column) => {
-        const proyectado = Number.parseFloat(
+  const totalsByColumn = useMemo(() => {
+    return columns.map((column) => {
+      let proyectado = 0;
+      let ejecutado = 0;
+      rows.forEach((row) => {
+        proyectado += Number.parseFloat(
           gridData[row]?.[column]?.proyectado || "0"
         );
-        const ejecutado = Number.parseFloat(
+        ejecutado += Number.parseFloat(
           gridData[row]?.[column]?.ejecutado || "0"
         );
-        totalProyectado += proyectado;
-        totalEjecutado += ejecutado;
       });
+      return { proyectado, ejecutado };
     });
-
-    return totalProyectado > 0
-      ? ((totalEjecutado / totalProyectado) * 100).toFixed(1)
-      : "0.0";
   }, [gridData, rows, columns]);
+
+  const totalExecutionPercentage = totalsByColumn
+    .reduce((acc, curr) => acc + curr.ejecutado, 0)
+    .toFixed(1);
+
+  const totalProyectadoPercentage = totalsByColumn
+    .reduce((acc, curr) => acc + curr.proyectado, 0)
+    .toFixed(1);
+
   const [rowCounter, setRowCounter] = useState<number>(rows.length + 1);
   const [columnCounter, setColumnCounter] = useState<number>(
     columns.length + 1
@@ -226,11 +236,23 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
   }, [convocatoria]);
 
   const saveAsJSON = () => {
+    const totalProyectado = Number(totalProyectadoPercentage);
+    const totalEjecutado = Number(totalExecutionPercentage);
+
+    if (totalProyectado !== 100) {
+      toast.error("El porcentaje total proyectado debe ser exactamente 100%");
+      return;
+    }
+    if (totalEjecutado > 100) {
+      toast.error("El porcentaje total ejecutado no puede ser mayor al 100%");
+      return;
+    }
+
     const jsonData = {
       metadata: {
         rows: rows.length,
         columns: columns.length,
-        totalExecutionPercentage: Number.parseFloat(totalExecutionPercentage),
+        totalExecutionPercentage: totalEjecutado,
         createdAt: new Date().toISOString(),
       },
       structure: {
@@ -239,15 +261,6 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
       },
       data: gridData,
     };
-
-    // const dataStr = JSON.stringify(jsonData, null, 2);
-    // const dataBlob = new Blob([dataStr], { type: "application/json" });
-    // const url = URL.createObjectURL(dataBlob);
-    // const link = document.createElement("a");
-    // link.href = url;
-    // link.download = "plan-desarrollo-proyecto.json";
-    // link.click();
-    // URL.revokeObjectURL(url);
 
     if (planFinanciero && planFinanciero._id) {
       handleUpdatePlanFinanciero(planFinanciero._id, {
@@ -295,24 +308,28 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
           : "0.0",
     };
   };
-
+  const porEjecutar = (Number(totalProyectadoPercentage) - Number(totalExecutionPercentage)).toFixed(1);
   return (
     <div className="p-6 max-w-full mx-auto">
       <Card>
-        <CardHeader>
-          <CardHeader className="flex items-center justify-between">
-            <div>
-              <div>Plan de Desarrollo de Proyecto</div>
-              <div className="text-lg font-normal text-blue-600 mt-1">
-                Porcentaje Total Ejecutado: {totalExecutionPercentage}%
-              </div>
+        <CardHeader className="flex items-center justify-between">
+          <div>
+            <div className="text-2xl font-bold">Plan de Desarrollo de Proyecto</div>
+            <div className="text-lg font-normal text-blue-600 mt-1">
+              Total Ejecutado: {totalExecutionPercentage}%
             </div>
-            <div className="flex gap-2">
-              <Button className="flex items-center gap-2" onClick={saveAsJSON}>
-                Guardar JSON
-              </Button>
+            <div className="text-lg font-normal text-blue-600 mt-1">
+              Total Proyectado: {totalProyectadoPercentage}%
             </div>
-          </CardHeader>
+            <div className="text-lg font-normal text-blue-600 mt-1">
+              Por ejecutar: {porEjecutar}%
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button className="flex items-center gap-2" variant="bordered" color="success" onClick={saveAsJSON}>
+              Guardar
+            </Button>
+          </div>
         </CardHeader>
         <CardBody>
           <div className="overflow-auto">
