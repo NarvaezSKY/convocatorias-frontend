@@ -38,33 +38,27 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
     formatPlanFinancieroForInitialValues,
   } = UsePlanFinanciero();
 
-  const [rows, setRows] = useState<string[]>(
-    [
-      "Actividad 1",
-      "Actividad 2",
-      "Actividad 3",
-      "Actividad 4",
-      "Actividad 5",
-    ]
-  );
-  const [columns, setColumns] = useState<string[]>(
-    [
-      "Mes1",
-      "Mes2",
-      "Mes3",
-      "Mes4",
-      "Mes5",
-    ]
-  );
-  const [gridData, setGridData] = useState<GridData>(
-    {
-      "Actividad 1": {},
-      "Actividad 2": {},
-      "Actividad 3": {},
-      "Actividad 4": {},
-      "Actividad 5": {},
-    }
-  );
+  const [rows, setRows] = useState<string[]>([
+    "Actividad 1",
+    "Actividad 2",
+    "Actividad 3",
+    "Actividad 4",
+    "Actividad 5",
+  ]);
+  const [columns, setColumns] = useState<string[]>([
+    "Mes1",
+    "Mes2",
+    "Mes3",
+    "Mes4",
+    "Mes5",
+  ]);
+  const [gridData, setGridData] = useState<GridData>({
+    "Actividad 1": {},
+    "Actividad 2": {},
+    "Actividad 3": {},
+    "Actividad 4": {},
+    "Actividad 5": {},
+  });
 
   const totalsByColumn = useMemo(() => {
     return columns.map((column) => {
@@ -308,13 +302,17 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
           : "0.0",
     };
   };
-  const porEjecutar = (Number(totalProyectadoPercentage) - Number(totalExecutionPercentage)).toFixed(1);
+  const porEjecutar = (
+    Number(totalProyectadoPercentage) - Number(totalExecutionPercentage)
+  ).toFixed(1);
   return (
     <div className="p-6 max-w-full mx-auto">
       <Card>
         <CardHeader className="flex items-center justify-between">
           <div>
-            <div className="text-2xl font-bold">Plan de Desarrollo de Proyecto</div>
+            <div className="text-2xl font-bold">
+              Plan de Desarrollo de Proyecto
+            </div>
             <div className="text-lg font-normal text-blue-600 mt-1">
               Total Ejecutado: {totalExecutionPercentage}%
             </div>
@@ -326,7 +324,12 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button className="flex items-center gap-2" variant="bordered" color="success" onClick={saveAsJSON}>
+            <Button
+              className="flex items-center gap-2"
+              color="success"
+              variant="bordered"
+              onClick={saveAsJSON}
+            >
               Guardar
             </Button>
           </div>
@@ -388,11 +391,15 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
                           {columns.length > 1 && (
                             <Button
                               className="h-8 w-8 p-0 rounded-none border-l text-red-500 hover:text-red-700"
+                              color="danger"
                               size="sm"
                               variant="ghost"
                               onClick={() => removeColumn(index)}
                             >
-                              <RiDeleteBin2Line className="w-3 h-3" />
+                              <RiDeleteBin2Line
+                                className="w-5 h-5 text-danger"
+                                color="danger"
+                              />
                             </Button>
                           )}
                         </div>
@@ -460,11 +467,12 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
                           {rows.length > 1 && (
                             <Button
                               className="h-8 w-8 p-0 rounded-none border-l text-red-500 hover:text-red-700"
+                              color="danger"
                               size="sm"
                               variant="ghost"
                               onClick={() => removeRow(rowIndex)}
                             >
-                              <RiDeleteBin2Line className="w-3 h-3" />
+                              <RiDeleteBin2Line className="w-5 h-5 text-danger" />
                             </Button>
                           )}
                         </div>

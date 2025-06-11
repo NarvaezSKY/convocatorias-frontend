@@ -22,7 +22,6 @@ import { useConvocatoriasStore } from "@/app/shared/convocatorias.store";
 import { ConfirmDelete } from "./ConfirmDelete";
 import { formatCurrency } from "../utils/FormatCurrency";
 import { CiCalendar } from "react-icons/ci";
-// import ProjectPlanningGrid from "./planDesarrollo";
 import ProjectPlanningGridV2 from "./planDesarrolloV2";
 
 
