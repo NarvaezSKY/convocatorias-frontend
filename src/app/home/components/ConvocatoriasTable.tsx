@@ -249,7 +249,6 @@ export default function ConvocatoriasTable() {
           onSubmit={() => setPlanningOpen(false)}
         >
           <div className="flex justify-end mt-4">
-            {/* <ProjectPlanningGrid convocatoria={singleConvocatoria} /> */}
             <ProjectPlanningGridV2 convocatoria={singleConvocatoria} />
           </div>
         </ReusableModal>

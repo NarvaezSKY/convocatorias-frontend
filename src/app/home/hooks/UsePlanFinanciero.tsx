@@ -37,20 +37,27 @@ export const UsePlanFinanciero = () => {
 
   const handleGetPlanFinanciero = async (id: string) => {
     try {
-      const planFinanciero = await getSinglePlanFinanciero(id);
-      return planFinanciero;
+      const plan = await getSinglePlanFinanciero(id);
+
+      if (!plan || Object.keys(plan).length === 0) {
+        toast.error("Esta convocatoria no tiene plan financiero");
+        return null;
+      }
+
+      return plan;
     } catch (error) {
-      console.error("Error fetching plan financiero:", error);
       toast.error("Esta convocatoria no tiene plan financiero");
+      return null;
     }
   };
+
 
   const formatPlanFinancieroForInitialValues = (
     data: IGetPlanFinancieroByIdRes
   ) => {
-    const rows = data.structure.rows; // ["Actividad 1", ..., "Actividad N"]
-    const columns = data.structure.columns; // ["Mes1", ..., "MesN"]
-    const gridData = data.data; // Objeto anidado {Actividad -> Mes -> datos}
+    const rows = data.structure.rows;
+    const columns = data.structure.columns;
+    const gridData = data.data;
 
     return {
       rows,

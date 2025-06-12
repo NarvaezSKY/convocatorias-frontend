@@ -80,7 +80,7 @@ export const useConvocatoriasStore = create<Store>((set) => ({
   },
 
   getSingleConvocatoria: async (id) => {
-    set({ loading: true, error: null });
+    set({ loading: true, error: null, singleConvocatoria: null });
     try {
       const convocatoria = await getSingleConvocatoriaUseCase(
         convocatoriasRepository

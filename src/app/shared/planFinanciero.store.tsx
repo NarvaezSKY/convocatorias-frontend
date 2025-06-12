@@ -38,7 +38,7 @@ export const usePlanFinancieroStore = create<State & Actions>((set) => ({
   },
 
   getSinglePlanFinanciero: async (id) => {
-    set({ loading: true, error: null });
+    set({ loading: true, error: null, planFinanciero: null });
     try {
       const planFinanciero = await getSinglePlanFinancieroUseCase(
         planFinancieroRepository
