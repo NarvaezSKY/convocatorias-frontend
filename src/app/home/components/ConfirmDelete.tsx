@@ -18,8 +18,8 @@ export const ConfirmDelete = ({ convocatoria, onClose }: ConfirmDeleteProps) => 
             <div className="flex justify-end">
                 <Button
                     className="mt-2"
-                    variant="bordered"
                     color="danger"
+                    variant="bordered"
                     onClick={() => { handleDelete(convocatoria._id) as any; onClose(); }}
                 >
                     Eliminar
@@ -27,8 +27,8 @@ export const ConfirmDelete = ({ convocatoria, onClose }: ConfirmDeleteProps) => 
 
                 <Button
                     className="mt-2 ml-2"
-                    variant="bordered"
                     color="default"
+                    variant="bordered"
                     onClick={onClose}
                 >
                     Cancelar

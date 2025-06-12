@@ -22,7 +22,7 @@ import { useConvocatoriasStore } from "@/app/shared/convocatorias.store";
 import { ConfirmDelete } from "./ConfirmDelete";
 import { formatCurrency } from "../utils/FormatCurrency";
 import { CiCalendar } from "react-icons/ci";
-import ProjectPlanningGridV2 from "./planDesarrolloV2";
+import ProjectPlanningGridV2 from "../planDesarrollo/components/planDesarrolloV2";
 
 const columns = [
   { key: "convocatoria", label: "Convocatoria" },

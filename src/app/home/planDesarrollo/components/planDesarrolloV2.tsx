@@ -9,6 +9,7 @@ import { useProjectPlanningGrid } from "../hooks/UseProjectPlanningGrid";
 import { MdCancel } from "react-icons/md";
 import { FaRegSave } from "react-icons/fa";
 import React from "react";
+import { ProjectFinancialMatrix } from "./planDesarrolloFinanciero";
 
 interface Props {
   convocatoria: IGetAllConvocatoriasRes;
@@ -41,6 +42,18 @@ export default function ProjectPlanningGridV2({
     saveAsJSON,
     loadingPlanFinanciero,
   } = useProjectPlanningGrid(convocatoria);
+  const actividades = rows;
+  const meses = columns;
+  const porcentajesProyectado = rows.map((row) =>
+    columns.reduce(
+      (acc, col) => acc + (Number(getCellValue(row, col, "proyectado")) || 0),
+      0
+    )
+  );
+  const porcentajesEjecutado = rows.map((row) =>
+    columns.map((col) => Number(getCellValue(row, col, "ejecutado")) || 0)
+  );
+  const [valorTotalProyecto, setValorTotalProyecto] = React.useState(0);
   return (
     <div className="p-6 max-w-full mx-auto">
       {loadingPlanFinanciero ? (
@@ -396,6 +409,14 @@ export default function ProjectPlanningGridV2({
           </CardBody>
         </Card>
       )}
+      <ProjectFinancialMatrix
+        actividades={actividades}
+        meses={meses}
+        porcentajesEjecutado={porcentajesEjecutado}
+        porcentajesProyectado={porcentajesProyectado}
+        setValorTotalProyecto={setValorTotalProyecto}
+        valorTotalProyecto={valorTotalProyecto}
+      />
     </div>
   );
 }

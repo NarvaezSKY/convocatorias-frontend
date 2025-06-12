@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { IGetAllConvocatoriasRes } from "@/core/convocatorias/domain/get-all-convocatorias";
-import { UsePlanFinanciero } from "@/app/home/hooks/UsePlanFinanciero";
+import { UsePlanFinanciero } from "./UsePlanFinanciero";
 import { useConvocatoriasStore } from "@/app/shared/convocatorias.store";
 
 interface GridData {
