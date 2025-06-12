@@ -6,13 +6,19 @@ import { Card, CardBody, CardHeader, Spinner } from "@heroui/react";
 
 import { IGetAllConvocatoriasRes } from "@/core/convocatorias/domain/get-all-convocatorias";
 import { useProjectPlanningGrid } from "../hooks/UseProjectPlanningGrid";
+import { MdCancel } from "react-icons/md";
+import { FaRegSave } from "react-icons/fa";
 import React from "react";
 
 interface Props {
   convocatoria: IGetAllConvocatoriasRes;
+  onClose: () => void;
 }
 
-export default function ProjectPlanningGridV2({ convocatoria }: Props) {
+export default function ProjectPlanningGridV2({
+  convocatoria,
+  onClose,
+}: Props) {
   const {
     rows,
     columns,
@@ -33,11 +39,9 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
     getCellValue,
     getColumnPercentage,
     saveAsJSON,
-    loadingPlanFinanciero
-
+    loadingPlanFinanciero,
   } = useProjectPlanningGrid(convocatoria);
   return (
-
     <div className="p-6 max-w-full mx-auto">
       {loadingPlanFinanciero ? (
         <div className="flex items-center justify-center h-screen">
@@ -93,15 +97,28 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
                 </p>
               </div>
             </div>
-
             <div className="flex gap-2">
               <Button
                 className="flex items-center gap-2"
                 color="success"
+                radius="sm"
+                size="lg"
                 variant="bordered"
                 onClick={saveAsJSON}
               >
+                <FaRegSave className="w-4 h-4" />
                 Guardar
+              </Button>
+              <Button
+                className="flex items-center gap-2"
+                color="warning"
+                radius="sm"
+                size="lg"
+                variant="bordered"
+                onClick={onClose}
+              >
+                <MdCancel className="w-4 h-4" />
+                Cancelar
               </Button>
             </div>
           </CardHeader>
@@ -121,9 +138,9 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
                           </div>
                           <Button
                             className="h-10 w-8 p-0 rounded-none border-l"
+                            color="success"
                             size="sm"
                             variant="ghost"
-                            color="success"
                             onClick={addRow}
                           >
                             <FaRegPlusSquare className="w-4 h-4" />
@@ -141,7 +158,7 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
                               className="border-0 rounded-none bg-transparent font-semibold text-center"
                               radius="none"
                               value={editingColumnNames[column] ?? column}
-                              variant="bordered"
+                              variant="flat"
                               onBlur={() => {
                                 const newName = editingColumnNames[column];
                                 if (newName && newName !== column) {
@@ -166,12 +183,9 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
                                 color="danger"
                                 size="sm"
                                 variant="ghost"
-
                                 onClick={() => removeColumn(index)}
                               >
-                                <RiDeleteBin2Line
-                                  className="w-5 h-5"
-                                />
+                                <RiDeleteBin2Line className="w-5 h-5" />
                               </Button>
                             )}
                           </div>
@@ -180,10 +194,10 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
                       <th className="border border-gray-300 p-0 bg-gray-100">
                         <Button
                           className="h-10 w-full rounded-none"
+                          color="success"
                           size="sm"
                           variant="ghost"
                           onClick={addColumn}
-                          color="success"
                         >
                           <FaRegPlusSquare className="w-4 h-4" />
                         </Button>
@@ -218,12 +232,13 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
                   </thead>
                   <tbody>
                     {rows.map((row, rowIndex) => {
-
                       let totalProyectado = 0;
                       let totalEjecutado = 0;
                       columns.forEach((column) => {
-                        totalProyectado += Number(getCellValue(row, column, "proyectado")) || 0;
-                        totalEjecutado += Number(getCellValue(row, column, "ejecutado")) || 0;
+                        totalProyectado +=
+                          Number(getCellValue(row, column, "proyectado")) || 0;
+                        totalEjecutado +=
+                          Number(getCellValue(row, column, "ejecutado")) || 0;
                       });
 
                       return (
@@ -234,7 +249,7 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
                                 className="border-0 rounded-none bg-transparent font-medium"
                                 radius="none"
                                 value={editingRowNames[row] ?? row}
-                                variant="bordered"
+                                variant="flat"
                                 onBlur={() => {
                                   const newName = editingRowNames[row];
                                   if (newName && newName !== row) {
@@ -276,8 +291,16 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
                                   className="border-0 rounded-none h-10 text-center"
                                   placeholder="0"
                                   radius="none"
-                                  value={getCellValue(row, column, "proyectado")}
-                                  variant="bordered"
+                                  value={getCellValue(
+                                    row,
+                                    column,
+                                    "proyectado"
+                                  )}
+                                  variant={
+                                    getCellValue(row, column, "proyectado")
+                                      ? "flat"
+                                      : "bordered"
+                                  }
                                   onChange={(e) =>
                                     updateCell(
                                       row,
@@ -294,27 +317,37 @@ export default function ProjectPlanningGridV2({ convocatoria }: Props) {
                               >
                                 <Input
                                   className="border-0 rounded-none h-10 text-center cursor-not-allowed"
-                                  max={totalProyectado}
-                                  min="0"
-                                  placeholder="0"
-                                  radius="none"
-                                  step="0.1"
-                                  type="number"
-                                  value={getCellValue(row, column, "ejecutado")}
-                                  variant="bordered"
                                   disabled={
                                     totalEjecutado >= totalProyectado &&
-                                    (!getCellValue(row, column, "ejecutado") || Number(getCellValue(row, column, "ejecutado")) === 0)
+                                    (!getCellValue(row, column, "ejecutado") ||
+                                      Number(
+                                        getCellValue(row, column, "ejecutado")
+                                      ) === 0)
+                                  }
+                                  max={totalProyectado}
+                                  placeholder="0"
+                                  radius="none"
+                                  type="number"
+                                  value={getCellValue(row, column, "ejecutado")}
+                                  variant={
+                                    getCellValue(row, column, "ejecutado")
+                                      ? "flat"
+                                      : "bordered"
                                   }
                                   onChange={(e) => {
-                                    let value = Number(e.target.value);
-                                    if (value > totalProyectado) value = totalProyectado;
-                                    if (value < 0) value = 0;
+                                    let value = e.target.value;
+                                    if (value === "") {
+                                      updateCell(row, column, "ejecutado", "");
+                                      return;
+                                    }
+                                    let numValue = Number(value);
+                                    if (numValue > totalProyectado)
+                                      numValue = totalProyectado;
                                     updateCell(
                                       row,
                                       column,
                                       "ejecutado",
-                                      value.toString()
+                                      numValue.toString()
                                     );
                                   }}
                                 />

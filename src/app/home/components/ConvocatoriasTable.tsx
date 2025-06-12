@@ -24,7 +24,6 @@ import { formatCurrency } from "../utils/FormatCurrency";
 import { CiCalendar } from "react-icons/ci";
 import ProjectPlanningGridV2 from "./planDesarrolloV2";
 
-
 const columns = [
   { key: "convocatoria", label: "Convocatoria" },
   { key: "consecutivo", label: "Consecutivo" },
@@ -240,7 +239,7 @@ export default function ConvocatoriasTable() {
         </ReusableModal>
       )}
 
-      {planningOpen && user?.role === "superadmin"  && singleConvocatoria && (
+      {planningOpen && user?.role === "superadmin" && singleConvocatoria && (
         <ReusableModal
           isOpen={planningOpen}
           modalTitle="Plan Financiero"
@@ -249,7 +248,10 @@ export default function ConvocatoriasTable() {
           onSubmit={() => setPlanningOpen(false)}
         >
           <div className="flex justify-end mt-4">
-            <ProjectPlanningGridV2 convocatoria={singleConvocatoria} />
+            <ProjectPlanningGridV2
+              convocatoria={singleConvocatoria}
+              onClose={() => setPlanningOpen(false)}
+            />
           </div>
         </ReusableModal>
       )}

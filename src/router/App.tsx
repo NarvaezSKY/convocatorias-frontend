@@ -6,10 +6,11 @@ import Register from "@/app/register";
 import { useEffect } from "react";
 import { useAuthStore } from "@/app/shared/auth.store";
 import { NotFound } from "@/layouts/404";
+import { Page } from "../Page";
 
 function App() {
-
   const { verify } = useAuthStore();
+
   useEffect(() => {
     const token = sessionStorage.getItem("token");
     if (token) {
@@ -24,15 +25,37 @@ function App() {
       <Route
         element={
           <ProtectedRoute>
-            <Home />
+            <Page title="Home | Innovación y Competitividad">
+              <Home />
+            </Page>
           </ProtectedRoute>
         }
         path="/home"
       />
-      <Route element={<Login />} path="/" />
-      <Route element={<Register />} path="/register" />
-      <Route path="*" element={<NotFound />}> </Route>
-
+      <Route
+        element={
+          <Page title="Iniciar sesión | Innovación y Competitividad">
+            <Login />
+          </Page>
+        }
+        path="/"
+      />
+      <Route
+        element={
+          <Page title="Registrarse | Innovación y Competitividad">
+            <Register />
+          </Page>
+        }
+        path="/register"
+      />
+      <Route
+        element={
+          <Page title="Página no encontrada | Innovación y Competitividad">
+            <NotFound />
+          </Page>
+        }
+        path="*"
+      />
     </Routes>
   );
 }
