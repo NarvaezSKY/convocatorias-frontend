@@ -53,7 +53,7 @@ export default function ProjectPlanningGridV2({
   const porcentajesEjecutado = rows.map((row) =>
     columns.map((col) => Number(getCellValue(row, col, "ejecutado")) || 0)
   );
-  const [valorTotalProyecto, setValorTotalProyecto] = React.useState(0);
+  const [valorTotalProyecto, setValorTotalProyecto] = React.useState(convocatoria.valor_aprobado || 0);
   return (
     <div className="p-6 max-w-full mx-auto">
       {loadingPlanFinanciero ? (

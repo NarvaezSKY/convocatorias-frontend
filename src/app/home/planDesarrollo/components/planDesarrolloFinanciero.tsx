@@ -53,7 +53,9 @@ export function ProjectFinancialMatrix({
             <thead>
               <tr>
                 <th className="border px-2 py-1 bg-gray-100">Actividad</th>
-                <th className="border px-2 py-1 bg-gray-100">Valor Actividad</th>
+                <th className="border px-2 py-1 bg-gray-100">
+                  Valor Actividad
+                </th>
                 <th
                   className="border px-2 py-1 bg-gray-100"
                   colSpan={meses.length}
@@ -88,13 +90,11 @@ export function ProjectFinancialMatrix({
                   {meses.map((_, mesIdx) => (
                     <td
                       key={mesIdx}
-                      className="border px-2 py-1"
-                      style={{
-                        background:
-                          porcentajesEjecutado[actIdx]?.[mesIdx] > 0
-                            ? "#26262a"
-                            : undefined,
-                      }}
+                      className={`border px-2 py-1 ${
+                        porcentajesEjecutado[actIdx]?.[mesIdx] > 0
+                          ? "bg-default-400 text-white"
+                          : ""
+                      }`}
                     >
                       $
                       {(
