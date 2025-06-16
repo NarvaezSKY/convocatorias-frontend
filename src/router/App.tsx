@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useAuthStore } from "@/app/shared/auth.store";
 import { NotFound } from "@/layouts/404";
 import { Page } from "../Page";
+import { ReporteProyectos } from '../app/reports/index';
 
 function App() {
   const { verify } = useAuthStore();
@@ -28,9 +29,20 @@ function App() {
             <Page title="Proyectos | Innovación y Competitividad">
               <Home />
             </Page>
+          
           </ProtectedRoute>
         }
         path="/home"
+      />
+      <Route
+        element={
+          <ProtectedRoute>
+            <Page title="Reportes | Innovación y Competitividad">
+              <ReporteProyectos />
+            </Page>
+          </ProtectedRoute>
+        }
+        path="/reportes/proyectos"
       />
       <Route
         element={

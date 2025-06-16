@@ -18,6 +18,12 @@ import { useAuthStore } from "@/app/shared/auth.store";
 import { FaUserAlt } from "react-icons/fa";
 import { PiSignOutBold } from "react-icons/pi";
 import { Button } from "@heroui/button";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@heroui/dropdown";
 
 export const Navbar = () => {
   const { user, logout } = useAuthStore();
@@ -54,6 +60,57 @@ export const Navbar = () => {
             </div>
           )}
         </div>
+        {isAuthenticated && (
+          <div className="flex items-center gap-2">
+            <NavbarItem className="hidden sm:flex">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Link className="flex items-center gap-2 underline cursor-pointer" size="md">
+                    Módulos
+                  </Link>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="ACME features"
+                  itemClasses={{
+                    base: "gap-4",
+                  }}
+                >
+                  <DropdownItem
+                    key="autoscaling"
+                    description="Ver los proyectos a través de las convocatorias con sus respectivos planes de desarrollo"
+                    href="/home"
+                  >
+                    Proyectos
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </NavbarItem>
+
+            <NavbarItem className="hidden sm:flex">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Link className="flex items-center gap-2 underline cursor-pointer" size="md">
+                    Reportes
+                  </Link>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="ACME features"
+                  itemClasses={{
+                    base: "gap-4",
+                  }}
+                >
+                  <DropdownItem
+                    key="autoscaling"
+                    description="Ver el reporte en Power BI de los proyectos"
+                    href="/reportes/proyectos"
+                  >
+                    Reporte de Proyectos (Power BI)
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </NavbarItem>
+          </div>
+        )}
       </NavbarContent>
 
       <NavbarContent

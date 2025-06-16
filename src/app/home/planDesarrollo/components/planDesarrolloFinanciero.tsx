@@ -1,4 +1,3 @@
-// ProjectFinancialMatrix.tsx
 import { Card, CardHeader, CardBody, Input } from "@heroui/react";
 
 interface ProjectFinancialMatrixProps {
@@ -6,8 +5,8 @@ interface ProjectFinancialMatrixProps {
   setValorTotalProyecto: (valor: number) => void;
   actividades: string[];
   meses: string[];
-  porcentajesProyectado: number[]; // Ej: [14, 17, 30, 39]
-  porcentajesEjecutado: number[][]; // Ej: [[2,5,5,2],[4,8,2,3],...]
+  porcentajesProyectado: number[];
+  porcentajesEjecutado: number[][];
 }
 
 export function ProjectFinancialMatrix({
@@ -18,7 +17,6 @@ export function ProjectFinancialMatrix({
   porcentajesProyectado,
   porcentajesEjecutado,
 }: ProjectFinancialMatrixProps) {
-  // Calcula totales por columna (mes)
   const totalesPorMes = meses.map((_, mesIdx) =>
     actividades.reduce(
       (acc, _, actIdx) =>
@@ -108,7 +106,6 @@ export function ProjectFinancialMatrix({
                   ))}
                 </tr>
               ))}
-              {/* Fila de totales */}
               <tr>
                 <td className="border px-2 py-1 font-bold bg-gray-50" />
                 <td className="border px-2 py-1 font-bold bg-gray-50" />
