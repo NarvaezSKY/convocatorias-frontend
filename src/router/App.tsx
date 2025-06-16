@@ -25,7 +25,7 @@ function App() {
       <Route
         element={
           <ProtectedRoute>
-            <Page title="Home | Innovación y Competitividad">
+            <Page title="Proyectos | Innovación y Competitividad">
               <Home />
             </Page>
           </ProtectedRoute>

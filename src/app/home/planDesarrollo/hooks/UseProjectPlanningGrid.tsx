@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { IGetAllConvocatoriasRes } from "@/core/convocatorias/domain/get-all-convocatorias";
 import { UsePlanFinanciero } from "./UsePlanFinanciero";
@@ -38,9 +38,12 @@ export const useProjectPlanningGrid = (convocatoria: IGetAllConvocatoriasRes) =>
     const [rowCounter, setRowCounter] = useState<number>(1);
     const [columnCounter, setColumnCounter] = useState<number>(1);
 
+    const lastIdRef = useRef<string | undefined>(undefined);
     useEffect(() => {
         if (!convocatoria?._id) return;
-
+        // Evitar llamadas repetidas si el ID no ha cambiado
+        if (lastIdRef.current === convocatoria._id) return;
+        lastIdRef.current = convocatoria._id;
         const controller = new AbortController();
 
         const fetchData = async () => {
@@ -53,7 +56,7 @@ export const useProjectPlanningGrid = (convocatoria: IGetAllConvocatoriasRes) =>
                     setGridData(gridData);
                     setRowCounter(rows.length + 1);
                     setColumnCounter(columns.length + 1);
-                } else{
+                } else {
                     setRows(["Actividad 1"]);
                     setColumns(["Mes 1"]);
                     setGridData({ "Actividad 1": { "Mes 1": { proyectado: "", ejecutado: "" } } });

@@ -9,6 +9,9 @@ import {
   getKeyValue,
   Button,
   Pagination,
+  Card,
+  CardBody,
+  CardHeader,
 } from "@heroui/react";
 import { useConvocatorias } from "../hooks/UseConvocatorias";
 import { useAuthStore } from "@/app/shared/auth.store";
@@ -16,13 +19,14 @@ import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin2Line } from "react-icons/ri";
 import { UploadConvocatoriaForm } from "./UploadConvocatoriaForm";
 import { IUploadConvocatoriaReq } from "@/core/convocatorias/domain/upload-convocatorias";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import ReusableModal from "@/app/shared/components/Modal";
 import { useConvocatoriasStore } from "@/app/shared/convocatorias.store";
 import { ConfirmDelete } from "./ConfirmDelete";
 import { formatCurrency } from "../utils/FormatCurrency";
 import { CiCalendar } from "react-icons/ci";
 import ProjectPlanningGridV2 from "../planDesarrollo/components/planDesarrolloV2";
+import { useSearchParams } from "react-router-dom";
 
 const columns = [
   { key: "convocatoria", label: "Convocatoria" },
@@ -51,9 +55,34 @@ const columns = [
 const rowsPerPage = 10;
 
 export default function ConvocatoriasTable() {
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const proyectoParam = searchParams.get("proyecto");
+  const newParams = new URLSearchParams(searchParams);
+
+  const handleSetParam = (_id: string) => {
+    clearParams();
+
+    newParams.set("proyecto", _id)
+    setSearchParams(newParams)
+  };
+
+  const clearParams = () => {
+
+    newParams.delete("proyecto")
+    setSearchParams(newParams)
+  };
+
+  useEffect(() => {
+    if (proyectoParam) {
+      getSingleConvocatoria(proyectoParam);
+    }
+  }, [proyectoParam]);
+
+
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [planningOpen, setPlanningOpen] = useState(false);
+  // const [planningOpen, setPlanningOpen] = useState(false);
   const [page, setPage] = useState(1);
 
   const { convocatorias } = useConvocatorias();
@@ -168,8 +197,9 @@ export default function ConvocatoriasTable() {
                         size="md"
                         variant="bordered"
                         onClick={() => {
-                          setPlanningOpen((prev) => !prev);
-                          getSingleConvocatoria(item._id);
+                          // setPlanningOpen((prev) => !prev);
+                          handleSetParam(item._id);
+                          // getSingleConvocatoria(item._id);
                         }}
                       >
                         <CiCalendar />
@@ -239,18 +269,42 @@ export default function ConvocatoriasTable() {
         </ReusableModal>
       )}
 
-      {planningOpen && user?.role === "superadmin" && singleConvocatoria && (
+      {proyectoParam && user?.role === "superadmin" && singleConvocatoria && (
         <ReusableModal
-          isOpen={planningOpen}
+          isOpen={!!proyectoParam}
           modalTitle="Plan Financiero"
           size="full"
-          onClose={() => setPlanningOpen(false)}
-          onSubmit={() => setPlanningOpen(false)}
+          onClose={() => { clearParams(); }}
+          onSubmit={() => { clearParams(); }}
         >
-          <div className="flex justify-end mt-4">
+          <div className="flex justify-end mt-4 flex-col gap-4">
+            <Card>
+              <CardHeader>
+                <h2 className="text-lg font-bold text-xl">Proyecto:</h2>
+              </CardHeader>
+              <CardBody className="flex flex-row gap-4 items-center justify-between">
+                <p className="truncate max-w-sm"><strong>Nombre:</strong>{" "}{singleConvocatoria?.nombre}</p>
+                <p>
+                  <strong>Consecutivo:</strong> {singleConvocatoria?.consecutivo}
+                </p>
+                <p>
+                  <strong>Dirección:</strong>{" "}
+                  {singleConvocatoria?.direccion_oficina_regional}
+                </p>
+                <p>
+                  <strong>Tipo de Postulación:</strong>{" "}
+                  {singleConvocatoria?.tipo_postulacion}
+                </p>
+                <p>
+                  <strong>Estado:</strong> {singleConvocatoria?.nuevo_estado}
+                </p>
+                <p className="truncate max-w-sm"><strong>Observaciones:</strong> {singleConvocatoria?.observaciones}</p>
+
+              </CardBody>
+            </Card>
             <ProjectPlanningGridV2
               convocatoria={singleConvocatoria}
-              onClose={() => setPlanningOpen(false)}
+              onClose={() => clearParams()}
             />
           </div>
         </ReusableModal>
