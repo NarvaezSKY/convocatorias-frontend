@@ -8,15 +8,18 @@ import {
   NavbarMenu,
   NavbarMenuItem,
 } from "@heroui/navbar";
+import { Chip } from "@heroui/chip";
 import clsx from "clsx";
 import { toast } from "sonner";
 import { link as linkStyles } from "@heroui/theme";
 import { siteConfig } from "../config/site";
 import { ThemeSwitch } from "./theme-switch";
-import { Logo } from "./icons";
+// import { Logo } from "./icons";
 import { useAuthStore } from "@/app/shared/auth.store";
 import { FaUserAlt } from "react-icons/fa";
 import { PiSignOutBold } from "react-icons/pi";
+import { HiOutlineDocumentReport } from "react-icons/hi";
+import { IoCashOutline } from "react-icons/io5";
 import { Button } from "@heroui/button";
 import {
   Dropdown,
@@ -24,9 +27,10 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@heroui/dropdown";
+import SENAIcon from '../../favicon_io/logoSena.png';
 
 export const Navbar = () => {
-  const { user, logout } = useAuthStore();
+  const { user, logout, role } = useAuthStore();
 
   const isAuthenticated = !!user;
 
@@ -49,17 +53,38 @@ export const Navbar = () => {
             color="foreground"
             href="/home"
           >
-            <Logo />
-            <p className="font-bold text-inherit">Convocatorias</p>
+            {/* <Logo /> */}
+            <img
+              src={SENAIcon}
+              alt="SENA Logo"
+              className="w-8 h-8 m-2 rounded-full"
+            />
+            <p className="font-bold leading-none">Innovación y<br />Competitividad</p>
           </Link>
         </NavbarBrand>
-        <div className="hidden lg:flex gap-4 justify-start ml-2">
+        <NavbarItem className="ml-6  hidden lg:flex">
+        <div className="hidden lg:flex gap-4 justify-start ml-2 w-full">
           {isAuthenticated && (
             <div className="flex items-center gap-2">
-              <FaUserAlt /> <p>Bienvenido, {user?.username}</p>
+              <div className="flex flex-row items-center gap-2">
+                <FaUserAlt /> <p>Bienvenido, {user?.username}</p>
+              </div>
+              <div>
+                <Chip
+
+                  size="sm"
+                  color="warning"
+                  variant="bordered"
+                  className="text-xs"
+                >
+                  {role}
+                </Chip>
+              </div>
+
             </div>
           )}
         </div>
+        </NavbarItem> 
         {isAuthenticated && (
           <div className="flex items-center gap-2">
             <NavbarItem className="hidden sm:flex">
@@ -80,6 +105,7 @@ export const Navbar = () => {
                     description="Ver los proyectos a través de las convocatorias con sus respectivos planes de desarrollo"
                     href="/home"
                   >
+                    <IoCashOutline className="inline-block mr-2" />
                     Proyectos
                   </DropdownItem>
                 </DropdownMenu>
@@ -104,6 +130,7 @@ export const Navbar = () => {
                     description="Ver el reporte en Power BI de los proyectos"
                     href="/reportes/proyectos"
                   >
+                    <HiOutlineDocumentReport className="inline-block mr-2" />
                     Reporte de Proyectos (Power BI)
                   </DropdownItem>
                 </DropdownMenu>

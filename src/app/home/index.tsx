@@ -56,22 +56,23 @@ export const Home = () => {
               {mostrarFiltros ? <IoMdCloseCircle /> : <FaSearch />}
             </Button>
           </div>
-          {role && role === "superadmin" && (
+          {(role === "superadmin" || role === "dinamizador") && (
             <div className="flex flex-col gap-2">
               <Button
                 color="primary"
                 size="md"
                 variant="bordered"
+                isDisabled={role === "dinamizador"}
                 onClick={() => setIsOpen(true)}
               >
-                <MdFileUpload /> Subir Convocatoria
+                <MdFileUpload /> Subir Proyecto
               </Button>
               <Button
                 color="primary"
                 size="md"
                 variant="bordered"
-                onClick={() => setIsUsersOpen(prev => !prev)}>
-
+                onClick={() => setIsUsersOpen(prev => !prev)}
+              >
                 {isUsersOpen ? <IoMdCloseCircle /> : <FaUserAlt />}
                 {isUsersOpen ? "Cerrar Usuarios" : "Usuarios"}
               </Button>
@@ -80,6 +81,15 @@ export const Home = () => {
         </div>
         {
           isUsersOpen && user?.role === "superadmin" && (
+            <div className=" w-full flex flex-col gap-2">
+              <Divider />
+              <UserList />
+            </div>
+          )
+        }
+
+        {
+          isUsersOpen && user?.role === "dinamizador" && (
             <div className=" w-full flex flex-col gap-2">
               <Divider />
               <UserList />

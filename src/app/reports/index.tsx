@@ -1,5 +1,6 @@
 import DefaultLayout from "@/layouts/default";
 import { Link } from "@heroui/link";
+import { Divider } from "@heroui/react";
 
 export const ReporteProyectos = () => {
   return (
@@ -18,6 +19,7 @@ export const ReporteProyectos = () => {
             <strong>Ver en Power BI</strong>
           </p>
         </Link>
+        <Divider className="mt-2" />
       </div>
     </DefaultLayout>
   );

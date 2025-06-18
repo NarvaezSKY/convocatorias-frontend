@@ -18,9 +18,13 @@ import { IGetAllUsersRes } from "@/core/users/domain/get-all-users";
 const roles = [
   { key: "user", label: "Usuario" },
   { key: "admin", label: "Administrador" },
+  { key: "dinamizador", label: "Dinamizador" },
 ];
+import { useAuthStore } from "@/app/shared/auth.store";
+// ...
 
 export const UserList = () => {
+  const { user: currentUser } = useAuthStore();
   const { users, loading, handleEditRole } = useUserList();
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedUser, setSelectedUser] =
@@ -67,7 +71,11 @@ export const UserList = () => {
                   <div className="flex gap-2">
                     <Button
                       color="warning"
-                      isDisabled={user.role === "superadmin"}
+                      isDisabled={
+                        user.role === "superadmin" || // Nunca cambiar superadmin
+                        user._id === currentUser?.userid || // Nunca cambiarse a sí mismo
+                        (currentUser?.role === "dinamizador" && user.role === "dinamizador") // Dinamizador no puede cambiar otros dinamizadores
+                      }
                       size="sm"
                       variant="bordered"
                       onClick={() => {

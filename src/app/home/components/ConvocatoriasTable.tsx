@@ -282,24 +282,15 @@ export default function ConvocatoriasTable() {
               <CardHeader>
                 <h2 className="text-lg font-bold text-xl">Proyecto:</h2>
               </CardHeader>
-              <CardBody className="flex flex-row gap-4 items-center justify-between">
-                <p className="truncate max-w-sm"><strong>Nombre:</strong>{" "}{singleConvocatoria?.nombre}</p>
-                <p>
-                  <strong>Consecutivo:</strong> {singleConvocatoria?.consecutivo}
-                </p>
-                <p>
-                  <strong>Dirección:</strong>{" "}
-                  {singleConvocatoria?.direccion_oficina_regional}
-                </p>
-                <p>
-                  <strong>Tipo de Postulación:</strong>{" "}
-                  {singleConvocatoria?.tipo_postulacion}
-                </p>
-                <p>
-                  <strong>Estado:</strong> {singleConvocatoria?.nuevo_estado}
-                </p>
-                <p className="truncate max-w-sm"><strong>Observaciones:</strong> {singleConvocatoria?.observaciones}</p>
-
+              <CardBody className="p-4">
+                <div className="flex flex-col gap-2 w-full">
+                  <p className="truncate max-w-xl text-sm"><strong>Nombre:</strong> {singleConvocatoria?.nombre}</p>
+                  <p className="truncate max-w-xl text-sm"><strong>Consecutivo:</strong> {singleConvocatoria?.consecutivo}</p>
+                  <p className="truncate max-w-xl text-sm"><strong>Dirección:</strong> {singleConvocatoria?.direccion_oficina_regional}</p>
+                  <p className="truncate max-w-xl text-sm"><strong>Tipo de Postulación:</strong> {singleConvocatoria?.tipo_postulacion}</p>
+                  <p className="truncate max-w-xl text-sm"><strong>Estado:</strong> {singleConvocatoria?.nuevo_estado}</p>
+                  <p className="truncate max-w-xl text-sm"><strong>Observaciones:</strong> {singleConvocatoria?.observaciones}</p>
+                </div>
               </CardBody>
             </Card>
             <ProjectPlanningGridV2
