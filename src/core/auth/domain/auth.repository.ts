@@ -1,3 +1,4 @@
+import { IForgotPasswordRequest } from "./forgot-password";
 import { ILoginReq, ILoginRes } from "./login";
 import { IRegisterReq } from "./register";
 import { IVerifyRes } from "./verify";
@@ -9,4 +10,5 @@ export interface IAuthRepository {
     userRegister: (data: IRegisterReq) => Promise<void>;
     activateUser: (token: string) => Promise<void>;
     recoverPassword: (email: string) => Promise<void>;
+    changePassword: (data: IForgotPasswordRequest) => Promise<void>;
 }

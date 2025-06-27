@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { authRepository } from "../../core/auth/infrastructure/auth.repository";
-
-import { loginUseCase, registerUseCase, verifyUseCase, recoverPasswordUseCase, activateUserUseCase } from "../../core/auth/application";
+import { loginUseCase, registerUseCase, verifyUseCase, recoverPasswordUseCase, activateUserUseCase, changePasswordUseCase } from "../../core/auth/application";
 import { ILoginReq, ILoginRes } from "../../core/auth/domain/login";
+import { IForgotPasswordRequest } from "@/core/auth/domain/forgot-password";
 import { IRegisterReq } from "../../core/auth/domain/register";
 import { IVerifyRes } from "@/core/auth/domain/verify";
 
@@ -21,6 +21,7 @@ type Actions = {
   logout: () => void;
   activateUser: (token: string) => Promise<void>;
   recoverPassword: (email: string) => Promise<void>;
+  changePassword: (data: IForgotPasswordRequest) => Promise<void>;
 };
 
 type Store = State & Actions;
@@ -44,7 +45,7 @@ export const useAuthStore = create<Store>((set) => ({
       } else {
         set({ loginError: "An unknown error occurred" });
       }
-    } 
+    }
     return null;
   },
 
@@ -54,7 +55,21 @@ export const useAuthStore = create<Store>((set) => ({
       set({ registerError: null });
     } catch (error) {
       if (error instanceof Error) {
-        console.error(error.message);
+        set({ registerError: error.message });
+
+        throw error; // <-- This is crucial to propagate the error
+      } else {
+        set({ registerError: "An unknown error occurred" });
+      }
+    }
+  },
+
+  changePassword: async (data: IForgotPasswordRequest) => {
+    try {
+      await changePasswordUseCase(authRepository)(data);
+      set({ registerError: null });
+    } catch (error) {
+      if (error instanceof Error) {
         set({ registerError: error.message });
       } else {
         set({ registerError: "An unknown error occurred" });
@@ -68,7 +83,6 @@ export const useAuthStore = create<Store>((set) => ({
       set({ registerError: null });
     } catch (error) {
       if (error instanceof Error) {
-        console.error(error.message);
         set({ registerError: error.message });
       } else {
         set({ registerError: "An unknown error occurred" });
@@ -96,7 +110,6 @@ export const useAuthStore = create<Store>((set) => ({
       set({ registerError: null });
     } catch (error) {
       if (error instanceof Error) {
-        console.error(error.message);
         set({ registerError: error.message });
       } else {
         set({ registerError: "An unknown error occurred" });

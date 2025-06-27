@@ -4,7 +4,7 @@ import { IAuthRepository } from '../domain/auth.repository';
 import { ILoginReq } from '../domain/login';
 import { IRegisterReq } from '../domain/register';
 import axios from 'axios';
-
+import { IForgotPasswordRequest } from '../domain/forgot-password';
 
 const login = async (data: ILoginReq) => {
     try {
@@ -46,7 +46,6 @@ const userRegister = async (data: IRegisterReq) => {
     }
 }
 
-
 const verify = async () => {
     try {
         const response = await axiosInstance.get("/auth/verify");
@@ -77,11 +76,22 @@ const recoverPassword = async (email: string) => {
     }
 }
 
+const changePassword = async (data: IForgotPasswordRequest) => {
+    try {
+        const response = await axiosInstance.post("/auth/reset-password", data);
+        return response.data;
+    } catch (error) {
+        console.error("Error during password change:", error);
+        throw error;
+    }
+}
+
 export const authRepository: IAuthRepository = {
     login,
     adminRegister,
     userRegister,
     verify,
     activateUser,
-    recoverPassword
+    recoverPassword,
+    changePassword
 }

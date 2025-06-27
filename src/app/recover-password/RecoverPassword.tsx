@@ -5,6 +5,7 @@ import { Card, CardBody, Spinner, Divider, Form } from "@heroui/react";
 import { useForm } from "react-hook-form";
 import { useRecoverPass } from "./hooks/useRecoverPass";
 import { MdEmail as EmailIcon } from "react-icons/md"
+import React, { useState, useRef } from "react";
 
 interface RecoverPasswordForm {
     email: string;
@@ -12,6 +13,8 @@ interface RecoverPasswordForm {
 
 export const RecoverPassword = () => {
     const { handleRecoverPassword, isLoading, registerError } = useRecoverPass();
+    const [cooldown, setCooldown] = useState(0);
+    const cooldownRef = useRef<NodeJS.Timeout | null>(null);
 
     const {
         register,
@@ -20,13 +23,27 @@ export const RecoverPassword = () => {
         formState: { errors },
     } = useForm<RecoverPasswordForm>()
 
+    React.useEffect(() => {
+        if (cooldown > 0) {
+            cooldownRef.current = setTimeout(() => setCooldown(cooldown - 1), 1000);
+        }
+        return () => {
+            if (cooldownRef.current) clearTimeout(cooldownRef.current);
+        };
+    }, [cooldown]);
+
     const onSubmit = async (data: RecoverPasswordForm) => {
         try {
-            await handleRecoverPassword(data.email)
+            await handleRecoverPassword(data.email);
+
+            setCooldown(60); // 60 segundos de cooldown
         } catch (error) {
-            console.log(error)
+            console.log(error);
+
+            setCooldown(0); // Reinicia cooldown en caso de error
         }
-    }
+    };
+
     return (
         <DefaultLayout>
             <div className="flex items-center justify-center min-h-screen p-4">
@@ -73,7 +90,7 @@ export const RecoverPassword = () => {
                                     <div className="space-y-2 w-full">
                                         <Button
                                             className="w-full mb-2 h-14 text-success font-semibold"
-                                            isDisabled={isLoading}
+                                            isDisabled={isLoading || cooldown > 0}
                                             color="success"
                                             variant="flat"
                                             type="submit"
@@ -84,6 +101,8 @@ export const RecoverPassword = () => {
                                                     <Spinner size="sm" color="white" />
                                                     <span>Enviando correo...</span>
                                                 </div>
+                                            ) : cooldown > 0 ? (
+                                                `Recuperar contraseña (${cooldown}s)`
                                             ) : (
                                                 "Recuperar contraseña"
                                             )}
