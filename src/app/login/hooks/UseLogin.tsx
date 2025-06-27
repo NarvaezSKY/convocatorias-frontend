@@ -19,7 +19,7 @@ export const useLogin = () => {
         toast.success("Inicio de sesión exitoso");
         navigate("/home", { replace: true });
       } else {
-        toast.error("Credenciales incorrectas");
+        toast.error("Revisa tus credenciales e intenta nuevamente. Si tu cuenta está inactiva, contacta al administrador del sistema.");
       }
     } catch (e) {
       toast.error("Unexpected error");

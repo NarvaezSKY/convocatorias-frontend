@@ -50,7 +50,7 @@ export const Home = () => {
               color="primary"
               radius="full"
               size="md"
-              variant="bordered"
+              variant="flat"
               onClick={() => setMostrarFiltros((prev) => !prev)}
             >
               {mostrarFiltros ? <IoMdCloseCircle /> : <FaSearch />}
@@ -59,9 +59,9 @@ export const Home = () => {
           {(role === "superadmin" || role === "dinamizador") && (
             <div className="flex flex-col gap-2">
               <Button
-                color="primary"
+                color="success"
                 size="md"
-                variant="bordered"
+                variant="flat"
                 isDisabled={role === "dinamizador"}
                 onClick={() => setIsOpen(true)}
               >
@@ -70,7 +70,7 @@ export const Home = () => {
               <Button
                 color="primary"
                 size="md"
-                variant="bordered"
+                variant="flat"
                 onClick={() => setIsUsersOpen(prev => !prev)}
               >
                 {isUsersOpen ? <IoMdCloseCircle /> : <FaUserAlt />}
@@ -113,7 +113,6 @@ export const Home = () => {
 
         <Divider />
         <ConvocatoriasTable />
-        <Divider />
         <ReusableModal
           isOpen={isOpen}
           modalTitle="Subir Convocatoria"

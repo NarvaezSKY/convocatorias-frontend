@@ -9,6 +9,7 @@ import {
   Button,
   Select,
   SelectItem,
+  Chip,
 } from "@heroui/react";
 import { useUserList } from "../hooks/UseUserList";
 import ReusableModal from "@/app/shared/components/Modal";
@@ -21,7 +22,6 @@ const roles = [
   { key: "dinamizador", label: "Dinamizador" },
 ];
 import { useAuthStore } from "@/app/shared/auth.store";
-// ...
 
 export const UserList = () => {
   const { user: currentUser } = useAuthStore();
@@ -34,11 +34,12 @@ export const UserList = () => {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-2">Lista de Usuarios</h2>
-      <Table aria-label="Tabla de usuarios" >
+      <Table aria-label="Tabla de usuarios" isStriped >
         <TableHeader>
           <TableColumn>NOMBRE</TableColumn>
           <TableColumn>CORREO</TableColumn>
           <TableColumn>ROL</TableColumn>
+          <TableColumn>ESTADO</TableColumn>
           <TableColumn>ACCIONES</TableColumn>
         </TableHeader>
         <TableBody>
@@ -50,6 +51,9 @@ export const UserList = () => {
                 </TableCell>
                 <TableCell>
                   <Skeleton className="w-32 h-4 rounded-md bg-default-300" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-20 h-4 rounded-md bg-default-300" />
                 </TableCell>
                 <TableCell>
                   <Skeleton className="w-20 h-4 rounded-md bg-default-300" />
@@ -67,17 +71,18 @@ export const UserList = () => {
                 <TableCell>{user.username}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.role}</TableCell>
+                <TableCell><Chip variant="bordered" color={user.estado === "activo" ? "success" : "danger"}>{user.estado}</Chip></TableCell>
                 <TableCell>
                   <div className="flex gap-2">
                     <Button
                       color="warning"
                       isDisabled={
-                        user.role === "superadmin" || // Nunca cambiar superadmin
-                        user._id === currentUser?.userid || // Nunca cambiarse a sí mismo
-                        (currentUser?.role === "dinamizador" && user.role === "dinamizador") // Dinamizador no puede cambiar otros dinamizadores
+                        user.role === "superadmin" ||
+                        user._id === currentUser?.userid ||
+                        (currentUser?.role === "dinamizador" && user.role === "dinamizador")
                       }
                       size="sm"
-                      variant="bordered"
+                      variant="flat"
                       onClick={() => {
                         setIsOpen(true);
                         setSelectedUser(user);
@@ -100,7 +105,7 @@ export const UserList = () => {
           setSelectedUser(null);
         }}
       >
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 w-full">
           <label className="text-sm text-neutral-700" htmlFor="rol">
             Usuario seleccionado:
             <div className="font-semibold">{selectedUser?.username}</div>
@@ -110,7 +115,7 @@ export const UserList = () => {
             <div className="font-semibold">{selectedUser?.role}</div>
           </label>
           <Select
-            className="max-w-xs"
+            className="w-full"
             label="Selecciona un rol"
             onChange={(e) => setSelectedRole(e.target.value)}
           >
@@ -129,11 +134,11 @@ export const UserList = () => {
             ))}
           </Select>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full justify-end">
             <Button
-              color="primary"
+              color="success"
               size="md"
-              variant="bordered"
+              variant="flat"
               onClick={() => {
                 if (selectedUser) {
                   handleEditRole(selectedUser._id, selectedRole || "");
@@ -147,7 +152,7 @@ export const UserList = () => {
             <Button
               color="danger"
               size="md"
-              variant="bordered"
+              variant="flat"
               onClick={() => {
                 setIsOpen(false);
                 setSelectedUser(null);

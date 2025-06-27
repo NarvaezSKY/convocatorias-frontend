@@ -243,15 +243,15 @@ export function UploadConvocatoriaForm({
 
       {error && <span className="text-danger text-sm -mt-2">{error}</span>}
 
-      <div className="flex gap-4">
-        <Button color="primary" isDisabled={isLoading} type="submit">
+      <div className="flex gap-4 w-full">
+        <Button color="success" isDisabled={isLoading} type="submit" variant="flat" className="w-full">
           {isLoading
             ? "Cargando..."
             : method === "edit"
               ? "Actualizar"
               : "Subir"}
         </Button>
-        <Button type="reset" variant="bordered">
+        <Button type="reset" variant="flat" className="w-full">
           Limpiar
         </Button>
       </div>

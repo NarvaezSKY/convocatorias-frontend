@@ -7,4 +7,6 @@ export interface IAuthRepository {
     verify() : Promise<IVerifyRes>;
     adminRegister: (data: IRegisterReq) => Promise<void>;
     userRegister: (data: IRegisterReq) => Promise<void>;
+    activateUser: (token: string) => Promise<void>;
+    recoverPassword: (email: string) => Promise<void>;
 }

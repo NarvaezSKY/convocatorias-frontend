@@ -52,7 +52,7 @@ const columns = [
   { key: "acciones", label: "Acciones" },
 ];
 
-const rowsPerPage = 10;
+const rowsPerPage = 5;
 
 export default function ConvocatoriasTable() {
 
@@ -113,6 +113,7 @@ export default function ConvocatoriasTable() {
   return (
     <>
       <Table
+        topContentPlacement="inside"
         isStriped
         aria-label="Tabla de Convocatorias con paginación"
         bottomContent={
@@ -122,7 +123,8 @@ export default function ConvocatoriasTable() {
                 isCompact
                 showControls
                 showShadow
-                color="primary"
+                color="success"
+                variant="flat"
                 page={page}
                 total={pages}
                 onChange={(page) => setPage(page)}

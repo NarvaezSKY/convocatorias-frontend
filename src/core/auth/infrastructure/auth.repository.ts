@@ -57,9 +57,31 @@ const verify = async () => {
     }
 }
 
+const activateUser = async (token: string) => {
+    try {
+        const response = await axiosInstance.get(`/auth/activate/${token}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error during activation:", error);
+        throw error;
+    }
+}
+
+const recoverPassword = async (email: string) => {
+    try {
+        const response = await axiosInstance.post("/auth/recover-password", { email });
+        return response.data;
+    } catch (error) {
+        console.error("Error during password recovery:", error);
+        throw error;
+    }
+}
+
 export const authRepository: IAuthRepository = {
     login,
     adminRegister,
     userRegister,
-    verify
+    verify,
+    activateUser,
+    recoverPassword
 }

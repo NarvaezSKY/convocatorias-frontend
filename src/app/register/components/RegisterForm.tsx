@@ -1,13 +1,24 @@
-import { Form, Input, Button } from "@heroui/react";
-import { useForm } from "react-hook-form";
-import { useRegister } from "../hooks/UseRegister";
-import { IRegisterReq } from "@/core/auth/domain/register";
+"use client"
+
+import { Form, Input, Button, Card, CardBody, Divider, Spinner, Select, SelectItem } from "@heroui/react"
+import { useForm } from "react-hook-form"
+import { useRegister } from "../hooks/UseRegister"
+import type { IRegisterReq } from "@/core/auth/domain/register"
+import { IoLockClosed as LockClosedIcon } from "react-icons/io5"
+import { RiAdminFill } from "react-icons/ri";
+import { FaEye as EyeIcon, FaEyeSlash as EyeSlashIcon } from "react-icons/fa"
+import { FaUserAlt as UserIcon, FaPhoneAlt } from "react-icons/fa"
+import { MdEmail as EmailIcon } from "react-icons/md"
+import { useState } from "react"
+
 interface FormValues extends IRegisterReq {
-  confirmPassword: string;
+  confirmPassword: string
 }
 
 export function RegisterForm() {
-  const { registerUser, isLoading, registerError } = useRegister();
+  const { registerUser, isLoading, registerError } = useRegister()
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false)
 
   const {
     register,
@@ -15,112 +26,260 @@ export function RegisterForm() {
     reset,
     watch,
     formState: { errors },
-  } = useForm<FormValues>();
+  } = useForm<FormValues>()
 
   const onSubmit = async (data: FormValues) => {
-    const { confirmPassword, ...registerData } = data;
-    await registerUser(registerData);
-  };
+    const { confirmPassword, ...registerData } = data
+    await registerUser(registerData)
+  }
 
-  const password = watch("password");
+  const password = watch("password")
+
+  const togglePasswordVisibility = () => setIsPasswordVisible(!isPasswordVisible)
+  const toggleConfirmPasswordVisibility = () => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
 
   return (
-    <Form
-      className="w-full justify-center items-center space-y-4"
-      onReset={() => reset()}
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <div className="flex flex-col gap-4 rounded-lg p-4">
-        <h1 className="text-3xl font-bold mb-2">Registrarse</h1>
-
-        <p className="text-sm text-gray-500 mb-2">
-          Si ya tienes una cuenta,{" "}
-          <a className="text-primary" href="/">
-            {" "}
-            inicia sesión aqui{" "}
-          </a>
-        </p>
-
-        <Input
-          isRequired
-          label="Nombre de usuario"
-          labelPlacement="outside"
-          placeholder="Ingresa tu nombre de usuario"
-          variant="bordered"
-          {...register("username", {
-            required: "El nombre de usuario es obligatorio",
-          })}
-          errorMessage={errors.username?.message}
-          isInvalid={!!errors.username}
-        />
-
-        <Input
-          isRequired
-          label="Correo electrónico"
-          labelPlacement="outside"
-          placeholder="Ingresa tu correo"
-          type="email"
-          variant="bordered"
-          {...register("email", {
-            required: "El correo es obligatorio",
-            pattern: {
-              value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-              message: "Correo inválido",
-            },
-          })}
-          errorMessage={errors.email?.message}
-          isInvalid={!!errors.email}
-        />
-
-        <Input
-          isRequired
-          label="Contraseña"
-          labelPlacement="outside"
-          placeholder="Ingresa tu contraseña"
-          type="password"
-          variant="bordered"
-          {...register("password", {
-            required: "La contraseña es obligatoria",
-          })}
-          errorMessage={errors.password?.message}
-          isInvalid={!!errors.password}
-        />
-
-        <Input
-          isRequired
-          label="Verificar contraseña"
-          labelPlacement="outside"
-          placeholder="Confirma tu contraseña"
-          type="password"
-          variant="bordered"
-          {...register("confirmPassword", {
-            required: "Confirma tu contraseña",
-            validate: (value) =>
-              value === password || "Las contraseñas no coinciden",
-          })}
-          errorMessage={errors.confirmPassword?.message}
-          isInvalid={!!errors.confirmPassword}
-        />
-
-        {registerError && (
-          <span className="text-danger text-small -mt-2">{registerError}</span>
-        )}
-
-        <div className="flex gap-4">
-          <Button
-            className="w-full"
-            color="primary"
-            isDisabled={isLoading}
-            type="submit"
-            variant="bordered"
-          >
-            {isLoading ? "Registrando..." : "Registrarse"}
-          </Button>
-          <Button type="reset" variant="bordered">
-            Limpiar
-          </Button>
+    <div className="min-h-screen flex items-center justify-center p-4 border border-gray-200 rounded-lg shadow-lg w-full max-w-md">
+      <div className="w-full max-w-md mb-10">
+        {/* Header con logo */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Crear cuenta</h1>
+          <p className="text-gray-600">Regístrate para comenzar</p>
         </div>
+
+        {/* Card principal */}
+        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm mt-4">
+          <CardBody className="p-8">
+            <Form className="space-y-6" onReset={() => reset()} onSubmit={handleSubmit(onSubmit)}>
+              {/* Campo de usuario */}
+              <div className="space-y-2 w-full">
+                <Input
+                  isRequired
+                  label="Nombre de usuario"
+                  labelPlacement="outside"
+                  autoComplete="name"
+                  placeholder="Ingresa tu nombre de usuario"
+                  variant="bordered"
+                  startContent={<UserIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
+                  classNames={{
+                    input: "text-sm",
+                    inputWrapper: "border-gray-200 hover:border-gray-300 focus-within:!border-blue-500 h-14",
+                  }}
+                  {...register("username", {
+                    required: "El nombre de usuario es obligatorio",
+                  })}
+                  errorMessage={errors.username?.message}
+                  isInvalid={!!errors.username}
+                />
+              </div>
+
+              {/* Campo de email */}
+              <div className="space-y-2 w-full">
+                <Input
+                  isRequired
+                  label="Correo electrónico"
+                  labelPlacement="outside"
+                  placeholder="Ingresa tu correo electrónico"
+                  type="email"
+                  autoComplete="email"
+                  variant="bordered"
+                  startContent={<EmailIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
+                  classNames={{
+                    input: "text-sm",
+                    inputWrapper: "border-gray-200 hover:border-gray-300 focus-within:!border-blue-500 h-14",
+                  }}
+                  {...register("email", {
+                    required: "El correo es obligatorio",
+                    pattern: {
+                      value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                      message: "Correo inválido",
+                    },
+                  })}
+                  errorMessage={errors.email?.message}
+                  isInvalid={!!errors.email}
+                />
+              </div>
+              <div className="space-y-2 w-full">
+                <Input
+                  isRequired
+                  label="Número de teléfono"
+                  labelPlacement="outside"
+                  placeholder="Ingresa tu número de teléfono"
+                  type="number"
+                  maxLength={10}
+                  isClearable
+                  autoComplete="tel"
+                  variant="bordered"
+                  startContent={<FaPhoneAlt className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
+                  classNames={{
+                    input: "text-sm",
+                    inputWrapper: "border-gray-200 hover:border-gray-300 focus-within:!border-blue-500 h-14",
+                  }}
+                  {...register("telefono", {
+                    required: "El telefono es obligatorio",
+                    pattern: {
+                      value: /^\d{10}$/,
+                      message: "Número de teléfono inválido, debe tener 10 dígitos",
+                    },
+                  })}
+                  errorMessage={errors.telefono?.message}
+                  isInvalid={!!errors.telefono}
+                />
+              </div>
+              <div className="space-y-2 w-full">
+                <Select
+                  isRequired
+                  size="lg"
+                  radius="md"
+                  label="Rol solicitado"
+                  labelPlacement="outside"
+                  placeholder="Selecciona tu rol"
+                  variant="bordered"
+                  // onChange={(e) => {
+                  //   const value = (e.target as HTMLSelectElement).value
+                  //   // Aquí puedes manejar el cambio de rol si es necesario
+                  //   console.log("Rol seleccionado:", value)
+                  // }}
+                  {...register("role", {
+                    required: "El rol es obligatorio",
+                  })}
+                  errorMessage={errors.role?.message}
+                  isInvalid={!!errors.role}
+
+                  startContent={<RiAdminFill className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}  
+                >
+                  <SelectItem key="dinamizador">Dinamizador</SelectItem>
+                  <SelectItem key="admin">Administrador</SelectItem>
+                  <SelectItem key="investigador">Investigador</SelectItem>
+                </Select>
+              </div>
+
+              {/* Campo de contraseña */}
+              <div className="space-y-2 w-full">
+
+                <Input
+                  isRequired
+                  label="Contraseña"
+                  autoComplete="new-password"
+                  labelPlacement="outside"
+                  placeholder="Ingresa tu contraseña"
+                  type={isPasswordVisible ? "text" : "password"}
+                  variant="bordered"
+                  startContent={<LockClosedIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
+                  endContent={
+                    <button className="focus:outline-none" type="button" onClick={togglePasswordVisibility}>
+                      {isPasswordVisible ? (
+                        <EyeSlashIcon className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                      ) : (
+                        <EyeIcon className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                      )}
+                    </button>
+                  }
+                  classNames={{
+                    input: "text-sm",
+                    inputWrapper: "border-gray-200 hover:border-gray-300 focus-within:!border-blue-500 h-14",
+                  }}
+                  {...register("password", {
+                    required: "La contraseña es obligatoria",
+                  })}
+                  errorMessage={errors.password?.message}
+                  isInvalid={!!errors.password}
+                />
+              </div>
+
+
+              {/* Campo de confirmar contraseña */}
+              <div className="space-y-2 w-full">
+                <Input
+                  isRequired
+                  label="Confirmar contraseña"
+                  labelPlacement="outside"
+                  placeholder="Confirma tu contraseña"
+                  type={isConfirmPasswordVisible ? "text" : "password"}
+                  variant="bordered"
+                  startContent={<LockClosedIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
+                  endContent={
+                    <button className="focus:outline-none" type="button" onClick={toggleConfirmPasswordVisibility}>
+                      {isConfirmPasswordVisible ? (
+                        <EyeSlashIcon className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                      ) : (
+                        <EyeIcon className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                      )}
+                    </button>
+                  }
+                  classNames={{
+                    input: "text-sm",
+                    inputWrapper: "border-gray-200 hover:border-gray-300 focus-within:!border-blue-500 h-14",
+                  }}
+                  {...register("confirmPassword", {
+                    required: "Confirma tu contraseña",
+                    validate: (value) => value === password || "Las contraseñas no coinciden",
+                  })}
+                  errorMessage={errors.confirmPassword?.message}
+                  isInvalid={!!errors.confirmPassword}
+                />
+              </div>
+
+              {/* Error de registro */}
+              {registerError && (
+                <div className="border border-danger rounded-lg p-3 w-full">
+                  <span className="text-danger text-sm font-medium flex items-center justify-center">
+                    {registerError}
+                  </span>
+                </div>
+              )}
+
+              {/* Botones */}
+              <div className="space-y-2 w-full">
+                <Button
+                  className="w-full mb-2 h-14 text-success font-semibold"
+                  isDisabled={isLoading}
+                  color="success"
+                  variant="flat"
+                  type="submit"
+                  radius="lg"
+                >
+                  {isLoading ? (
+                    <div className="flex items-center gap-2">
+                      <Spinner size="sm" color="white" />
+                      <span>Registrando...</span>
+                    </div>
+                  ) : (
+                    "Crear cuenta"
+                  )}
+                </Button>
+
+                <Button
+                  type="reset"
+                  variant="flat"
+                  className="w-full h-14 border-gray-200 hover:border-gray-300 transition-colors"
+                  radius="lg"
+                >
+                  Limpiar campos
+                </Button>
+              </div>
+
+              {/* Divider */}
+              <div className="relative">
+                <Divider className="my-6" />
+              </div>
+
+              {/* Enlace de login */}
+              <div className="text-center">
+                <p className="text-sm text-gray-600 leading-relaxed py-1">
+                  ¿Ya tienes una cuenta?{" "}
+                  <a
+                    className="text-success hover:text-blue-700 font-semibold hover:underline transition-colors"
+                    href="/"
+                  >
+                    Inicia sesión aquí
+                  </a>
+                </p>
+              </div>
+            </Form>
+          </CardBody>
+        </Card>
       </div>
-    </Form>
-  );
+    </div>
+  )
 }

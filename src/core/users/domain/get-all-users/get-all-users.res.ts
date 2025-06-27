@@ -3,4 +3,5 @@ export interface IGetAllUsersRes {
     username: string;
     email: string;
     role: string;
+    estado: string;
 }

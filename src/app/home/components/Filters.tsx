@@ -191,7 +191,7 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
               radius="sm"
               size="lg"
               type="button"
-              variant="bordered"
+              variant="flat"
               onClick={() => generarReporte(filtros)}
             >
               <PiMicrosoftExcelLogoBold className="mr-2" /> Generar reporte
@@ -220,7 +220,7 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
             radius="sm"
             size="lg"
             type="button"
-            variant="bordered"
+            variant="flat"
             onClick={onReset}
           >
             <CiEraser className="mr-2" /> Limpiar filtros

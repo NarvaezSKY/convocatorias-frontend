@@ -8,16 +8,19 @@ import { useAuthStore } from "@/app/shared/auth.store";
 import { NotFound } from "@/layouts/404";
 import { Page } from "../Page";
 import { ReporteProyectos } from '../app/reports/index';
+import { ActivateUser } from "@/app/admin/ActivateUser";
+import { RecoverPassword } from "@/app/recover-password/RecoverPassword";
+import { ChangePassword } from "@/app/recover-password/ChangePassword";
 
 function App() {
   const { verify } = useAuthStore();
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     if (token) {
       verify();
     } else {
-      sessionStorage.removeItem("token");
+      localStorage.removeItem("token");
     }
   }, [verify]);
 
@@ -29,7 +32,7 @@ function App() {
             <Page title="Proyectos | Innovación y Competitividad">
               <Home />
             </Page>
-          
+
           </ProtectedRoute>
         }
         path="/home"
@@ -68,7 +71,36 @@ function App() {
         }
         path="*"
       />
+
+      <Route
+        element={
+          <ProtectedRoute>
+            <Page title="Activar cuenta | Innovación y Competitividad">
+              <ActivateUser/>
+            </Page>
+          </ProtectedRoute>
+
+
+        }
+        path="admin/activate/:token" />
+      <Route
+        element={
+          <Page title="Recuperar contraseña | Innovación y Competitividad"> 
+            <RecoverPassword />
+          </Page>
+        }
+        path="/recover-password"
+      />
+
+      <Route
+        element={
+          <Page title="Cambiar contraseña | Innovación y Competitividad">
+            <ChangePassword />
+          </Page>
+        }
+        path="/reset-password/:token"/>
     </Routes>
+    
   );
 }
 

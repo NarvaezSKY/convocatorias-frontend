@@ -1,3 +1,5 @@
 export * from './login.use-case'
 export * from './register.use-case'
 export * from './verify.use-case'
+export * from './activateUser.use-case'
+export * from './recoverPassword.use-case'

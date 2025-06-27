@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { authRepository } from "../../core/auth/infrastructure/auth.repository";
 
-import { loginUseCase, registerUseCase, verifyUseCase } from "../../core/auth/application";
+import { loginUseCase, registerUseCase, verifyUseCase, recoverPasswordUseCase, activateUserUseCase } from "../../core/auth/application";
 import { ILoginReq, ILoginRes } from "../../core/auth/domain/login";
 import { IRegisterReq } from "../../core/auth/domain/register";
 import { IVerifyRes } from "@/core/auth/domain/verify";
@@ -19,6 +19,8 @@ type Actions = {
   register: (data: IRegisterReq) => Promise<void>;
   verify: () => Promise<IVerifyRes | null>;
   logout: () => void;
+  activateUser: (token: string) => Promise<void>;
+  recoverPassword: (email: string) => Promise<void>;
 };
 
 type Store = State & Actions;
@@ -46,12 +48,38 @@ export const useAuthStore = create<Store>((set) => ({
     return null;
   },
 
+  recoverPassword: async (email: string) => {
+    try {
+      await recoverPasswordUseCase(authRepository)(email);
+      set({ registerError: null });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        set({ registerError: error.message });
+      } else {
+        set({ registerError: "An unknown error occurred" });
+      }
+    }
+  },
 
+  activateUser: async (token: string) => {
+    try {
+      await activateUserUseCase(authRepository)(token);
+      set({ registerError: null });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        set({ registerError: error.message });
+      } else {
+        set({ registerError: "An unknown error occurred" });
+      }
+    }
+  },
 
   login: async (data: ILoginReq) => {
     try {
       const response = await loginUseCase(authRepository)(data);
-      sessionStorage.setItem("token", response.token);
+      localStorage.setItem("token", response.token);
       set({ user: response, token: response.token, loginError: null, role: response.role });
     } catch (error) {
       if (error instanceof Error && (error as any).response?.data?.message) {
@@ -76,7 +104,7 @@ export const useAuthStore = create<Store>((set) => ({
     }
   },
   logout: () => {
-    sessionStorage.removeItem("token");
+    localStorage.removeItem("token");
     set({ token: null, user: null, loginError: null, registerError: null, role: null });
   },
 }));

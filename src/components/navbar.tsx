@@ -63,34 +63,34 @@ export const Navbar = () => {
           </Link>
         </NavbarBrand>
         <NavbarItem className="ml-6  hidden lg:flex">
-        <div className="hidden lg:flex gap-4 justify-start ml-2 w-full">
-          {isAuthenticated && (
-            <div className="flex items-center gap-2">
-              <div className="flex flex-row items-center gap-2">
-                <FaUserAlt /> <p>Bienvenido, {user?.username}</p>
-              </div>
-              <div>
-                <Chip
+          <div className="hidden lg:flex gap-4 justify-start ml-2 w-full">
+            {isAuthenticated && (
+              <div className="flex items-center gap-2">
+                <div className="flex flex-row items-center gap-2">
+                  <FaUserAlt /> <p>Bienvenido, <strong className="text-success">{user?.username}</strong></p>
+                </div>
+                <div>
+                  <Chip
 
-                  size="sm"
-                  color="warning"
-                  variant="bordered"
-                  className="text-xs"
-                >
-                  {role}
-                </Chip>
-              </div>
+                    size="sm"
+                    color="warning"
+                    variant="bordered"
+                    className="text-xs"
+                  >
+                    {role}
+                  </Chip>
+                </div>
 
-            </div>
-          )}
-        </div>
-        </NavbarItem> 
+              </div>
+            )}
+          </div>
+        </NavbarItem>
         {isAuthenticated && (
           <div className="flex items-center gap-2">
             <NavbarItem className="hidden sm:flex">
               <Dropdown>
                 <DropdownTrigger>
-                  <Link className="flex items-center gap-2 underline cursor-pointer" size="md">
+                  <Link className="flex items-center gap-2 underline cursor-pointer" color="success" size="md">
                     Módulos
                   </Link>
                 </DropdownTrigger>
@@ -115,7 +115,7 @@ export const Navbar = () => {
             <NavbarItem className="hidden sm:flex">
               <Dropdown>
                 <DropdownTrigger>
-                  <Link className="flex items-center gap-2 underline cursor-pointer" size="md">
+                  <Link className="flex items-center gap-2 underline cursor-pointer" color="success" size="md">
                     Reportes
                   </Link>
                 </DropdownTrigger>
@@ -161,7 +161,7 @@ export const Navbar = () => {
                 className="w-full"
                 color="danger"
                 size="sm"
-                variant="bordered"
+                variant="flat"
                 onClick={handleLogout}
               >
                 <PiSignOutBold /> Cerrar sesión
@@ -203,7 +203,7 @@ export const Navbar = () => {
                 className="w-full"
                 color="danger"
                 size="lg"
-                variant="bordered"
+                variant="flat"
                 onClick={handleLogout}
               >
                 <PiSignOutBold /> Cerrar sesión

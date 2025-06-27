@@ -1,7 +1,7 @@
 import { InternalAxiosRequestConfig } from "axios";
 
 export const requestInterceptor = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-  const token = sessionStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
   if (token && config.headers) {
     config.headers.set('Authorization', `Bearer ${token}`);
