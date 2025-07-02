@@ -29,6 +29,7 @@ export function RegisterForm() {
   } = useForm<FormValues>()
 
   const onSubmit = async (data: FormValues) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, ...registerData } = data
     await registerUser(registerData)
   }
@@ -55,16 +56,16 @@ export function RegisterForm() {
               <div className="space-y-2 w-full">
                 <Input
                   isRequired
-                  label="Nombre de usuario"
-                  labelPlacement="outside"
                   autoComplete="name"
-                  placeholder="Ingresa tu nombre de usuario"
-                  variant="bordered"
-                  startContent={<UserIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
                   classNames={{
                     input: "text-sm",
                     inputWrapper: "border-gray-200 hover:border-gray-300 focus-within:!border-blue-500 h-14",
                   }}
+                  label="Nombre de usuario"
+                  labelPlacement="outside"
+                  placeholder="Ingresa tu nombre de usuario"
+                  startContent={<UserIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
+                  variant="bordered"
                   {...register("username", {
                     required: "El nombre de usuario es obligatorio",
                   })}
@@ -77,17 +78,17 @@ export function RegisterForm() {
               <div className="space-y-2 w-full">
                 <Input
                   isRequired
-                  label="Correo electrónico"
-                  labelPlacement="outside"
-                  placeholder="Ingresa tu correo electrónico"
-                  type="email"
                   autoComplete="email"
-                  variant="bordered"
-                  startContent={<EmailIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
                   classNames={{
                     input: "text-sm",
                     inputWrapper: "border-gray-200 hover:border-gray-300 focus-within:!border-blue-500 h-14",
                   }}
+                  label="Correo electrónico"
+                  labelPlacement="outside"
+                  placeholder="Ingresa tu correo electrónico"
+                  startContent={<EmailIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
+                  type="email"
+                  variant="bordered"
                   {...register("email", {
                     required: "El correo es obligatorio",
                     pattern: {
@@ -101,20 +102,20 @@ export function RegisterForm() {
               </div>
               <div className="space-y-2 w-full">
                 <Input
-                  isRequired
-                  label="Número de teléfono"
-                  labelPlacement="outside"
-                  placeholder="Ingresa tu número de teléfono"
-                  type="number"
-                  maxLength={10}
                   isClearable
+                  isRequired
                   autoComplete="tel"
-                  variant="bordered"
-                  startContent={<FaPhoneAlt className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
                   classNames={{
                     input: "text-sm",
                     inputWrapper: "border-gray-200 hover:border-gray-300 focus-within:!border-blue-500 h-14",
                   }}
+                  label="Número de teléfono"
+                  labelPlacement="outside"
+                  maxLength={10}
+                  placeholder="Ingresa tu número de teléfono"
+                  startContent={<FaPhoneAlt className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
+                  type="number"
+                  variant="bordered"
                   {...register("telefono", {
                     required: "El telefono es obligatorio",
                     pattern: {
@@ -129,11 +130,11 @@ export function RegisterForm() {
               <div className="space-y-2 w-full">
                 <Select
                   isRequired
-                  size="lg"
-                  radius="md"
                   label="Rol solicitado"
                   labelPlacement="outside"
                   placeholder="Selecciona tu rol"
+                  radius="md"
+                  size="lg"
                   variant="bordered"
                   // onChange={(e) => {
                   //   const value = (e.target as HTMLSelectElement).value
@@ -151,6 +152,7 @@ export function RegisterForm() {
                   <SelectItem key="dinamizador">Dinamizador</SelectItem>
                   <SelectItem key="admin">Administrador</SelectItem>
                   <SelectItem key="investigador">Investigador</SelectItem>
+                  <SelectItem key="Linvestigador">Líder Investigador</SelectItem>
                 </Select>
               </div>
 
@@ -159,13 +161,11 @@ export function RegisterForm() {
 
                 <Input
                   isRequired
-                  label="Contraseña"
                   autoComplete="new-password"
-                  labelPlacement="outside"
-                  placeholder="Ingresa tu contraseña"
-                  type={isPasswordVisible ? "text" : "password"}
-                  variant="bordered"
-                  startContent={<LockClosedIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
+                  classNames={{
+                    input: "text-sm",
+                    inputWrapper: "border-gray-200 hover:border-gray-300 focus-within:!border-blue-500 h-14",
+                  }}
                   endContent={
                     <button className="focus:outline-none" type="button" onClick={togglePasswordVisibility}>
                       {isPasswordVisible ? (
@@ -175,10 +175,12 @@ export function RegisterForm() {
                       )}
                     </button>
                   }
-                  classNames={{
-                    input: "text-sm",
-                    inputWrapper: "border-gray-200 hover:border-gray-300 focus-within:!border-blue-500 h-14",
-                  }}
+                  label="Contraseña"
+                  labelPlacement="outside"
+                  placeholder="Ingresa tu contraseña"
+                  startContent={<LockClosedIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
+                  type={isPasswordVisible ? "text" : "password"}
+                  variant="bordered"
                   {...register("password", {
                     required: "La contraseña es obligatoria",
                   })}
@@ -192,12 +194,10 @@ export function RegisterForm() {
               <div className="space-y-2 w-full">
                 <Input
                   isRequired
-                  label="Confirmar contraseña"
-                  labelPlacement="outside"
-                  placeholder="Confirma tu contraseña"
-                  type={isConfirmPasswordVisible ? "text" : "password"}
-                  variant="bordered"
-                  startContent={<LockClosedIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
+                  classNames={{
+                    input: "text-sm",
+                    inputWrapper: "border-gray-200 hover:border-gray-300 focus-within:!border-blue-500 h-14",
+                  }}
                   endContent={
                     <button className="focus:outline-none" type="button" onClick={toggleConfirmPasswordVisibility}>
                       {isConfirmPasswordVisible ? (
@@ -207,10 +207,12 @@ export function RegisterForm() {
                       )}
                     </button>
                   }
-                  classNames={{
-                    input: "text-sm",
-                    inputWrapper: "border-gray-200 hover:border-gray-300 focus-within:!border-blue-500 h-14",
-                  }}
+                  label="Confirmar contraseña"
+                  labelPlacement="outside"
+                  placeholder="Confirma tu contraseña"
+                  startContent={<LockClosedIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
+                  type={isConfirmPasswordVisible ? "text" : "password"}
+                  variant="bordered"
                   {...register("confirmPassword", {
                     required: "Confirma tu contraseña",
                     validate: (value) => value === password || "Las contraseñas no coinciden",
@@ -233,15 +235,15 @@ export function RegisterForm() {
               <div className="space-y-2 w-full">
                 <Button
                   className="w-full mb-2 h-14 text-success font-semibold"
-                  isDisabled={isLoading}
                   color="success"
-                  variant="flat"
-                  type="submit"
+                  isDisabled={isLoading}
                   radius="lg"
+                  type="submit"
+                  variant="flat"
                 >
                   {isLoading ? (
                     <div className="flex items-center gap-2">
-                      <Spinner size="sm" color="white" />
+                      <Spinner color="white" size="sm" />
                       <span>Registrando...</span>
                     </div>
                   ) : (
@@ -250,10 +252,10 @@ export function RegisterForm() {
                 </Button>
 
                 <Button
-                  type="reset"
-                  variant="flat"
                   className="w-full h-14 border-gray-200 hover:border-gray-300 transition-colors"
                   radius="lg"
+                  type="reset"
+                  variant="flat"
                 >
                   Limpiar campos
                 </Button>

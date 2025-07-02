@@ -56,13 +56,14 @@ export const Home = () => {
               {mostrarFiltros ? <IoMdCloseCircle /> : <FaSearch />}
             </Button>
           </div>
-          {(role === "superadmin" || role === "dinamizador") && (
+          {(role === "superadmin" ||
+            role === "dinamizador" ||
+            role === "Linvestigador") && (
             <div className="flex flex-col gap-2">
               <Button
                 color="success"
                 size="md"
                 variant="flat"
-                isDisabled={role === "dinamizador"}
                 onClick={() => setIsOpen(true)}
               >
                 <MdFileUpload /> Subir Proyecto
@@ -71,31 +72,47 @@ export const Home = () => {
                 color="primary"
                 size="md"
                 variant="flat"
-                onClick={() => setIsUsersOpen(prev => !prev)}
+                onClick={() => setIsUsersOpen((prev) => !prev)}
               >
                 {isUsersOpen ? <IoMdCloseCircle /> : <FaUserAlt />}
                 {isUsersOpen ? "Cerrar Usuarios" : "Usuarios"}
               </Button>
             </div>
           )}
+          {role === "investigador" && (
+            <div className="flex flex-col gap-2">
+              <Button
+                color="success"
+                size="md"
+                variant="flat"
+                onClick={() => setIsOpen(true)}
+              >
+                <MdFileUpload /> Subir Proyecto
+              </Button>
+            </div>
+          )}
         </div>
-        {
-          isUsersOpen && user?.role === "superadmin" && (
-            <div className=" w-full flex flex-col gap-2">
-              <Divider />
-              <UserList />
-            </div>
-          )
-        }
+        {isUsersOpen && user?.role === "superadmin" && (
+          <div className=" w-full flex flex-col gap-2">
+            <Divider />
+            <UserList />
+          </div>
+        )}
 
-        {
-          isUsersOpen && user?.role === "dinamizador" && (
-            <div className=" w-full flex flex-col gap-2">
-              <Divider />
-              <UserList />
-            </div>
-          )
-        }
+        {isUsersOpen && user?.role === "dinamizador" && (
+          <div className=" w-full flex flex-col gap-2">
+            <Divider />
+            <UserList />
+          </div>
+        )}
+
+        {isUsersOpen && user?.role === "Linvestigador" && (
+          <div className=" w-full flex flex-col gap-2">
+            <Divider />
+            <UserList />
+          </div>
+        )}
+
         {mostrarFiltros && (
           <>
             <Divider />
@@ -120,7 +137,11 @@ export const Home = () => {
           onSubmit={() => setIsOpen(false)}
         >
           {user ? (
-            <UploadConvocatoriaForm method="upload" userId={user.userid} onClose={() => setIsOpen(false)} />
+            <UploadConvocatoriaForm
+              method="upload"
+              userId={user.userId}
+              onClose={() => setIsOpen(false)}
+            />
           ) : (
             <p>Usuario no autenticado, por favor inicie sesión.</p>
           )}

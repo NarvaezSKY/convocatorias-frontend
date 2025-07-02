@@ -199,21 +199,6 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
           </div>
         )}
 
-        {user?.role === "admin" && (
-          <div className="flex flex-col justify-end">
-            <Button
-              color="success"
-              radius="sm"
-              size="lg"
-              type="button"
-              variant="bordered"
-              onClick={() => generarReporte(filtros)}
-            >
-              <PiMicrosoftExcelLogoBold className="mr-2" /> Generar reporte
-            </Button>
-          </div>
-        )}
-
         <div className="flex flex-col justify-end">
           <Button
             color="danger"

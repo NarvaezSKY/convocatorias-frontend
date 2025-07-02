@@ -1,6 +1,6 @@
 export interface IVerifyRes {
     token: string
-    userid: string
+    userId: string
     role: string
     username: string
 }

@@ -55,7 +55,6 @@ const columns = [
 const rowsPerPage = 5;
 
 export default function ConvocatoriasTable() {
-
   const [searchParams, setSearchParams] = useSearchParams();
   const proyectoParam = searchParams.get("proyecto");
   const newParams = new URLSearchParams(searchParams);
@@ -63,14 +62,13 @@ export default function ConvocatoriasTable() {
   const handleSetParam = (_id: string) => {
     clearParams();
 
-    newParams.set("proyecto", _id)
-    setSearchParams(newParams)
+    newParams.set("proyecto", _id);
+    setSearchParams(newParams);
   };
 
   const clearParams = () => {
-
-    newParams.delete("proyecto")
-    setSearchParams(newParams)
+    newParams.delete("proyecto");
+    setSearchParams(newParams);
   };
 
   useEffect(() => {
@@ -78,7 +76,6 @@ export default function ConvocatoriasTable() {
       getSingleConvocatoria(proyectoParam);
     }
   }, [proyectoParam]);
-
 
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -113,7 +110,6 @@ export default function ConvocatoriasTable() {
   return (
     <>
       <Table
-        topContentPlacement="inside"
         isStriped
         aria-label="Tabla de Convocatorias con paginación"
         bottomContent={
@@ -124,9 +120,9 @@ export default function ConvocatoriasTable() {
                 showControls
                 showShadow
                 color="success"
-                variant="flat"
                 page={page}
                 total={pages}
+                variant="flat"
                 onChange={(page) => setPage(page)}
               />
             </div>
@@ -135,6 +131,7 @@ export default function ConvocatoriasTable() {
         classNames={{
           table: "min-h-[400px] table-auto",
         }}
+        topContentPlacement="inside"
       >
         <TableHeader columns={columns}>
           {(column) => (
@@ -168,7 +165,13 @@ export default function ConvocatoriasTable() {
                       : ""
                   }
                 >
-                  {columnKey === "acciones" && user?.role === "superadmin" ? (
+                  {columnKey === "acciones" &&
+                  [
+                    "superadmin",
+                    "dinamizador",
+                    "Linvestigador",
+                    "investigador",
+                  ].includes(user?.role ?? "") ? (
                     <div className="flex gap-2">
                       <Button
                         isIconOnly
@@ -235,73 +238,104 @@ export default function ConvocatoriasTable() {
         </TableBody>
       </Table>
 
-      {user?.role === "superadmin" && singleConvocatoria && (
-        <ReusableModal
-          isOpen={isOpen}
-          modalTitle="Editar Convocatoria"
-          onClose={() => setIsOpen(false)}
-          onSubmit={() => setIsOpen(false)}
-        >
-          <div className="flex justify-end mt-4">
-            <UploadConvocatoriaForm
-              convocatoriaId={singleConvocatoria._id}
-              initialValues={
-                singleConvocatoria as unknown as IUploadConvocatoriaReq
-              }
-              method="edit"
-              userId={user.userid}
-            />
-          </div>
-        </ReusableModal>
-      )}
+      {["superadmin", "dinamizador", "Linvestigador", "investigador"].includes(
+        user?.role ?? ""
+      ) &&
+        singleConvocatoria && (
+          <ReusableModal
+            isOpen={isOpen}
+            modalTitle="Editar Convocatoria"
+            onClose={() => setIsOpen(false)}
+            onSubmit={() => setIsOpen(false)}
+          >
+            <div className="flex justify-end mt-4">
+              <UploadConvocatoriaForm
+                convocatoriaId={singleConvocatoria._id}
+                initialValues={
+                  singleConvocatoria as unknown as IUploadConvocatoriaReq
+                }
+                method="edit"
+                userId={user?.userId ?? ""}
+              />
+            </div>
+          </ReusableModal>
+        )}
 
-      {isDeleteOpen && user?.role === "superadmin" && singleConvocatoria && (
-        <ReusableModal
-          isOpen={isDeleteOpen}
-          modalTitle="Eliminar Convocatoria"
-          onClose={() => setIsDeleteOpen(false)}
-          onSubmit={() => setIsDeleteOpen(false)}
-        >
-          <div className="flex justify-end mt-4">
-            <ConfirmDelete
-              convocatoria={singleConvocatoria}
-              onClose={() => setIsDeleteOpen(false)}
-            />
-          </div>
-        </ReusableModal>
-      )}
+      {["superadmin", "dinamizador", "Linvestigador", "investigador"].includes(
+        user?.role ?? ""
+      ) &&
+        singleConvocatoria && (
+          <ReusableModal
+            isOpen={isDeleteOpen}
+            modalTitle="Eliminar Convocatoria"
+            onClose={() => setIsDeleteOpen(false)}
+            onSubmit={() => setIsDeleteOpen(false)}
+          >
+            <div className="flex justify-end mt-4">
+              <ConfirmDelete
+                convocatoria={singleConvocatoria}
+                onClose={() => setIsDeleteOpen(false)}
+              />
+            </div>
+          </ReusableModal>
+        )}
 
-      {proyectoParam && user?.role === "superadmin" && singleConvocatoria && (
-        <ReusableModal
-          isOpen={!!proyectoParam}
-          modalTitle="Plan Financiero"
-          size="full"
-          onClose={() => { clearParams(); }}
-          onSubmit={() => { clearParams(); }}
-        >
-          <div className="flex justify-end mt-4 flex-col gap-4">
-            <Card>
-              <CardHeader>
-                <h2 className="text-lg font-bold text-xl">Proyecto:</h2>
-              </CardHeader>
-              <CardBody className="p-4">
-                <div className="flex flex-col gap-2 w-full">
-                  <p className="truncate max-w-xl text-sm"><strong>Nombre:</strong> {singleConvocatoria?.nombre}</p>
-                  <p className="truncate max-w-xl text-sm"><strong>Consecutivo:</strong> {singleConvocatoria?.consecutivo}</p>
-                  <p className="truncate max-w-xl text-sm"><strong>Dirección:</strong> {singleConvocatoria?.direccion_oficina_regional}</p>
-                  <p className="truncate max-w-xl text-sm"><strong>Tipo de Postulación:</strong> {singleConvocatoria?.tipo_postulacion}</p>
-                  <p className="truncate max-w-xl text-sm"><strong>Estado:</strong> {singleConvocatoria?.nuevo_estado}</p>
-                  <p className="truncate max-w-xl text-sm"><strong>Observaciones:</strong> {singleConvocatoria?.observaciones}</p>
-                </div>
-              </CardBody>
-            </Card>
-            <ProjectPlanningGridV2
-              convocatoria={singleConvocatoria}
-              onClose={() => clearParams()}
-            />
-          </div>
-        </ReusableModal>
-      )}
+      {proyectoParam &&
+        ["superadmin", "dinamizador", "Linvestigador", "investigador"].includes(
+          user?.role ?? ""
+        ) &&
+        singleConvocatoria && (
+          <ReusableModal
+            isOpen={!!proyectoParam}
+            modalTitle="Plan Financiero"
+            size="full"
+            onClose={() => {
+              clearParams();
+            }}
+            onSubmit={() => {
+              clearParams();
+            }}
+          >
+            <div className="flex justify-end mt-4 flex-col gap-4">
+              <Card>
+                <CardHeader>
+                  <h2 className="text-lg font-bold">Proyecto:</h2>
+                </CardHeader>
+                <CardBody className="p-4">
+                  <div className="flex flex-col gap-2 w-full">
+                    <p className="truncate max-w-xl text-sm">
+                      <strong>Nombre:</strong> {singleConvocatoria?.nombre}
+                    </p>
+                    <p className="truncate max-w-xl text-sm">
+                      <strong>Consecutivo:</strong>{" "}
+                      {singleConvocatoria?.consecutivo}
+                    </p>
+                    <p className="truncate max-w-xl text-sm">
+                      <strong>Dirección:</strong>{" "}
+                      {singleConvocatoria?.direccion_oficina_regional}
+                    </p>
+                    <p className="truncate max-w-xl text-sm">
+                      <strong>Tipo de Postulación:</strong>{" "}
+                      {singleConvocatoria?.tipo_postulacion}
+                    </p>
+                    <p className="truncate max-w-xl text-sm">
+                      <strong>Estado:</strong>{" "}
+                      {singleConvocatoria?.nuevo_estado}
+                    </p>
+                    <p className="truncate max-w-xl text-sm">
+                      <strong>Observaciones:</strong>{" "}
+                      {singleConvocatoria?.observaciones}
+                    </p>
+                  </div>
+                </CardBody>
+              </Card>
+              <ProjectPlanningGridV2
+                convocatoria={singleConvocatoria}
+                onClose={() => clearParams()}
+              />
+            </div>
+          </ReusableModal>
+        )}
     </>
   );
 }

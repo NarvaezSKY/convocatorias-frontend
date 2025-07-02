@@ -27,7 +27,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@heroui/dropdown";
-import SENAIcon from '../../favicon_io/logoSena.png';
+import SENAIcon from "../../favicon_io/logoSena.png";
 
 export const Navbar = () => {
   const { user, logout, role } = useAuthStore();
@@ -55,11 +55,14 @@ export const Navbar = () => {
           >
             {/* <Logo /> */}
             <img
-              src={SENAIcon}
               alt="SENA Logo"
               className="w-8 h-8 m-2 rounded-full"
+              src={SENAIcon}
             />
-            <p className="font-bold leading-none">Innovación y<br />Competitividad</p>
+            <p className="font-bold leading-none">
+              Innovación y<br />
+              Competitividad
+            </p>
           </Link>
         </NavbarBrand>
         <NavbarItem className="ml-6  hidden lg:flex">
@@ -67,20 +70,32 @@ export const Navbar = () => {
             {isAuthenticated && (
               <div className="flex items-center gap-2">
                 <div className="flex flex-row items-center gap-2">
-                  <FaUserAlt /> <p>Bienvenido, <strong className="text-success">{user?.username}</strong></p>
+                  <FaUserAlt />{" "}
+                  <p>
+                    Bienvenido,{" "}
+                    <strong className="text-success">{user?.username}</strong>
+                  </p>
                 </div>
                 <div>
                   <Chip
-
-                    size="sm"
-                    color="warning"
-                    variant="bordered"
                     className="text-xs"
+                    color="warning"
+                    size="sm"
+                    variant="bordered"
                   >
-                    {role}
+                    {role === "admin"
+                      ? "Supervisor"
+                      : role === "superadmin"
+                        ? "Super Administrador"
+                        : role === "dinamizador"
+                          ? "Dinamizador"
+                          : role === "Linvestigador"
+                            ? "Lider Investigador"
+                            : role === "investigador"
+                              ? "Investigador"
+                              : "Investigador"}
                   </Chip>
                 </div>
-
               </div>
             )}
           </div>
@@ -90,7 +105,11 @@ export const Navbar = () => {
             <NavbarItem className="hidden sm:flex">
               <Dropdown>
                 <DropdownTrigger>
-                  <Link className="flex items-center gap-2 underline cursor-pointer" color="success" size="md">
+                  <Link
+                    className="flex items-center gap-2 underline cursor-pointer"
+                    color="success"
+                    size="md"
+                  >
                     Módulos
                   </Link>
                 </DropdownTrigger>
@@ -115,7 +134,11 @@ export const Navbar = () => {
             <NavbarItem className="hidden sm:flex">
               <Dropdown>
                 <DropdownTrigger>
-                  <Link className="flex items-center gap-2 underline cursor-pointer" color="success" size="md">
+                  <Link
+                    className="flex items-center gap-2 underline cursor-pointer"
+                    color="success"
+                    size="md"
+                  >
                     Reportes
                   </Link>
                 </DropdownTrigger>

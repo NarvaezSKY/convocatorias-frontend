@@ -1,8 +1,8 @@
 import axiosInstance from '@/config/axios/instance';
 import { IUsersRepository } from '../domain/users.repository';
-
 import { IGetAllUsersRes } from '../domain/get-all-users';
 import { IUpdateRoleReq } from '../domain/update-role';
+import { IUpdateStatusReq } from '../domain/update-status';
 
 
 const getAllUsers = async (): Promise<IGetAllUsersRes[]> => {
@@ -25,7 +25,18 @@ const updateRole = async (data: IUpdateRoleReq): Promise<void> => {
     }
 }
 
+const updateStatus = async (data: IUpdateStatusReq): Promise<void> => {
+    try {
+        const response = await axiosInstance.patch('/auth/update-status', data);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating user status:', error);
+        throw error;
+    }
+}
+
 export const UsersRepository: IUsersRepository = {
     getAllUsers,
-    updateRole
+    updateRole,
+    updateStatus
 }
