@@ -150,7 +150,7 @@ export function RegisterForm() {
                   startContent={<RiAdminFill className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}  
                 >
                   <SelectItem key="dinamizador">Dinamizador</SelectItem>
-                  <SelectItem key="admin">Administrador</SelectItem>
+                  <SelectItem key="admin">Supervisor</SelectItem>
                   <SelectItem key="investigador">Investigador</SelectItem>
                   <SelectItem key="Linvestigador">Líder Investigador</SelectItem>
                 </Select>
