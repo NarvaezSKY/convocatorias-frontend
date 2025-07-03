@@ -102,7 +102,11 @@ export const UserList = () => {
                     <div className="flex gap-2">
                       <Button
                         color="warning"
-                        isDisabled={!currentUser || !canModify(currentUser, user)}
+                        isDisabled={
+                          !currentUser ||
+                          currentUser.role !== "superadmin" ||
+                          currentUser.userId === user._id
+                        }
                         size="sm"
                         variant="flat"
                         onClick={() => {
@@ -114,7 +118,9 @@ export const UserList = () => {
                       </Button>
                       <Button
                         color="secondary"
-                        isDisabled={!currentUser || !canModify(currentUser, user)}
+                        isDisabled={
+                          !currentUser || !canModify(currentUser, user)
+                        }
                         size="sm"
                         variant="flat"
                         onClick={() => {
