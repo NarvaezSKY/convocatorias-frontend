@@ -10,11 +10,13 @@ import {
   Select,
   SelectItem,
   Chip,
+  Spinner,
 } from "@heroui/react";
 import { useUserList } from "../hooks/UseUserList";
 import ReusableModal from "@/app/shared/components/Modal";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IGetAllUsersRes } from "@/core/users/domain/get-all-users";
+import { toast } from "sonner";
 
 const roles = [
   { key: "investigador", label: "Investigador" },
@@ -24,6 +26,9 @@ const roles = [
 ];
 import { useAuthStore } from "@/app/shared/auth.store";
 import { canModify } from "../utils/CanModify";
+import { SearchUsers } from "./components/SearchUsers";
+import { IFilterUsersReq } from "@/core/users/domain/filter-users";
+import { useSearchUsers } from "./hooks/useSearchUsers";
 
 export const UserList = () => {
   const { user: currentUser } = useAuthStore();
@@ -38,13 +43,44 @@ export const UserList = () => {
     null
   );
 
+  const [filters, setFilters] = useState<Partial<IFilterUsersReq>>({});
+
+  const { handleSearch } = useSearchUsers();
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      const filtrosLimpios = Object.fromEntries(
+        Object.entries(filters).filter(([_, v]) => v?.toString().trim() !== "")
+      );
+
+      handleSearch(filtrosLimpios);
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [filters]);
+
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-2">Lista de Usuarios</h2>
+      <div className="mb-4">
+        <SearchUsers
+          filters={filters}
+          onChange={(nuevoFiltro: Partial<IFilterUsersReq>) =>
+            setFilters((prev) => ({ ...prev, ...nuevoFiltro }))
+          }
+          onReset={() => {
+            toast.success("Filtros reseteados"), setFilters({});
+          }}
+        />
+      </div>
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold mb-2">Lista de Usuarios</h2>
+
+        {loading && <Spinner size="md" />}
+      </div>
       <Table isStriped aria-label="Tabla de usuarios">
         <TableHeader>
           <TableColumn>NOMBRE</TableColumn>
           <TableColumn>CORREO</TableColumn>
+          <TableColumn>TELEFONO</TableColumn>
           <TableColumn>ROL</TableColumn>
           <TableColumn>ESTADO</TableColumn>
           <TableColumn>ACCIONES</TableColumn>
@@ -66,6 +102,9 @@ export const UserList = () => {
                     <Skeleton className="w-20 h-4 rounded-md bg-default-300" />
                   </TableCell>
                   <TableCell>
+                    <Skeleton className="w-20 h-4 rounded-md bg-default-300" />
+                  </TableCell>
+                  <TableCell>
                     <div className="flex gap-2">
                       <Skeleton className="w-16 h-6 rounded-md bg-default-300" />
                       <Skeleton className="w-20 h-6 rounded-md bg-default-300" />
@@ -77,6 +116,7 @@ export const UserList = () => {
                 <TableRow key={user._id}>
                   <TableCell>{user.username}</TableCell>
                   <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.telefono}</TableCell>
                   <TableCell>
                     {user.role === "superadmin"
                       ? "Super Administrador"

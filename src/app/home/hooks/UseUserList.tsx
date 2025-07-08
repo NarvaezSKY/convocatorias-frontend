@@ -1,15 +1,9 @@
 import { useUsersStore } from "@/app/shared/users.store";
-
-import { useEffect } from "react";
 import { toast } from "sonner";
 
 export const useUserList = () => {
   const { users, getAllUsers, loading, updateRole, updateStatus } =
     useUsersStore();
-
-  useEffect(() => {
-    getAllUsers();
-  }, []);
 
   const handleEditRole = (userId: string, newRole: string) => {
     const data = {

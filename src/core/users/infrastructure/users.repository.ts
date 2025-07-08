@@ -3,6 +3,7 @@ import { IUsersRepository } from '../domain/users.repository';
 import { IGetAllUsersRes } from '../domain/get-all-users';
 import { IUpdateRoleReq } from '../domain/update-role';
 import { IUpdateStatusReq } from '../domain/update-status';
+import { IFilterUsersReq } from '../domain/filter-users';
 
 
 const getAllUsers = async (): Promise<IGetAllUsersRes[]> => {
@@ -35,8 +36,19 @@ const updateStatus = async (data: IUpdateStatusReq): Promise<void> => {
     }
 }
 
+const filterUsers = async (data: IFilterUsersReq): Promise<IGetAllUsersRes[]> => {
+    try {
+        const response = await axiosInstance.get('/auth/filter-users', { params: data });
+        return response.data;
+    } catch (error) {
+        console.error('Error filtering users:', error);
+        throw error;
+    }
+}
+
 export const UsersRepository: IUsersRepository = {
     getAllUsers,
     updateRole,
-    updateStatus
+    updateStatus,
+    filterUsers
 }

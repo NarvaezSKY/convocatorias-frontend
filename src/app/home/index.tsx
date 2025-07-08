@@ -14,7 +14,7 @@ import { MdFileUpload } from "react-icons/md";
 import { FaUserAlt } from "react-icons/fa";
 import { toast } from "sonner";
 import { Divider } from "@heroui/react";
-import { UserList } from "./components/UserList";
+import { UserList } from "./users/UserList";
 
 export const Home = () => {
   const [filtros, setFiltros] = useState<ISearchConvocatoriasReq>({});
@@ -38,7 +38,7 @@ export const Home = () => {
 
   return (
     <DefaultLayout>
-      <div className="flex items-center justify-center flex-col gap-4">
+      <div className="flex items-center justify-center flex-col gap-4 bg-default-100 p-4 rounded-lg shadow-md w-full max-w-6xl border-2 border-success-100">
         <div className="w-full flex justify-between items-center">
           <div className="flex gap-2">
             <h1 className="text-3xl font-bold">

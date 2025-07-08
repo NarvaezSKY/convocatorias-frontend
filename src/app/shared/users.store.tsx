@@ -4,10 +4,12 @@ import {
   getAllUsersUseCase,
   updateRoleUseCase,
   updateStatusUseCase,
+  filterUsersUseCase,
 } from "@/core/users/application";
 import { IGetAllUsersRes } from "@/core/users/domain/get-all-users";
 import { IUpdateRoleReq } from "@/core/users/domain/update-role";
 import { IUpdateStatusReq } from "@/core/users/domain/update-status";
+import { IFilterUsersReq } from "@/core/users/domain/filter-users";
 
 type State = {
   users: IGetAllUsersRes[];
@@ -19,6 +21,7 @@ type Actions = {
   getAllUsers: () => Promise<IGetAllUsersRes[]>;
   updateRole: (data: IUpdateRoleReq) => Promise<void>;
   updateStatus: (data: IUpdateStatusReq) => Promise<void>;
+  filterUsers: (data: IFilterUsersReq) => Promise<IGetAllUsersRes[]>;
 };
 
 type Store = State & Actions;
@@ -77,6 +80,18 @@ export const useUsersStore = create<Store>((set) => ({
     } catch (error) {
       console.error("Error updating status:", error);
       set({ error: "Error updating status", loading: false });
+    }
+  },
+  filterUsers: async (data) => {
+    set({ loading: true, error: null });
+    try {
+      const filteredUsers = await filterUsersUseCase(UsersRepository)(data);
+      set({ users: filteredUsers, loading: false, error: null });
+      return filteredUsers;
+    } catch (error) {
+      console.error("Error filtering users:", error);
+      set({ error: "Error filtering users", loading: false });
+      throw error;
     }
   },
 }));
