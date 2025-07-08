@@ -85,7 +85,7 @@ export const UserList = () => {
           <TableColumn>ESTADO</TableColumn>
           <TableColumn>ACCIONES</TableColumn>
         </TableHeader>
-        <TableBody>
+        <TableBody emptyContent="No se encontraron usuarios.">
           {loading
             ? Array.from({ length: 4 }).map((_, index) => (
                 <TableRow key={`skeleton-${index}`}>

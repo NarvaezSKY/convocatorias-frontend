@@ -23,7 +23,7 @@ export const SearchUsers = ({
             label="Buscar por nombre"
             placeholder="Buscar por nombre"
             size="sm"
-            value={filters.username}
+            value={filters.username || ""}
             variant="bordered"
             onChange={(e) => onChange({ username: e.target.value })}
           />
@@ -32,7 +32,7 @@ export const SearchUsers = ({
             label="Buscar por correo"
             placeholder="Buscar por correo"
             size="sm"
-            value={filters.email}
+            value={filters.email || ""}
             variant="bordered"
             onChange={(e) => onChange({ email: e.target.value })}
           />
@@ -41,7 +41,8 @@ export const SearchUsers = ({
             label="Buscar por teléfono"
             placeholder="Buscar por teléfono"
             size="sm"
-            value={filters.telefono}
+            type="number"
+            value={filters.telefono || ""}
             variant="bordered"
             onChange={(e) => onChange({ telefono: e.target.value })}
           />
@@ -50,7 +51,7 @@ export const SearchUsers = ({
             label="Buscar por estado"
             placeholder="Buscar por estado"
             size="sm"
-            value={filters.estado}
+            value={filters.estado || ""}
             variant="bordered"
             onChange={(e) => onChange({ estado: e.target.value })}
           >
@@ -62,7 +63,7 @@ export const SearchUsers = ({
             label="Buscar por rol"
             placeholder="Buscar por rol"
             size="sm"
-            value={filters.role}
+            value={filters.role || ""}
             variant="bordered"
             onChange={(e) => onChange({ role: e.target.value })}
           >
