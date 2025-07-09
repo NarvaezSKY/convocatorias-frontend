@@ -6,7 +6,6 @@ export interface IRegisterReq {
     password: string;
 
     // Optional fields
-    correoInstitucional?: String,
     areaDeTrabajo?: String,
     clasificacionMinCiencias?: String,
     CvLAC?: String,

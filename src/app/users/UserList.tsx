@@ -12,7 +12,7 @@ import {
   Chip,
   Spinner,
 } from "@heroui/react";
-import { useUserList } from "../hooks/UseUserList";
+import { useUserList } from "./hooks/UseUserList";
 import ReusableModal from "@/app/shared/components/Modal";
 import React, { useEffect, useState } from "react";
 import { IGetAllUsersRes } from "@/core/users/domain/get-all-users";
@@ -25,10 +25,11 @@ const roles = [
   { key: "Linvestigador", label: "Lider Investigador" },
 ];
 import { useAuthStore } from "@/app/shared/auth.store";
-import { canModify } from "../utils/CanModify";
+import { canModify } from "./utils/CanModify";
 import { SearchUsers } from "./components/SearchUsers";
 import { IFilterUsersReq } from "@/core/users/domain/filter-users";
 import { useSearchUsers } from "./hooks/useSearchUsers";
+import DefaultLayout from "@/layouts/default";
 
 export const UserList = () => {
   const { user: currentUser } = useAuthStore();
@@ -59,6 +60,7 @@ export const UserList = () => {
   }, [filters]);
 
   return (
+    <DefaultLayout>
     <div>
       <div className="mb-4">
         <SearchUsers
@@ -310,5 +312,6 @@ export const UserList = () => {
         </div>
       </ReusableModal>
     </div>
+    </DefaultLayout>
   );
 };

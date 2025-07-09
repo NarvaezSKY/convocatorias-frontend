@@ -4,7 +4,7 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  NavbarMenuToggle,
+  // NavbarMenuToggle,
   NavbarMenu,
   NavbarMenuItem,
 } from "@heroui/navbar";
@@ -14,37 +14,28 @@ import { toast } from "sonner";
 import { link as linkStyles } from "@heroui/theme";
 import { siteConfig } from "../config/site";
 import { ThemeSwitch } from "./theme-switch";
-// import { Logo } from "./icons";
+
 import { useAuthStore } from "@/app/shared/auth.store";
 import { FaUserAlt } from "react-icons/fa";
 import { PiSignOutBold } from "react-icons/pi";
-import { HiOutlineDocumentReport } from "react-icons/hi";
-import { IoCashOutline } from "react-icons/io5";
+
 import { Button } from "@heroui/button";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-} from "@heroui/dropdown";
+
 import SENAIcon from "../../favicon_io/logoSena.png";
 
 export const Navbar = () => {
   const { user, logout, role } = useAuthStore();
 
-  const isAuthenticated = !!user;
-
   const handleLogout = () => {
     logout();
     toast.success("Sesión cerrada correctamente");
   };
+  const isAuthenticated = !!user;
 
   return (
     <HeroUINavbar
-      className="border-b border-neutral-400"
-      isBlurred={true}
+      className="border-b border-gray-200 bg-default-100 fixed top-0 z-50 w-full"
       maxWidth="xl"
-      position="sticky"
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand className="gap-3 max-w-fit">
@@ -72,8 +63,7 @@ export const Navbar = () => {
                 <div className="flex flex-row items-center gap-2">
                   <FaUserAlt />{" "}
                   <p>
-                    Bienvenido,{" "}
-                    <strong className="text-success">{user?.username}</strong>
+                    <strong>{user?.username}</strong>
                   </p>
                 </div>
                 <div>
@@ -100,67 +90,6 @@ export const Navbar = () => {
             )}
           </div>
         </NavbarItem>
-        {isAuthenticated && (
-          <div className="flex items-center gap-2">
-            <NavbarItem className="hidden sm:flex">
-              <Dropdown>
-                <DropdownTrigger>
-                  <Link
-                    className="flex items-center gap-2 underline cursor-pointer"
-                    color="success"
-                    size="md"
-                  >
-                    Módulos
-                  </Link>
-                </DropdownTrigger>
-                <DropdownMenu
-                  aria-label="ACME features"
-                  itemClasses={{
-                    base: "gap-4",
-                  }}
-                >
-                  <DropdownItem
-                    key="autoscaling"
-                    description="Ver los proyectos a través de las convocatorias con sus respectivos planes de desarrollo"
-                    href="/home"
-                  >
-                    <IoCashOutline className="inline-block mr-2" />
-                    Proyectos
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </NavbarItem>
-
-            <NavbarItem className="hidden sm:flex">
-              <Dropdown>
-                <DropdownTrigger>
-                  <Link
-                    className="flex items-center gap-2 underline cursor-pointer"
-                    color="success"
-                    size="md"
-                  >
-                    Reportes
-                  </Link>
-                </DropdownTrigger>
-                <DropdownMenu
-                  aria-label="ACME features"
-                  itemClasses={{
-                    base: "gap-4",
-                  }}
-                >
-                  <DropdownItem
-                    key="autoscaling"
-                    description="Ver el reporte en Power BI de los proyectos"
-                    href="/reportes/proyectos"
-                  >
-                    <HiOutlineDocumentReport className="inline-block mr-2" />
-                    Reporte de Proyectos (Power BI)
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </NavbarItem>
-          </div>
-        )}
       </NavbarContent>
 
       <NavbarContent
@@ -168,7 +97,7 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex gap-2">
-          {!isAuthenticated ? (
+          {!isAuthenticated &&
             siteConfig.navItems.map((item, index) => (
               <Link
                 key={index}
@@ -177,27 +106,15 @@ export const Navbar = () => {
               >
                 {item.label}
               </Link>
-            ))
-          ) : (
-            <div className="flex gap-4">
-              <Button
-                className="w-full"
-                color="danger"
-                size="sm"
-                variant="flat"
-                onClick={handleLogout}
-              >
-                <PiSignOutBold /> Cerrar sesión
-              </Button>
-            </div>
-          )}
+            ))}
+
           <ThemeSwitch />
         </NavbarItem>
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
         <ThemeSwitch />
-        <NavbarMenuToggle />
+        {/* <NavbarMenuToggle /> */}
       </NavbarContent>
 
       <NavbarMenu>

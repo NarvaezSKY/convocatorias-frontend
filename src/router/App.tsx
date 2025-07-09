@@ -11,6 +11,7 @@ import { ReporteProyectos } from '../app/reports/index';
 import { ActivateUser } from "@/app/admin/ActivateUser";
 import { RecoverPassword } from "@/app/recover-password/RecoverPassword";
 import { ChangePassword } from "@/app/recover-password/ChangePassword";
+import { UserList } from "@/app/users/UserList";
 
 function App() {
   const { verify } = useAuthStore();
@@ -99,6 +100,17 @@ function App() {
           </Page>
         }
         path="/reset-password/:token"/>
+
+      <Route
+        element={
+          <ProtectedRoute>
+            <Page title="Lista de Usuarios | Innovación y Competitividad">
+              <UserList />
+            </Page>
+          </ProtectedRoute>
+        }
+        path="/users"
+      />
     </Routes>
     
   );

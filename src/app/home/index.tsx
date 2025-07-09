@@ -1,7 +1,7 @@
 import DefaultLayout from "@/layouts/default";
 import ConvocatoriasTable from "./components/ConvocatoriasTable";
 import ReusableModal from "../shared/components/Modal";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { UploadConvocatoriaForm } from "./components/UploadConvocatoriaForm";
 import { useAuthStore } from "../shared/auth.store";
 import { Button } from "@heroui/button";
@@ -11,15 +11,14 @@ import { IoMdCloseCircle } from "react-icons/io";
 import Filtros from "./components/Filters";
 import { useConvocatorias } from "./hooks/UseConvocatorias";
 import { MdFileUpload } from "react-icons/md";
-import { FaUserAlt } from "react-icons/fa";
 import { toast } from "sonner";
 import { Divider } from "@heroui/react";
-import { UserList } from "./users/UserList";
+// import { UserList } from "./users/UserList";
 
 export const Home = () => {
   const [filtros, setFiltros] = useState<ISearchConvocatoriasReq>({});
   const [isOpen, setIsOpen] = useState(false);
-  const [isUsersOpen, setIsUsersOpen] = React.useState(false);
+  // const [isUsersOpen, setIsUsersOpen] = React.useState(false);
   const { role, user } = useAuthStore();
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
   const { handleSearch } = useConvocatorias();
@@ -68,15 +67,6 @@ export const Home = () => {
               >
                 <MdFileUpload /> Subir Proyecto
               </Button>
-              <Button
-                color="primary"
-                size="md"
-                variant="flat"
-                onClick={() => setIsUsersOpen((prev) => !prev)}
-              >
-                {isUsersOpen ? <IoMdCloseCircle /> : <FaUserAlt />}
-                {isUsersOpen ? "Cerrar Usuarios" : "Usuarios"}
-              </Button>
             </div>
           )}
           {role === "investigador" && (
@@ -92,7 +82,7 @@ export const Home = () => {
             </div>
           )}
         </div>
-        {isUsersOpen && user?.role === "superadmin" && (
+        {/* {isUsersOpen && user?.role === "superadmin" && (
           <div className=" w-full flex flex-col gap-2">
             <Divider />
             <UserList />
@@ -111,7 +101,7 @@ export const Home = () => {
             <Divider />
             <UserList />
           </div>
-        )}
+        )} */}
 
         {mostrarFiltros && (
           <>
