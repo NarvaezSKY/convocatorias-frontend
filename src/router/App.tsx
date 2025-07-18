@@ -3,7 +3,7 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import Login from "../app/login";
 import { Home } from "@/app/home";
 import Register from "@/app/register";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "@/app/shared/auth.store";
 import { NotFound } from "@/layouts/404";
 import { Page } from "../Page";
@@ -12,18 +12,33 @@ import { ActivateUser } from "@/app/admin/ActivateUser";
 import { RecoverPassword } from "@/app/recover-password/RecoverPassword";
 import { ChangePassword } from "@/app/recover-password/ChangePassword";
 import { UserList } from "@/app/users/UserList";
+import { useNavigate } from "react-router-dom";
 
 function App() {
   const { verify } = useAuthStore();
+  const navigate = useNavigate();
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      verify();
+      verify()
+        .catch(() => {
+          alert("La sesión ha expirado o el token es inválido. Por favor, inicia sesión nuevamente.");
+          localStorage.removeItem("token");
+          navigate("/");
+        })
+        .finally(() => setCheckingAuth(false));
     } else {
       localStorage.removeItem("token");
+      navigate("/");
+      setCheckingAuth(false);
     }
-  }, [verify]);
+  }, [verify, navigate]);
+
+  if (checkingAuth) {
+    return null;
+  }
 
   return (
     <Routes>
@@ -77,7 +92,7 @@ function App() {
         element={
           <ProtectedRoute>
             <Page title="Activar cuenta | Innovación y Competitividad">
-              <ActivateUser/>
+              <ActivateUser />
             </Page>
           </ProtectedRoute>
 
@@ -86,7 +101,7 @@ function App() {
         path="admin/activate/:token" />
       <Route
         element={
-          <Page title="Recuperar contraseña | Innovación y Competitividad"> 
+          <Page title="Recuperar contraseña | Innovación y Competitividad">
             <RecoverPassword />
           </Page>
         }
@@ -99,7 +114,7 @@ function App() {
             <ChangePassword />
           </Page>
         }
-        path="/reset-password/:token"/>
+        path="/reset-password/:token" />
 
       <Route
         element={
@@ -112,7 +127,7 @@ function App() {
         path="/users"
       />
     </Routes>
-    
+
   );
 }
 

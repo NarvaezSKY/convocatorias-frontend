@@ -12,6 +12,7 @@ type State = {
   loginError: string | null;
   registerError: string | null;
   role: string | null;
+  verifyError: string | null;
 };
 
 type Actions = {
@@ -33,6 +34,7 @@ export const useAuthStore = create<Store>((set) => ({
   loginError: null,
   role: null,
   globalUser: null,
+  verifyError: null,
 
   verify: async () => {
     try {
@@ -41,9 +43,8 @@ export const useAuthStore = create<Store>((set) => ({
       return response;
     } catch (error) {
       if (error instanceof Error) {
-        set({ loginError: error.message });
-      } else {
-        set({ loginError: "An unknown error occurred" });
+        set({ verifyError: error.message });
+        throw error;
       }
     }
     return null;

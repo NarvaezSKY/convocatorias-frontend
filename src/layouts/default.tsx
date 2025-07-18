@@ -12,8 +12,8 @@ export default function DefaultLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { user } = useAuthStore();
-  const isAuthenticated = !!user;
+  const { user, verifyError  } = useAuthStore();
+  const isAuthenticated = !!user && !verifyError;
 
   return (
     <div className="relative flex flex-col h-screen">

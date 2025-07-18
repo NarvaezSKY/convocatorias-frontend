@@ -24,13 +24,13 @@ import { Button } from "@heroui/button";
 import SENAIcon from "../../favicon_io/logoSena.png";
 
 export const Navbar = () => {
-  const { user, logout, role } = useAuthStore();
+  const { user, logout, role, verifyError } = useAuthStore();
 
   const handleLogout = () => {
     logout();
     toast.success("Sesión cerrada correctamente");
   };
-  const isAuthenticated = !!user;
+  const isAuthenticated = !!user && !verifyError;
 
   return (
     <HeroUINavbar
