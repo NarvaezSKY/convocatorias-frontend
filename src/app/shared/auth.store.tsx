@@ -95,7 +95,7 @@ export const useAuthStore = create<Store>((set) => ({
     try {
       const response = await loginUseCase(authRepository)(data);
       localStorage.setItem("token", response.token);
-      set({ user: response, token: response.token, loginError: null, role: response.role });
+      set({ user: response, token: response.token, loginError: null, role: response.role, registerError: null, verifyError: null });
     } catch (error) {
       if (error instanceof Error && (error as any).response?.data?.message) {
         set({ loginError: (error as any).response.data.message });
