@@ -26,15 +26,14 @@ function App() {
         .catch(() => {
           alert("La sesión ha expirado o el token es inválido. Por favor, inicia sesión nuevamente.");
           localStorage.removeItem("token");
-          // Limpia el estado de auth igual que logout
           useAuthStore.getState().logout();
-          navigate("/");
+          // navigate("/");
         })
         .finally(() => setCheckingAuth(false));
     } else {
       localStorage.removeItem("token");
       useAuthStore.getState().logout();
-      navigate("/");
+      // navigate("/");
       setCheckingAuth(false);
     }
   }, [verify, navigate]);
