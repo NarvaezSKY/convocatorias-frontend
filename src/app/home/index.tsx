@@ -13,12 +13,11 @@ import { useConvocatorias } from "./hooks/UseConvocatorias";
 import { MdFileUpload } from "react-icons/md";
 import { toast } from "sonner";
 import { Divider } from "@heroui/react";
-// import { UserList } from "./users/UserList";
 
 export const Home = () => {
   const [filtros, setFiltros] = useState<ISearchConvocatoriasReq>({});
   const [isOpen, setIsOpen] = useState(false);
-  // const [isUsersOpen, setIsUsersOpen] = React.useState(false);
+
   const { role, user } = useAuthStore();
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
   const { handleSearch } = useConvocatorias();
@@ -58,17 +57,17 @@ export const Home = () => {
           {(role === "superadmin" ||
             role === "dinamizador" ||
             role === "Linvestigador") && (
-            <div className="flex flex-col gap-2">
-              <Button
-                color="success"
-                size="md"
-                variant="flat"
-                onClick={() => setIsOpen(true)}
-              >
-                <MdFileUpload /> Subir Proyecto
-              </Button>
-            </div>
-          )}
+              <div className="flex flex-col gap-2">
+                <Button
+                  color="success"
+                  size="md"
+                  variant="flat"
+                  onClick={() => setIsOpen(true)}
+                >
+                  <MdFileUpload /> Subir Proyecto
+                </Button>
+              </div>
+            )}
           {role === "investigador" && (
             <div className="flex flex-col gap-2">
               <Button
@@ -82,26 +81,6 @@ export const Home = () => {
             </div>
           )}
         </div>
-        {/* {isUsersOpen && user?.role === "superadmin" && (
-          <div className=" w-full flex flex-col gap-2">
-            <Divider />
-            <UserList />
-          </div>
-        )}
-
-        {isUsersOpen && user?.role === "dinamizador" && (
-          <div className=" w-full flex flex-col gap-2">
-            <Divider />
-            <UserList />
-          </div>
-        )}
-
-        {isUsersOpen && user?.role === "Linvestigador" && (
-          <div className=" w-full flex flex-col gap-2">
-            <Divider />
-            <UserList />
-          </div>
-        )} */}
 
         {mostrarFiltros && (
           <>

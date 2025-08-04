@@ -52,12 +52,11 @@ export function RegisterForm() {
     setIsPasswordVisible(!isPasswordVisible);
   const toggleConfirmPasswordVisibility = () =>
     setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
-  const role = watch("role");
+  // const role = watch("role");
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 border border-gray-200 rounded-lg shadow-lg w-full max-w-md">
       <div className="w-full max-w-md mb-10">
-        {/* Header con logo */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Crear cuenta
@@ -194,7 +193,7 @@ export function RegisterForm() {
                   rules={{ required: "El rol es obligatorio" }}
                 />
               </div>
-              {(role === "dinamizador" ||
+              {/* {(role === "dinamizador" ||
                 role === "Linvestigador" ||
                 role === "investigador") && (
                 <>
@@ -279,7 +278,7 @@ export function RegisterForm() {
                     isInvalid={!!errors.SemilleroInvestigacion}
                   />
                 </>
-              )}
+              )} */}
 
               {/* Campo de contraseña */}
               <div className="space-y-2 w-full">

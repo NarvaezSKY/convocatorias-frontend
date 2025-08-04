@@ -119,7 +119,6 @@ export const useAuthStore = create<Store>((set) => ({
   },
   logout: () => {
     localStorage.removeItem("token");
-    // Limpia todos los estados relacionados con autenticación
     set({
       token: null,
       user: null,

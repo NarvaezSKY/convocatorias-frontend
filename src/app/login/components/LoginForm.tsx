@@ -68,11 +68,11 @@ export function LoginForm() {
                     <UserIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />
                   }
                   variant="bordered"
-                  {...register("username", {
+                  {...register("email", {
                     required: "El nombre de usuario es obligatorio",
                   })}
-                  errorMessage={errors.username?.message}
-                  isInvalid={!!errors.username}
+                  errorMessage={errors.email?.message}
+                  isInvalid={!!errors.email}
                 />
               </div>
 

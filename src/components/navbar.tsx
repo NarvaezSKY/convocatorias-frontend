@@ -1,17 +1,5 @@
-import { Link } from "@heroui/link";
-import {
-  Navbar as HeroUINavbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  // NavbarMenuToggle,
-  NavbarMenu,
-  NavbarMenuItem,
-} from "@heroui/navbar";
-import { Chip } from "@heroui/chip";
 import clsx from "clsx";
 import { toast } from "sonner";
-import { link as linkStyles } from "@heroui/theme";
 import { siteConfig } from "../config/site";
 import { ThemeSwitch } from "./theme-switch";
 
@@ -19,7 +7,10 @@ import { useAuthStore } from "@/app/shared/auth.store";
 import { FaUserAlt } from "react-icons/fa";
 import { PiSignOutBold } from "react-icons/pi";
 
-import { Button } from "@heroui/button";
+
+import {
+  Tooltip, Button, link as linkStyles, Chip, Navbar as HeroUINavbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, Link,
+} from "@heroui/react";
 
 import SENAIcon from "../../favicon_io/logoSena.png";
 
@@ -60,12 +51,14 @@ export const Navbar = () => {
           <div className="hidden lg:flex gap-4 justify-start ml-2 w-full">
             {isAuthenticated && (
               <div className="flex items-center gap-2">
-                <div className="flex flex-row items-center gap-2">
-                  <FaUserAlt />{" "}
-                  <p>
-                    <strong>{user?.username}</strong>
-                  </p>
-                </div>
+                <Tooltip content="Ver tu perfil" placement="bottom">
+                  <div className="flex flex-row items-center gap-2">
+                    <FaUserAlt />{" "}
+                    <p>
+                      <strong>{user?.username}</strong>
+                    </p>
+                  </div>
+                </Tooltip>
                 <div>
                   <Chip
                     className="text-xs"

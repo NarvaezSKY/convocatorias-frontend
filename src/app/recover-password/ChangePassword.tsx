@@ -26,6 +26,7 @@ export const ChangePassword = () => {
     } = useForm<FormValues>()
     const password = watch("password")
 
+
     const togglePasswordVisibility = () => setIsPasswordVisible(!isPasswordVisible)
     const toggleConfirmPasswordVisibility = () => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
 

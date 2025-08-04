@@ -61,35 +61,35 @@ export const UserList = () => {
 
   return (
     <DefaultLayout>
-    <div>
-      <div className="mb-4">
-        <SearchUsers
-          filters={filters}
-          onChange={(nuevoFiltro: Partial<IFilterUsersReq>) =>
-            setFilters((prev) => ({ ...prev, ...nuevoFiltro }))
-          }
-          onReset={() => {
-            toast.success("Filtros reseteados"), setFilters({});
-          }}
-        />
-      </div>
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold mb-2">Lista de Usuarios</h2>
+      <div>
+        <div className="mb-4">
+          <SearchUsers
+            filters={filters}
+            onChange={(nuevoFiltro: Partial<IFilterUsersReq>) =>
+              setFilters((prev) => ({ ...prev, ...nuevoFiltro }))
+            }
+            onReset={() => {
+              toast.success("Filtros reseteados"), setFilters({});
+            }}
+          />
+        </div>
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold mb-2">Lista de Usuarios</h2>
 
-        {loading && <Spinner size="md" />}
-      </div>
-      <Table isStriped aria-label="Tabla de usuarios">
-        <TableHeader>
-          <TableColumn>NOMBRE</TableColumn>
-          <TableColumn>CORREO</TableColumn>
-          <TableColumn>TELEFONO</TableColumn>
-          <TableColumn>ROL</TableColumn>
-          <TableColumn>ESTADO</TableColumn>
-          <TableColumn>ACCIONES</TableColumn>
-        </TableHeader>
-        <TableBody emptyContent="No se encontraron usuarios.">
-          {loading
-            ? Array.from({ length: 4 }).map((_, index) => (
+          {loading && <Spinner size="md" />}
+        </div>
+        <Table isStriped aria-label="Tabla de usuarios">
+          <TableHeader>
+            <TableColumn>NOMBRE</TableColumn>
+            <TableColumn>CORREO</TableColumn>
+            <TableColumn>TELEFONO</TableColumn>
+            <TableColumn>ROL</TableColumn>
+            <TableColumn>ESTADO</TableColumn>
+            <TableColumn>ACCIONES</TableColumn>
+          </TableHeader>
+          <TableBody emptyContent="No se encontraron usuarios.">
+            {loading
+              ? Array.from({ length: 4 }).map((_, index) => (
                 <TableRow key={`skeleton-${index}`}>
                   <TableCell>
                     <Skeleton className="w-24 h-4 rounded-md bg-default-300" />
@@ -114,8 +114,8 @@ export const UserList = () => {
                   </TableCell>
                 </TableRow>
               ))
-            : users.map((user) => (
-                <TableRow key={user._id}>
+              : users.map((user) => (
+                <TableRow key={user._id} href={`/profile/${user._id}`} className="cursor-pointer hover:bg-default-200">
                   <TableCell>{user.username}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.telefono}</TableCell>
@@ -177,141 +177,141 @@ export const UserList = () => {
                   </TableCell>
                 </TableRow>
               ))}
-        </TableBody>
-      </Table>
+          </TableBody>
+        </Table>
 
-      <ReusableModal
-        isOpen={isOpen}
-        modalTitle="Cambiar rol"
-        onClose={() => {
-          setIsOpen(false);
-          setSelectedUser(null);
-        }}
-      >
-        <div className="flex flex-col gap-4 w-full">
-          <label className="text-sm text-neutral-700" htmlFor="rol">
-            Usuario seleccionado:
-            <div className="font-semibold">{selectedUser?.username}</div>
-          </label>
-          <label className="text-sm text-neutral-700" htmlFor="rol">
-            Rol actual:
-            <div className="font-semibold">{selectedUser?.role}</div>
-          </label>
-          <Select
-            className="w-full"
-            label="Selecciona un rol"
-            onChange={(e) => setSelectedRole(e.target.value)}
-          >
-            {roles.map((role) => (
-              <SelectItem
-                key={role.key}
-                isDisabled={role.key === selectedUser?.role}
-                onSelect={() => {
-                  setSelectedUser(
-                    selectedUser ? { ...selectedUser, role: role.key } : null
-                  );
+        <ReusableModal
+          isOpen={isOpen}
+          modalTitle="Cambiar rol"
+          onClose={() => {
+            setIsOpen(false);
+            setSelectedUser(null);
+          }}
+        >
+          <div className="flex flex-col gap-4 w-full">
+            <label className="text-sm text-neutral-700" htmlFor="rol">
+              Usuario seleccionado:
+              <div className="font-semibold">{selectedUser?.username}</div>
+            </label>
+            <label className="text-sm text-neutral-700" htmlFor="rol">
+              Rol actual:
+              <div className="font-semibold">{selectedUser?.role}</div>
+            </label>
+            <Select
+              className="w-full"
+              label="Selecciona un rol"
+              onChange={(e) => setSelectedRole(e.target.value)}
+            >
+              {roles.map((role) => (
+                <SelectItem
+                  key={role.key}
+                  isDisabled={role.key === selectedUser?.role}
+                  onSelect={() => {
+                    setSelectedUser(
+                      selectedUser ? { ...selectedUser, role: role.key } : null
+                    );
+                  }}
+                >
+                  {role.label}
+                </SelectItem>
+              ))}
+            </Select>
+
+            <div className="flex gap-2 w-full justify-end">
+              <Button
+                color="success"
+                size="md"
+                variant="flat"
+                onClick={() => {
+                  if (selectedUser) {
+                    handleEditRole(selectedUser._id, selectedRole || "");
+                  }
+                  setIsOpen(false);
+                  setSelectedUser(null);
                 }}
               >
-                {role.label}
+                Guardar
+              </Button>
+              <Button
+                color="danger"
+                size="md"
+                variant="flat"
+                onClick={() => {
+                  setIsOpen(false);
+                  setSelectedUser(null);
+                }}
+              >
+                Cancelar
+              </Button>
+            </div>
+          </div>
+        </ReusableModal>
+        <ReusableModal
+          isOpen={isStatusModalOpen}
+          modalTitle="Cambiar estado"
+          onClose={() => {
+            setIsStatusModalOpen(false);
+            setSelectedUser(null);
+          }}
+        >
+          <div className="flex flex-col gap-4 w-full">
+            <label className="text-sm text-neutral-700">
+              Usuario seleccionado:
+              <div className="font-semibold">{selectedUser?.username}</div>
+            </label>
+            <label className="text-sm text-neutral-700">
+              Estado actual:
+              <div className="font-semibold">{selectedUser?.estado}</div>
+            </label>
+            <Select
+              className="w-full"
+              label="Selecciona un estado"
+              value={selectedStatus || ""}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+            >
+              <SelectItem
+                key="activo"
+                isDisabled={selectedUser?.estado === "activo"}
+              >
+                Activo
               </SelectItem>
-            ))}
-          </Select>
-
-          <div className="flex gap-2 w-full justify-end">
-            <Button
-              color="success"
-              size="md"
-              variant="flat"
-              onClick={() => {
-                if (selectedUser) {
-                  handleEditRole(selectedUser._id, selectedRole || "");
-                }
-                setIsOpen(false);
-                setSelectedUser(null);
-              }}
-            >
-              Guardar
-            </Button>
-            <Button
-              color="danger"
-              size="md"
-              variant="flat"
-              onClick={() => {
-                setIsOpen(false);
-                setSelectedUser(null);
-              }}
-            >
-              Cancelar
-            </Button>
+              <SelectItem
+                key="inactivo"
+                isDisabled={selectedUser?.estado === "inactivo"}
+              >
+                Inactivo
+              </SelectItem>
+            </Select>
+            <div className="flex gap-2 w-full justify-end">
+              <Button
+                color="success"
+                size="md"
+                variant="flat"
+                onClick={() => {
+                  if (selectedUser) {
+                    handleEditStatus(selectedUser._id, selectedStatus || "");
+                  }
+                  setIsStatusModalOpen(false);
+                  setSelectedUser(null);
+                }}
+              >
+                Guardar
+              </Button>
+              <Button
+                color="danger"
+                size="md"
+                variant="flat"
+                onClick={() => {
+                  setIsStatusModalOpen(false);
+                  setSelectedUser(null);
+                }}
+              >
+                Cancelar
+              </Button>
+            </div>
           </div>
-        </div>
-      </ReusableModal>
-      <ReusableModal
-        isOpen={isStatusModalOpen}
-        modalTitle="Cambiar estado"
-        onClose={() => {
-          setIsStatusModalOpen(false);
-          setSelectedUser(null);
-        }}
-      >
-        <div className="flex flex-col gap-4 w-full">
-          <label className="text-sm text-neutral-700">
-            Usuario seleccionado:
-            <div className="font-semibold">{selectedUser?.username}</div>
-          </label>
-          <label className="text-sm text-neutral-700">
-            Estado actual:
-            <div className="font-semibold">{selectedUser?.estado}</div>
-          </label>
-          <Select
-            className="w-full"
-            label="Selecciona un estado"
-            value={selectedStatus || ""}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-          >
-            <SelectItem
-              key="activo"
-              isDisabled={selectedUser?.estado === "activo"}
-            >
-              Activo
-            </SelectItem>
-            <SelectItem
-              key="inactivo"
-              isDisabled={selectedUser?.estado === "inactivo"}
-            >
-              Inactivo
-            </SelectItem>
-          </Select>
-          <div className="flex gap-2 w-full justify-end">
-            <Button
-              color="success"
-              size="md"
-              variant="flat"
-              onClick={() => {
-                if (selectedUser) {
-                  handleEditStatus(selectedUser._id, selectedStatus || "");
-                }
-                setIsStatusModalOpen(false);
-                setSelectedUser(null);
-              }}
-            >
-              Guardar
-            </Button>
-            <Button
-              color="danger"
-              size="md"
-              variant="flat"
-              onClick={() => {
-                setIsStatusModalOpen(false);
-                setSelectedUser(null);
-              }}
-            >
-              Cancelar
-            </Button>
-          </div>
-        </div>
-      </ReusableModal>
-    </div>
+        </ReusableModal>
+      </div>
     </DefaultLayout>
   );
 };

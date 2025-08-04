@@ -4,7 +4,7 @@ import { IGetAllUsersRes } from '../domain/get-all-users';
 import { IUpdateRoleReq } from '../domain/update-role';
 import { IUpdateStatusReq } from '../domain/update-status';
 import { IFilterUsersReq } from '../domain/filter-users';
-
+import { IGetSingleUserRes } from '../domain/get-single-user';
 
 const getAllUsers = async (): Promise<IGetAllUsersRes[]> => {
     try {
@@ -46,9 +46,20 @@ const filterUsers = async (data: IFilterUsersReq): Promise<IGetAllUsersRes[]> =>
     }
 }
 
+const getSingleUser = async (id: string): Promise<IGetSingleUserRes> => {
+    try {
+        const response = await axiosInstance.get(`/auth/user/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching single user:', error);
+        throw error;
+    }
+}
+
 export const UsersRepository: IUsersRepository = {
     getAllUsers,
     updateRole,
     updateStatus,
-    filterUsers
+    filterUsers,
+    getSingleUser
 }

@@ -13,6 +13,8 @@ import { RecoverPassword } from "@/app/recover-password/RecoverPassword";
 import { ChangePassword } from "@/app/recover-password/ChangePassword";
 import { UserList } from "@/app/users/UserList";
 import { useNavigate } from "react-router-dom";
+import { Profile } from "@/app/profiles";
+import { PublicRoute } from "./PublicRoute";
 
 function App() {
   const { verify } = useAuthStore();
@@ -67,17 +69,21 @@ function App() {
       />
       <Route
         element={
-          <Page title="Iniciar sesión | Innovación y Competitividad">
-            <Login />
-          </Page>
+          <PublicRoute>
+            <Page title="Iniciar sesión | Innovación y Competitividad">
+              <Login />
+            </Page>
+          </PublicRoute>
         }
         path="/"
       />
       <Route
         element={
-          <Page title="Registrarse | Innovación y Competitividad">
-            <Register />
-          </Page>
+          <PublicRoute>
+            <Page title="Registrarse | Innovación y Competitividad">
+              <Register />
+            </Page>
+          </PublicRoute>
         }
         path="/register"
       />
@@ -103,9 +109,11 @@ function App() {
         path="admin/activate/:token" />
       <Route
         element={
-          <Page title="Recuperar contraseña | Innovación y Competitividad">
-            <RecoverPassword />
-          </Page>
+          <PublicRoute>
+            <Page title="Recuperar contraseña | Innovación y Competitividad">
+              <RecoverPassword />
+            </Page>
+          </PublicRoute>
         }
         path="/recover-password"
       />
@@ -127,6 +135,18 @@ function App() {
           </ProtectedRoute>
         }
         path="/users"
+      />
+
+
+      <Route
+        element={
+          <ProtectedRoute>
+            <Page title="Perfil | Innovación y Competitividad">
+              <Profile />
+            </Page>
+          </ProtectedRoute>
+        }
+        path="/profile/:id"
       />
     </Routes>
 
