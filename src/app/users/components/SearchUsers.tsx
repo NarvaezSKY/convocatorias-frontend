@@ -72,6 +72,7 @@ export const SearchUsers = ({
             <SelectItem key="dinamizador">Dinamizador</SelectItem>
             <SelectItem key="Linvestigador">Lider Investigador</SelectItem>
             <SelectItem key="investigador">Investigador</SelectItem>
+            <SelectItem key="aprendiz">Aprendiz</SelectItem>
           </Select>
           <Button
             isIconOnly

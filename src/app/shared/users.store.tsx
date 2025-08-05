@@ -5,6 +5,7 @@ import {
   updateRoleUseCase,
   updateStatusUseCase,
   filterUsersUseCase,
+  updateUserUseCase,
 } from "@/core/users/application";
 import { IGetAllUsersRes } from "@/core/users/domain/get-all-users";
 import { IUpdateRoleReq } from "@/core/users/domain/update-role";
@@ -12,6 +13,7 @@ import { IUpdateStatusReq } from "@/core/users/domain/update-status";
 import { IFilterUsersReq } from "@/core/users/domain/filter-users";
 import { IGetSingleUserRes } from "@/core/users/domain/get-single-user";
 import { getSingleUserUseCase } from "@/core/users/application/getSingleUser.use-case";
+import { IUpdateUserReq } from "@/core/users/domain/update-user";
 
 type State = {
   users: IGetAllUsersRes[];
@@ -26,6 +28,7 @@ type Actions = {
   updateRole: (data: IUpdateRoleReq) => Promise<void>;
   updateStatus: (data: IUpdateStatusReq) => Promise<void>;
   filterUsers: (data: IFilterUsersReq) => Promise<IGetAllUsersRes[]>;
+  updateUser: (data: IUpdateUserReq) => Promise<void>;
 };
 
 type Store = State & Actions;
@@ -111,6 +114,19 @@ export const useUsersStore = create<Store>((set) => ({
     } catch (error) {
       console.error("Error filtering users:", error);
       set({ error: "Error filtering users", loading: false });
+      throw error;
+    }
+  },
+
+  updateUser: async (data) => {
+    set({ loading: true, error: null });
+    try {
+      await updateUserUseCase(UsersRepository)(data);
+      set({
+        loading: false,
+      })
+    } catch (error) {
+      set({ error: 'Error updating user', loading: false });
       throw error;
     }
   },

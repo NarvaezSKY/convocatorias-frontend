@@ -5,6 +5,7 @@ import { IUpdateRoleReq } from '../domain/update-role';
 import { IUpdateStatusReq } from '../domain/update-status';
 import { IFilterUsersReq } from '../domain/filter-users';
 import { IGetSingleUserRes } from '../domain/get-single-user';
+import { IUpdateUserReq } from '../domain/update-user';
 
 const getAllUsers = async (): Promise<IGetAllUsersRes[]> => {
     try {
@@ -56,10 +57,21 @@ const getSingleUser = async (id: string): Promise<IGetSingleUserRes> => {
     }
 }
 
+const updateUser = async (data: IUpdateUserReq): Promise<void> => {
+    try {
+        const response = await axiosInstance.patch('/auth/update-user', data);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating user:', error);
+        throw error;
+    }
+}
+
 export const UsersRepository: IUsersRepository = {
     getAllUsers,
     updateRole,
     updateStatus,
     filterUsers,
-    getSingleUser
+    getSingleUser,
+    updateUser,
 }

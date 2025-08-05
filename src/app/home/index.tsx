@@ -36,7 +36,8 @@ export const Home = () => {
 
   return (
     <DefaultLayout>
-      <div className="flex items-center justify-center flex-col gap-4 bg-default-100 p-4 rounded-lg shadow-md w-full max-w-6xl border-2 border-success-100">
+      <div className="flex flex-col gap-4 bg-default-100 p-4 rounded-lg shadow-md w-full border-2 border-success-100 mt-6 overflow-x-auto">
+
         <div className="w-full flex justify-between items-center">
           <div className="flex gap-2">
             <h1 className="text-3xl font-bold">
@@ -99,6 +100,7 @@ export const Home = () => {
 
         <Divider />
         <ConvocatoriasTable />
+
         <ReusableModal
           isOpen={isOpen}
           modalTitle="Subir Convocatoria"

@@ -2,7 +2,7 @@ import DefaultLayout from "@/layouts/default";
 import { useAuthStore } from "../shared/auth.store";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Button } from "@heroui/button";
+import { Link } from "@heroui/link";
 
 export const ActivateUser = () => {
     const { token } = useParams();
@@ -24,7 +24,7 @@ export const ActivateUser = () => {
                 ) : (
                     <p className="text-green-500">El usuario ha sido activado correctamente.</p>
                 )}
-            <Button href="/home" color="success" variant="flat" className="mt-4 w-full max-w-xs" radius="sm">Ir al inicio</Button>
+                <Link href="/home" color="success" className="mt-6">Ir al inicio</Link>
             </div>
         </DefaultLayout>
     );

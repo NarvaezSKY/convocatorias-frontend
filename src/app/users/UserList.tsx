@@ -30,6 +30,7 @@ import { SearchUsers } from "./components/SearchUsers";
 import { IFilterUsersReq } from "@/core/users/domain/filter-users";
 import { useSearchUsers } from "./hooks/useSearchUsers";
 import DefaultLayout from "@/layouts/default";
+import { roleConverter } from "../shared/utils/roleConverter";
 
 export const UserList = () => {
   const { user: currentUser } = useAuthStore();
@@ -62,7 +63,7 @@ export const UserList = () => {
   return (
     <DefaultLayout>
       <div>
-        <div className="mb-4">
+        <div className="mb-4 mt-6">
           <SearchUsers
             filters={filters}
             onChange={(nuevoFiltro: Partial<IFilterUsersReq>) =>
@@ -120,17 +121,7 @@ export const UserList = () => {
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.telefono}</TableCell>
                   <TableCell>
-                    {user.role === "superadmin"
-                      ? "Super Administrador"
-                      : user.role === "admin"
-                        ? "Supervisor"
-                        : user.role === "dinamizador"
-                          ? "Dinamizador"
-                          : user.role === "Linvestigador"
-                            ? "Lider Investigador"
-                            : user.role === "investigador"
-                              ? "Investigador"
-                              : "Investigador"}
+                    {roleConverter(user.role as string)}
                   </TableCell>
                   <TableCell>
                     <Chip

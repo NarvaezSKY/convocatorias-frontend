@@ -61,15 +61,16 @@ export function LoginForm() {
                     inputWrapper:
                       "border-gray-200 hover:border-gray-300 focus-within:!border-blue-500 h-14",
                   }}
-                  label="Nombre de usuario"
+                  label="Correo Electrónico"
+                  type="email"
                   labelPlacement="outside"
-                  placeholder="Ingresa tu nombre de usuario"
+                  placeholder="Ingresa tu correo electrónico"
                   startContent={
                     <UserIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />
                   }
                   variant="bordered"
                   {...register("email", {
-                    required: "El nombre de usuario es obligatorio",
+                    required: "El correo electrónico es obligatorio",
                   })}
                   errorMessage={errors.email?.message}
                   isInvalid={!!errors.email}

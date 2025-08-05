@@ -188,6 +188,7 @@ export function RegisterForm() {
                       <SelectItem key="admin">Supervisor</SelectItem>
                       <SelectItem key="investigador">Investigador</SelectItem>
                       <SelectItem key="Linvestigador">Líder Investigador</SelectItem>
+                      <SelectItem key="aprendiz">Aprendiz</SelectItem>
                     </Select>
                   )}
                   rules={{ required: "El rol es obligatorio" }}

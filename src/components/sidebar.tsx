@@ -24,7 +24,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const location = useLocation();
   const currentPath = location.pathname;
   const { logout, role } = useAuthStore();
-  console.log(role)
 
   const handleLogout = () => {
     logout();
@@ -49,7 +48,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               className={`font-semibold text-success hover:text-default-800 underline flex justify-start gap-1 transition-all 
     ${currentPath === "/users" ? "bg-success text-white rounded-md py-1 px-1 hover:text-white" : ""}`}
               href="/users"
-              isDisabled={role === "investigador" || role === "admin"}
+              isDisabled={role === "investigador" || role === "admin" || role === "aprendiz"}
             >
               <FaUserAlt className="w-4 h-4" />
               Gestión de Usuarios
@@ -102,7 +101,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               <Link
                 className="font-semibold text-success hover:text-default-800 underline flex justify-start gap-1 transition-all"
                 href="/users"
-                isDisabled={role === "investigador" || role === "admin"}
+                isDisabled={role === "investigador" || role === "admin" || role === "aprendiz"}
                 onClick={onClose}
               >
                 <FaUserAlt className="w-4 h-4" />

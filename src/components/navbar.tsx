@@ -13,6 +13,7 @@ import {
 } from "@heroui/react";
 
 import SENAIcon from "../../favicon_io/logoSena.png";
+import { roleConverter } from "@/app/shared/utils/roleConverter";
 
 export const Navbar = () => {
   const { user, logout, role, verifyError } = useAuthStore();
@@ -25,23 +26,23 @@ export const Navbar = () => {
 
   return (
     <HeroUINavbar
-      className="border-b border-gray-200 bg-default-100 fixed top-0 z-50 w-full"
+      className="border-b border-gray-200 bg-default-100 fixed top-0 z-50 w-full h-20"
       maxWidth="xl"
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand className="gap-3 max-w-fit">
           <Link
-            className="flex justify-start items-center gap-1"
+            className="flex justify-start items-center gap-0"
             color="foreground"
             href="/home"
           >
             {/* <Logo /> */}
             <img
               alt="SENA Logo"
-              className="w-8 h-8 m-2 rounded-full"
+              className="w-20 m-2"
               src={SENAIcon}
             />
-            <p className="font-bold leading-none">
+            <p className="font-bold leading-none text-default-800 text-lg">
               Innovación y<br />
               Competitividad
             </p>
@@ -55,7 +56,7 @@ export const Navbar = () => {
                   <div className="flex flex-row items-center gap-2">
                     <FaUserAlt />{" "}
                     <p>
-                      <strong>{user?.username}</strong>
+                      <Link className="text-default-800" href={`/profile/${user.userId}`}>{user?.username}</Link>
                     </p>
                   </div>
                 </Tooltip>
@@ -66,17 +67,7 @@ export const Navbar = () => {
                     size="sm"
                     variant="bordered"
                   >
-                    {role === "admin"
-                      ? "Supervisor"
-                      : role === "superadmin"
-                        ? "Super Administrador"
-                        : role === "dinamizador"
-                          ? "Dinamizador"
-                          : role === "Linvestigador"
-                            ? "Lider Investigador"
-                            : role === "investigador"
-                              ? "Investigador"
-                              : "Investigador"}
+                    {roleConverter(role as string)}
                   </Chip>
                 </div>
               </div>

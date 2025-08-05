@@ -3,6 +3,7 @@ import { IGetAllUsersRes } from "./get-all-users";
 import { IGetSingleUserRes } from "./get-single-user";
 import { IUpdateRoleReq } from "./update-role";
 import { IUpdateStatusReq } from "./update-status";
+import { IUpdateUserReq } from "./update-user";
 
 export interface IUsersRepository {
     getAllUsers(): Promise<IGetAllUsersRes[]>;
@@ -10,4 +11,5 @@ export interface IUsersRepository {
     updateStatus(data: IUpdateStatusReq): Promise<void>;
     filterUsers(data: IFilterUsersReq): Promise<IGetAllUsersRes[]>;
     getSingleUser(id: string): Promise<IGetSingleUserRes>;
+    updateUser(data: IUpdateUserReq): Promise<void>;
 }

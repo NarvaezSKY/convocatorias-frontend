@@ -166,12 +166,12 @@ export default function ConvocatoriasTable() {
                   }
                 >
                   {columnKey === "acciones" &&
-                  [
-                    "superadmin",
-                    "dinamizador",
-                    "Linvestigador",
-                    "investigador",
-                  ].includes(user?.role ?? "") ? (
+                    [
+                      "superadmin",
+                      "dinamizador",
+                      "Linvestigador",
+                      "investigador",
+                    ].includes(user?.role ?? "") ? (
                     <div className="flex gap-2">
                       <Button
                         isIconOnly
