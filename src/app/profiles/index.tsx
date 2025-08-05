@@ -171,26 +171,26 @@ export const Profile = () => {
                                     <Input
                                         label="Semillero de Investigación"
                                         radius="md"
-                                        value={profileData.semillero}
+                                        value={profileData.SemilleroInvestigacion}
                                         isReadOnly={!isEditing}
                                         variant={isEditing ? "bordered" : "flat"}
                                         onChange={(e) =>
                                             setProfileData({
                                                 ...profileData,
-                                                semillero: e.target.value,
+                                                SemilleroInvestigacion: e.target.value,
                                             })
                                         }
                                     />
                                     <Input
                                         label="Clasificación MinCiencias"
                                         radius="md"
-                                        value={profileData.clasificacion}
+                                        value={profileData.clasificacionMinCiencias}
                                         isReadOnly={!isEditing}
                                         variant={isEditing ? "bordered" : "flat"}
                                         onChange={(e) =>
                                             setProfileData({
                                                 ...profileData,
-                                                clasificacion: e.target.value,
+                                                clasificacionMinCiencias: e.target.value,
                                             })
                                         }
                                     />
