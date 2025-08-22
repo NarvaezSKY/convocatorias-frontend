@@ -59,6 +59,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               className={`font-semibold text-success hover:text-default-800 underline flex justify-start transition-all 
     ${currentPath === "/reportes/proyectos" ? "bg-success text-white rounded-md py-1 px-1 hover:text-white" : ""}`}
               href="/reportes/proyectos"
+              isDisabled={role === "aprendiz"}
             >
               <HiOutlineDocumentReport className="w-5 h-5" />
               Power BI Proyectos
