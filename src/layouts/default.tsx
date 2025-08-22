@@ -45,7 +45,7 @@ export default function DefaultLayout({
       <footer className="w-full flex items-center justify-center py-3 font-semibold border-gray-300 border-t mt-6">
         <Link
           className="flex items-center gap-1 text-current"
-          href="https://seguimiento-innovacion-y-competitividad.vercel.app/home"
+          href="/home"
         >
           <span className="mt-6 mb-4">
             © Seguimiento Innovación y Competitividad -{" "}
