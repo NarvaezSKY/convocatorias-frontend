@@ -2,7 +2,6 @@ import { Card, CardHeader, CardBody, Input } from "@heroui/react";
 
 interface ProjectFinancialMatrixProps {
   valorTotalProyecto: number;
-  setValorTotalProyecto: (valor: number) => void;
   actividades: string[];
   meses: string[];
   porcentajesProyectado: number[];
@@ -11,7 +10,6 @@ interface ProjectFinancialMatrixProps {
 
 export function ProjectFinancialMatrix({
   valorTotalProyecto,
-  setValorTotalProyecto,
   actividades,
   meses,
   porcentajesProyectado,
@@ -22,27 +20,58 @@ export function ProjectFinancialMatrix({
       (acc, _, actIdx) =>
         acc +
         (valorTotalProyecto * (porcentajesEjecutado[actIdx]?.[mesIdx] || 0)) /
-          100,
+        100,
       0
     )
   );
 
+  const totalEjecutado = totalesPorMes.reduce((acc, curr) => acc + curr, 0);
+  const totalPorEjecutar = valorTotalProyecto - totalEjecutado;
+
   return (
     <Card className="mt-8">
       <CardHeader className="flex items-center justify-between">
-        <div className="font-bold">Matriz Financiera de Actividades</div>
-        <div className="flex items-center gap-2">
-          <span className="font-semibold">Valor total del proyecto:</span>
-          <Input
-            className="w-48"
-            min={0}
-            radius="sm"
-            startContent="$"
-            type="number"
-            value={valorTotalProyecto.toString()}
-            variant="bordered"
-            onChange={(e) => setValorTotalProyecto(Number(e.target.value))}
-          />
+        <div className="font-bold">Matriz Financiera de objetivos</div>
+        <div className="flex items-end flex-col justify-end gap-2">
+          <div className="flex items-center gap-2">
+            <span className="font-semibold">Valor total del proyecto:</span>
+            <Input
+              className="w-48"
+              isDisabled
+              radius="sm"
+              startContent="$"
+              value={valorTotalProyecto.toLocaleString("es-CO", {
+                minimumFractionDigits: 2,
+              })}
+              variant="bordered"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="font-semibold">Total ejecutado hasta la fecha:</span>
+            <Input
+              className="w-40"
+              isDisabled
+              radius="sm"
+              startContent="$"
+              value={totalEjecutado.toLocaleString("es-CO", {
+                minimumFractionDigits: 2,
+              })}
+              variant="bordered"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="font-semibold">Valor por comprometer:</span>
+            <Input
+              className="w-40"
+              isDisabled
+              radius="sm"
+              startContent="$"
+              value={totalPorEjecutar.toLocaleString("es-CO", {
+                minimumFractionDigits: 2,
+              })}
+              variant="bordered"
+            />
+          </div>
         </div>
       </CardHeader>
       <CardBody>
@@ -50,9 +79,9 @@ export function ProjectFinancialMatrix({
           <table className="min-w-max border-collapse w-full text-sm">
             <thead>
               <tr>
-                <th className="border px-2 py-1 bg-gray-100">Actividad</th>
+                <th className="border px-2 py-1 bg-gray-100">Objetivo</th>
                 <th className="border px-2 py-1 bg-gray-100">
-                  Valor Actividad
+                  Valor objetivo
                 </th>
                 <th
                   className="border px-2 py-1 bg-gray-100"
@@ -88,11 +117,10 @@ export function ProjectFinancialMatrix({
                   {meses.map((_, mesIdx) => (
                     <td
                       key={mesIdx}
-                      className={`border px-2 py-1 ${
-                        porcentajesEjecutado[actIdx]?.[mesIdx] > 0
+                      className={`border px-2 py-1 ${porcentajesEjecutado[actIdx]?.[mesIdx] > 0
                           ? "bg-default-400 text-white"
                           : ""
-                      }`}
+                        }`}
                     >
                       $
                       {(

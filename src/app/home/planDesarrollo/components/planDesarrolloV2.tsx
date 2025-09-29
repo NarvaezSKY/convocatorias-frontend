@@ -53,7 +53,6 @@ export default function ProjectPlanningGridV2({
   const porcentajesEjecutado = rows.map((row) =>
     columns.map((col) => Number(getCellValue(row, col, "ejecutado")) || 0)
   );
-  const [valorTotalProyecto, setValorTotalProyecto] = React.useState(convocatoria.valor_aprobado || 0);
   return (
     <div className="p-6 max-w-full mx-auto">
       {loadingPlanFinanciero ? (
@@ -147,7 +146,7 @@ export default function ProjectPlanningGridV2({
                       >
                         <div className="flex">
                           <div className="flex-1 p-3 font-semibold">
-                            Actividades/tiempo
+                            Objetivos/tiempo
                           </div>
                           <Button
                             className="h-10 w-8 p-0 rounded-none border-l"
@@ -414,8 +413,7 @@ export default function ProjectPlanningGridV2({
         meses={meses}
         porcentajesEjecutado={porcentajesEjecutado}
         porcentajesProyectado={porcentajesProyectado}
-        setValorTotalProyecto={setValorTotalProyecto}
-        valorTotalProyecto={valorTotalProyecto}
+        valorTotalProyecto={convocatoria.valor_aprobado || 0}
       />
     </div>
   );

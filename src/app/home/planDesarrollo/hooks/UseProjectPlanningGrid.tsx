@@ -57,9 +57,9 @@ export const useProjectPlanningGrid = (convocatoria: IGetAllConvocatoriasRes) =>
                     setRowCounter(rows.length + 1);
                     setColumnCounter(columns.length + 1);
                 } else {
-                    setRows(["Actividad 1"]);
+                    setRows(["Objetivo 1"]);
                     setColumns(["Mes 1"]);
-                    setGridData({ "Actividad 1": { "Mes 1": { proyectado: "", ejecutado: "" } } });
+                    setGridData({ "Objetivo 1": { "Mes 1": { proyectado: "", ejecutado: "" } } });
                     setRowCounter(2);
                     setColumnCounter(2);
                 }
@@ -97,14 +97,14 @@ export const useProjectPlanningGrid = (convocatoria: IGetAllConvocatoriasRes) =>
     const porEjecutar = (Number(totalProyectadoPercentage) - Number(totalExecutionPercentage)).toFixed(0);
 
     const addRow = () => {
-        const newRow = `Actividad ${rowCounter}`;
+        const newRow = `Objetivo ${rowCounter}`;
         setRows([...rows, newRow]);
         setGridData((prev) => ({ ...prev, [newRow]: {} }));
         setRowCounter((prev) => prev + 1);
     };
 
     const addColumn = () => {
-        const newColumn = `Mes${columnCounter}`;
+        const newColumn = `Mes ${columnCounter}`;
         setColumns([...columns, newColumn]);
         setColumnCounter((prev) => prev + 1);
     };
@@ -117,6 +117,20 @@ export const useProjectPlanningGrid = (convocatoria: IGetAllConvocatoriasRes) =>
         delete newGridData[rowToRemove];
         setRows(newRows);
         setGridData(newGridData);
+
+        // Calcular el próximo número disponible basado en los objetivos existentes
+        const existingNumbers = newRows
+            .map(row => {
+                const match = row.match(/^Objetivo (\d+)$/);
+                return match ? parseInt(match[1]) : 0;
+            })
+            .filter(num => num > 0);
+
+        const nextRowCounter = existingNumbers.length > 0
+            ? Math.max(...existingNumbers) + 1
+            : 1;
+
+        setRowCounter(nextRowCounter);
     };
 
     const removeColumn = (index: number) => {
@@ -129,6 +143,19 @@ export const useProjectPlanningGrid = (convocatoria: IGetAllConvocatoriasRes) =>
         });
         setColumns(newColumns);
         setGridData(newGridData);
+
+        const existingNumbers = newColumns
+            .map(column => {
+                const match = column.match(/^Mes\s*(\d+)$/);
+                return match ? parseInt(match[1]) : 0;
+            })
+            .filter(num => num > 0);
+
+        const nextColumnCounter = existingNumbers.length > 0
+            ? Math.max(...existingNumbers) + 1
+            : 1;
+
+        setColumnCounter(nextColumnCounter);
     };
 
     const updateCell = (row: string, column: string, type: "proyectado" | "ejecutado", value: string) => {
