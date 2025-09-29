@@ -61,7 +61,6 @@ export function LoginForm() {
                     inputWrapper:
                       "border-gray-200 hover:border-gray-300 focus-within:!border-blue-500 h-14",
                   }}
-                  label="Correo Electrónico"
                   type="email"
                   labelPlacement="outside"
                   placeholder="Ingresa tu correo electrónico"
@@ -99,7 +98,6 @@ export function LoginForm() {
                       )}
                     </button>
                   }
-                  label="Contraseña"
                   labelPlacement="outside"
                   placeholder="Ingresa tu contraseña"
                   startContent={
