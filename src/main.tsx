@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./router/App.tsx";
 import { Provider } from "./provider.tsx";
 import "@/styles/globals.css";
+import "@/styles/heroui-fix.css";
 import { Toaster } from "sonner";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

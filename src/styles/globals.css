@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Asegurar que HeroUI se carge correctamente */
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fix para HeroUI en producción */
+.heroui-input-wrapper,
+.heroui-select-wrapper {
+  box-sizing: border-box;
+}
+
+/* Asegurar que los estilos de componentes se apliquen */
+[data-slot="base"] {
+  box-sizing: border-box;
+}

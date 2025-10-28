@@ -1,5 +1,4 @@
 import { Helmet } from 'react-helmet';
-
 import { ReactNode } from 'react';
 
 type PageProps = {
@@ -10,6 +9,7 @@ type PageProps = {
 export function Page({ title, children }: PageProps) {
   return (
     <>
+      {/* @ts-ignore */}
       <Helmet>
         <title>{title}</title>
       </Helmet>

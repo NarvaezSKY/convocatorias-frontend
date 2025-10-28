@@ -12,6 +12,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Tooltip,
 } from "@heroui/react";
 import { useConvocatorias } from "../hooks/UseConvocatorias";
 import { useAuthStore } from "@/app/shared/auth.store";
@@ -173,42 +174,48 @@ export default function ConvocatoriasTable() {
                       "investigador",
                     ].includes(user?.role ?? "") ? (
                     <div className="flex gap-2">
-                      <Button
-                        isIconOnly
-                        color="warning"
-                        radius="full"
-                        size="md"
-                        variant="bordered"
-                        onClick={() => handleEdit(item._id)}
-                      >
-                        <FaEdit className="text-neutral-200" />
-                      </Button>
-                      <Button
-                        isIconOnly
-                        color="danger"
-                        radius="full"
-                        size="md"
-                        variant="bordered"
-                        onClick={() => {
-                          handleDelete(item._id);
-                        }}
-                      >
-                        <RiDeleteBin2Line className="text-neutral-200" />
-                      </Button>
-                      <Button
-                        isIconOnly
-                        color="primary"
-                        radius="full"
-                        size="md"
-                        variant="bordered"
-                        onClick={() => {
-                          // setPlanningOpen((prev) => !prev);
-                          handleSetParam(item._id);
-                          // getSingleConvocatoria(item._id);
-                        }}
-                      >
-                        <CiCalendar />
-                      </Button>
+                      <Tooltip content="Editar proyecto" placement="top">
+                        <Button
+                          isIconOnly
+                          color="warning"
+                          radius="full"
+                          size="md"
+                          variant="bordered"
+                          onClick={() => handleEdit(item._id)}
+                        >
+                          <FaEdit />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip content="Eliminar proyecto" placement="top">
+                        <Button
+                          isIconOnly
+                          color="danger"
+                          radius="full"
+                          size="md"
+                          variant="bordered"
+                          onClick={() => {
+                            handleDelete(item._id);
+                          }}
+                        >
+                          <RiDeleteBin2Line />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip content="Ver plan de desarrollo" placement="top">
+                        <Button
+                          isIconOnly
+                          color="primary"
+                          radius="full"
+                          size="md"
+                          variant="bordered"
+                          onClick={() => {
+                            // setPlanningOpen((prev) => !prev);
+                            handleSetParam(item._id);
+                            // getSingleConvocatoria(item._id);
+                          }}
+                        >
+                          <CiCalendar />
+                        </Button>
+                      </Tooltip>
                     </div>
                   ) : columnKey === "url" ? (
                     <a

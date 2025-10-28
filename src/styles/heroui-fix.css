@@ -1,0 +1,57 @@
+/* Fix específico para componentes HeroUI en producción */
+
+/* Asegurar que los inputs mantengan su estilo */
+.heroui-input-wrapper {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.heroui-input {
+  position: relative;
+  width: 100%;
+  display: inline-flex;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Fix para Select components */
+.heroui-select-wrapper {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Asegurar que los estilos de variantes se apliquen */
+[data-variant="bordered"] {
+  border-width: 2px !important;
+  border-style: solid !important;
+}
+
+/* Fix para Card components */
+.heroui-card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  outline: none;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+/* Fix para Button components */
+.heroui-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  text-decoration: none;
+}
