@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet';
+
 import { ReactNode } from 'react';
 
 type PageProps = {
