@@ -58,14 +58,14 @@ export function RegisterForm() {
     <div className="min-h-screen flex items-center justify-center p-4 border border-gray-200 rounded-lg shadow-lg w-full max-w-md">
       <div className="w-full max-w-md mb-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-gray mb-2">
             Crear cuenta
           </h1>
           <p className="text-gray-600">Regístrate para comenzar</p>
         </div>
 
         {/* Card principal */}
-        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm mt-4">
+        <Card className="shadow-xl border-0  backdrop-blur-sm mt-4">
           <CardBody className="p-8">
             <Form
               className="space-y-6"

@@ -42,13 +42,13 @@ export const Profile = () => {
 
     return (
         <DefaultLayout>
-            <div className="flex flex-col gap-6 p-6 bg-gray-50 min-h-screen">
+            <div className="flex flex-col gap-6 p-6 min-h-screen">
                 <div className="flex items-center justify-between mt-6">
                     <div>
                         <div className="flex items-center gap-2">
                             <PiUserCircleLight className="w-14 h-14 text-default-500" />
                             <div className="flex items-center gap-2">
-                                <h1 className="text-3xl font-bold text-gray-800">
+                                <h1 className="text-3xl font-bold text-gray">
                                     {singleUser?.username}
                                 </h1>
                                 <Chip variant="bordered" color="primary">
@@ -112,7 +112,7 @@ export const Profile = () => {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="lg:col-span-2 space-y-6">
+                    <div className="lg:col-span-3 space-y-6">
                         <Divider className="mt-6" />
                         <Card className="shadow-lg mt-6 border border-success-200">
                             <CardHeader className="pb-3">
