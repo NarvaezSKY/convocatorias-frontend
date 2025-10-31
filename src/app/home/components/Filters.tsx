@@ -2,10 +2,10 @@ import {
   Button,
   Card,
   Input,
-  Select,
-  SelectItem,
   Spinner,
 } from "@heroui/react";
+
+import {Select, SelectItem} from "@heroui/select";
 import React from "react";
 import { ISearchConvocatoriasReq } from "../../../core/convocatorias/domain/search-convocatorias";
 import { CiEraser } from "react-icons/ci";
