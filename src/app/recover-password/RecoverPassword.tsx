@@ -1,7 +1,7 @@
 import DefaultLayout from "@/layouts/default";
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
-import { Card, CardBody, Spinner, Divider, Form, CardHeader } from "@heroui/react";
+import { Card, CardBody, Spinner, Form, CardHeader } from "@heroui/react";
 import { useForm } from "react-hook-form";
 import { useRecoverPass } from "./hooks/useRecoverPass";
 import { MdEmail as EmailIcon } from "react-icons/md"
