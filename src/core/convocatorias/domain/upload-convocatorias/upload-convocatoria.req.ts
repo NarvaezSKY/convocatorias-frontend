@@ -1,4 +1,5 @@
 export interface IUploadConvocatoriaReq{
+    year: number
     convocatoria: string;
     consecutivo: string;
     direccion_oficina_regional: string;

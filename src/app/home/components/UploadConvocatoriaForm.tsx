@@ -80,6 +80,19 @@ export function UploadConvocatoriaForm({
     >
       <Select
         isRequired
+        label="Año"
+        placeholder="Selecciona una año"
+        variant="bordered"
+        {...register("year", { required: "Este campo es obligatorio" })}
+        errorMessage={errors.year?.message}
+        isInvalid={!!errors.year}
+      >
+        <SelectItem key="2025">2025</SelectItem>
+        <SelectItem key="2026">2026</SelectItem>
+      </Select>
+
+      <Select
+        isRequired
         label="Convocatoria"
         placeholder="Selecciona una convocatoria"
         variant="bordered"

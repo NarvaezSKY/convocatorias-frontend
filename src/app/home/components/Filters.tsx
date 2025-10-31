@@ -5,7 +5,7 @@ import {
   Spinner,
 } from "@heroui/react";
 
-import {Select, SelectItem} from "@heroui/select";
+import { Select, SelectItem } from "@heroui/select";
 import React from "react";
 import { ISearchConvocatoriasReq } from "../../../core/convocatorias/domain/search-convocatorias";
 import { CiEraser } from "react-icons/ci";
@@ -135,6 +135,30 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
               <SelectItem key="PLANES_OPERATIVO">PLANES_OPERATIVO</SelectItem>
             </Select>
           </div>
+          <div className="flex flex-col gap-2 w-full max-w-xs">
+            <label className="text-sm text-neutral-700" htmlFor="Año">
+              Año
+            </label>
+            <Select
+              placeholder="Año"
+              variant="bordered"
+              multiple
+              id="tipo_postulacion"
+              label="Selecciona un año"
+              onChange={(e) => {
+                const value = (e.target as HTMLSelectElement).value;
+                onChange({ year: value });
+              }}>
+              <SelectItem key="2025">
+                2025
+              </SelectItem>
+              <SelectItem key="2026">
+                2026
+              </SelectItem>
+
+            </Select>
+          </div>
+
           <div className="flex flex-col gap-2 w-full max-w-xs">
             <label className="text-sm text-neutral-700" htmlFor="nombre">
               Convocatoria
