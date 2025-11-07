@@ -156,6 +156,15 @@ export function UploadConvocatoriaForm({
         </SelectItem>
         <SelectItem key="PLAN DE ACCIÓN">PLAN DE ACCIÓN</SelectItem>
         <SelectItem key="PLANES_OPERATIVO">PLANES_OPERATIVO</SelectItem>
+        <SelectItem key="INVESTIGACION">INVESTIGACION (MGA)</SelectItem>
+        <SelectItem key="MODERNIZACION">MODERNIZACION (MGA)</SelectItem>
+        <SelectItem key="PA_LABORATORIO">PA_LABORATORIO</SelectItem>
+        <SelectItem key="PA_TECNOACADEMIA">PA_TECNOACADEMIA</SelectItem>
+        <SelectItem key="PA_TECNOPARQUE">PA_TECNOPARQUE</SelectItem>
+        <SelectItem key="PITTE">PITTE</SelectItem>
+        <SelectItem key="NACIONAL">NACIONAL</SelectItem>
+        <SelectItem key="REGIONAL">REGIONAL</SelectItem>
+        <SelectItem key="PROYECTOS IAP">PROYECTOS IAP</SelectItem>
       </Select>
 
       <Select

@@ -3,6 +3,7 @@ import {
   Card,
   Input,
   Spinner,
+  Tooltip,
 } from "@heroui/react";
 
 import { Select, SelectItem } from "@heroui/select";
@@ -33,14 +34,14 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
     <div>
       <Card className="p-4">
         <h2 className="text-lg font-semibold mb-4">Filtros de búsqueda</h2>
-        <form className="mb-4 flex gap-4 flex-wrap items-end">
+        <form className="mb-4 grid grid-cols-1 lg:grid-cols-4 gap-4">
           <div className="flex flex-col gap-2 w-full max-w-xs">
-            <label
+            {/* <label
               className="text-sm text-neutral-700"
               htmlFor="direccion_oficina_regional"
             >
               Dirección oficina regional
-            </label>
+            </label> */}
             <Select
               fullWidth
               multiple
@@ -68,12 +69,12 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
           </div>
 
           <div className="flex flex-col gap-2 w-full max-w-xs">
-            <label
+            {/* <label
               className="text-sm text-neutral-700"
               htmlFor="tipo_postulacion"
             >
               Estado
-            </label>
+            </label> */}
 
             <Select
               fullWidth
@@ -107,9 +108,9 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
           </div>
 
           <div className="flex flex-col gap-2 w-full max-w-xs">
-            <label className="text-sm text-neutral-700" htmlFor="nuevo_estado">
+            {/* <label className="text-sm text-neutral-700" htmlFor="nuevo_estado">
               Mecanismo
-            </label>
+            </label> */}
 
             <Select
               fullWidth
@@ -133,16 +134,26 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
               </SelectItem>
               <SelectItem key="PLAN DE ACCIÓN">PLAN DE ACCIÓN</SelectItem>
               <SelectItem key="PLANES_OPERATIVO">PLANES_OPERATIVO</SelectItem>
+              <SelectItem key="INVESTIGACION">INVESTIGACION (MGA)</SelectItem>
+              <SelectItem key="MODERNIZACION">MODERNIZACION (MGA)</SelectItem>
+              <SelectItem key="PA_LABORATORIO">PA_LABORATORIO</SelectItem>
+              <SelectItem key="PA_TECNOACADEMIA">PA_TECNOACADEMIA</SelectItem>
+              <SelectItem key="PA_TECNOPARQUE">PA_TECNOPARQUE</SelectItem>
+              <SelectItem key="PITTE">PITTE</SelectItem>
+              <SelectItem key="NACIONAL">NACIONAL</SelectItem>
+              <SelectItem key="REGIONAL">REGIONAL</SelectItem>
+              <SelectItem key="PROYECTOS IAP">PROYECTOS IAP</SelectItem>
             </Select>
           </div>
           <div className="flex flex-col gap-2 w-full max-w-xs">
-            <label className="text-sm text-neutral-700" htmlFor="Año">
+            {/* <label className="text-sm text-neutral-700" htmlFor="Año">
               Año
-            </label>
+            </label> */}
             <Select
               placeholder="Año"
               variant="bordered"
               multiple
+              size="sm"
               id="tipo_postulacion"
               label="Selecciona un año"
               onChange={(e) => {
@@ -160,9 +171,9 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
           </div>
 
           <div className="flex flex-col gap-2 w-full max-w-xs">
-            <label className="text-sm text-neutral-700" htmlFor="nombre">
+            {/* <label className="text-sm text-neutral-700" htmlFor="nombre">
               Convocatoria
-            </label>
+            </label> */}
 
             <Select
               fullWidth
@@ -185,15 +196,16 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
             </Select>
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-neutral-700" htmlFor="consecutivo">
+            {/* <label className="text-sm text-neutral-700" htmlFor="consecutivo">
               Consecutivo
-            </label>
+            </label> */}
             <Input
               id="consecutivo"
               name="consecutivo"
+              label="Consecutivo"
               placeholder="Buscar por consecutivo"
               radius="sm"
-              size="lg"
+              size="sm"
               value={filtros.consecutivo || ""}
               variant="bordered"
               onChange={handleChange}
@@ -201,47 +213,56 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-neutral-700" htmlFor="nombre">
+            {/* <label className="text-sm text-neutral-700" htmlFor="nombre">
               Nombre
-            </label>
+            </label> */}
             <Input
               id="nombre"
               name="nombre"
+              label="Nombre"
               placeholder="Buscar por nombre"
               radius="sm"
-              size="lg"
+              size="sm"
               value={filtros.nombre || ""}
               variant="bordered"
               onChange={handleChange}
             />
           </div>
+          <div className="w-full grid grid-cols-2 gap-2 mb-1">
 
-          {user?.role === "superadmin" && (
+            {user?.role === "superadmin" && (
+              <div className="flex flex-col justify-end">
+                <Tooltip content="Generar reporte">
+                  <Button
+                    className="w-full"
+                    color="success"
+                    radius="sm"
+                    size="lg"
+                    type="button"
+                    variant="flat"
+                    onClick={() => generarReporte(filtros)}
+                  >
+                    <PiMicrosoftExcelLogoBold className="w-7 h-7" />
+                  </Button>
+                </Tooltip>
+              </div>
+            )}
+
             <div className="flex flex-col justify-end">
-              <Button
-                color="success"
-                radius="sm"
-                size="lg"
-                type="button"
-                variant="flat"
-                onClick={() => generarReporte(filtros)}
-              >
-                <PiMicrosoftExcelLogoBold className="mr-2" /> Generar reporte
-              </Button>
+              <Tooltip content="Limpiar filtros">
+                <Button
+                  className="w-full"
+                  color="danger"
+                  radius="sm"
+                  size="lg"
+                  type="button"
+                  variant="flat"
+                  onClick={onReset}
+                >
+                  <CiEraser className="w-7 h-7" />
+                </Button>
+              </Tooltip>
             </div>
-          )}
-
-          <div className="flex flex-col justify-end">
-            <Button
-              color="danger"
-              radius="sm"
-              size="lg"
-              type="button"
-              variant="flat"
-              onClick={onReset}
-            >
-              <CiEraser className="mr-2" /> Limpiar filtros
-            </Button>
           </div>
           {filterLoading && (
             <div className="flex justify-center items-center h-12 rounded-full">

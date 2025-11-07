@@ -30,6 +30,7 @@ import ProjectPlanningGridV2 from "../planDesarrollo/components/planDesarrolloV2
 import { useSearchParams } from "react-router-dom";
 
 const columns = [
+  { key: "year", label: "Año" },
   { key: "convocatoria", label: "Convocatoria" },
   { key: "consecutivo", label: "Consecutivo" },
   {
@@ -53,7 +54,7 @@ const columns = [
   { key: "acciones", label: "Acciones" },
 ];
 
-const rowsPerPage = 5;
+const rowsPerPage = 10;
 
 export default function ConvocatoriasTable() {
   const [searchParams, setSearchParams] = useSearchParams();

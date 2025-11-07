@@ -13,8 +13,8 @@ import {
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { FiEdit3, FiSave, FiUser } from "react-icons/fi";
 import { roleConverter } from "../shared/utils/roleConverter";
-import { PiUserCircleLight } from "react-icons/pi";
 import { useProfile } from "./hooks/useProfile";
+import defaultPfp from "../../../public/profile_default.png"
 
 export const Profile = () => {
     const {
@@ -42,38 +42,38 @@ export const Profile = () => {
 
     return (
         <DefaultLayout>
-            <div className="flex flex-col gap-6 p-6 min-h-screen">
+            <div className="flex flex-col gap-6 p-6 min-h-screen bg-test rounded-lg">
                 <div className="flex items-center justify-between mt-6">
                     <div>
                         <div className="flex items-center gap-2">
-                            <PiUserCircleLight className="w-14 h-14 text-default-500" />
+                            <img src={defaultPfp} width={80} alt="" className="rounded-full border border-4 border-success" />
                             <div className="flex items-center gap-2">
-                                <h1 className="text-3xl font-bold text-gray">
+                                <h1 className="text-4xl font-extrabold text-success ml-1">
                                     {singleUser?.username}
                                 </h1>
-                                <Chip variant="bordered" color="primary">
-                                    {roleConverter(singleUser?.role as string)}
-                                </Chip>
-                                <Chip
-                                    variant="bordered"
-                                    color={singleUser?.estado === "activo" ? "success" : "danger"}
-                                >
-                                    {singleUser?.estado}
-                                </Chip>
+                                {singleUser?.CvLAC && (
+                                    <Link
+                                        color="success"
+                                        className="flex items-center gap-1 text-sm"
+                                        href={singleUser?.CvLAC}
+                                        isExternal
+                                    >
+                                        <FaExternalLinkAlt /> Ver CvLAC
+                                    </Link>
+                                )}
                             </div>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 mt-2">
                             <p className="text-default-600 mt-1">Perfil de Usuario</p>
-                            {singleUser?.CvLAC && (
-                                <Link
-                                    color="success"
-                                    className="flex items-center gap-1 text-sm"
-                                    href={singleUser?.CvLAC}
-                                    isExternal
-                                >
-                                    <FaExternalLinkAlt /> Ver CvLAC
-                                </Link>
-                            )}
+                            <Chip variant="bordered" color="warning">
+                                {roleConverter(singleUser?.role as string)}
+                            </Chip>
+                            <Chip
+                                variant="bordered"
+                                color={singleUser?.estado === "activo" ? "success" : "danger"}
+                            >
+                                {singleUser?.estado}
+                            </Chip>
                         </div>
                     </div>
                     <div className="flex gap-2">
@@ -81,7 +81,7 @@ export const Profile = () => {
                             !isEditing ? (
                                 <Button
                                     color="success"
-                                    variant="light"
+                                    variant="flat"
                                     startContent={<FiEdit3 />}
                                     onPress={() => setIsEditing(true)}
                                 >
@@ -91,7 +91,7 @@ export const Profile = () => {
                                 <div className="flex gap-2">
                                     <Button
                                         color="primary"
-                                        variant="light"
+                                        variant="flat"
                                         startContent={<FiSave />}
                                         onPress={handleSave}
                                     >
@@ -117,8 +117,8 @@ export const Profile = () => {
                         <Card className="shadow-lg mt-6 border border-success-200">
                             <CardHeader className="pb-3">
                                 <div className="flex items-center gap-2 text-success">
-                                    <FiUser className="text-green-600" />
-                                    <h2 className="text-lg font-semibold">
+                                    <FiUser className="text-green-600 h-6 w-6" />
+                                    <h2 className="text-lg font-bold">
                                         Información Personal
                                     </h2>
                                 </div>

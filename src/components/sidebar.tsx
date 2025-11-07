@@ -31,13 +31,13 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   };
   return (
     <>
-      <aside className="hidden md:flex flex-col h-full w-64 bg-default-100 border-r border-gray-200 pt-20 px-4 fixed z-30 pr-4">
+      <aside className="hidden md:flex flex-col h-full w-64 bg-test border-r border-gray-200 pt-20 px-4 fixed z-30 pr-4">
         <div className="flex flex-col h-screen justify-between">
           <nav className="flex flex-col gap-2 flex-1">
-            <h1 className="font-bold">Módulos</h1>
+            <h1 className="font-bold text-lg">Módulos</h1>
             <Link
-              className={`font-semibold text-success hover:text-default-800 underline flex justify-start gap-1 transition-all
-    ${currentPath === "/home" ? "bg-success text-white rounded-md py-1 px-1 hover:text-white" : ""}
+              className={`font-semibold text-success hover:text-default-800 underline flex justify-start gap-1 transition-all py-2 px-2
+    ${currentPath === "/home" ? "bg-success text-white rounded-md hover:text-white" : ""}
   `}
               href="/home"
             >
@@ -45,8 +45,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               Gestión de Proyectos
             </Link>
             <Link
-              className={`font-semibold text-success hover:text-default-800 underline flex justify-start gap-1 transition-all 
-    ${currentPath === "/users" ? "bg-success text-white rounded-md py-1 px-1 hover:text-white" : ""}`}
+              className={`font-semibold text-success hover:text-default-800 underline flex justify-start gap-1 transition-all py-2 px-2
+    ${currentPath === "/users" ? "bg-success text-white rounded-md hover:text-white" : ""}`}
               href="/users"
               isDisabled={role === "investigador" || role === "admin" || role === "aprendiz"}
             >
@@ -54,10 +54,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               Gestión de Usuarios
             </Link>
             <Divider />
-            <h1 className="font-bold">Reportes</h1>
+            <h1 className="font-bold text-lg">Reportes</h1>
             <Link
-              className={`font-semibold text-success hover:text-default-800 underline flex justify-start transition-all 
-    ${currentPath === "/reportes/proyectos" ? "bg-success text-white rounded-md py-1 px-1 hover:text-white" : ""}`}
+              className={`font-semibold text-success hover:text-default-800 underline flex justify-start transition-all py-2 px-2
+    ${currentPath === "/reportes/proyectos" ? "bg-success text-white rounded-md hover:text-white" : ""}`}
               href="/reportes/proyectos"
               isDisabled={role === "aprendiz"}
             >
@@ -68,7 +68,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           <div className="mb-[3rem] flex flex-col gap-2">
             <Divider />
             <Button
-              className="w-full"
+              className="w-full h-12"
               color="danger"
               size="sm"
               variant="flat"
@@ -92,7 +92,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             <nav className="flex flex-col gap-2 flex-1">
               <h1 className="font-bold">Módulos</h1>
               <Link
-                className="font-semibold text-success hover:text-default-800 underline flex justify-start gap-1 transition-all"
+                className="font-semibold text-success hover:text-default-800 underline flex justify-start gap-1 transition-all py-3 px-2"
                 href="/home"
                 onClick={onClose}
               >
@@ -100,7 +100,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 Gestión de Proyectos
               </Link>
               <Link
-                className="font-semibold text-success hover:text-default-800 underline flex justify-start gap-1 transition-all"
+                className="font-semibold text-success hover:text-default-800 underline flex justify-start gap-1 transition-all py-3 px-2"
                 href="/users"
                 isDisabled={role === "investigador" || role === "admin" || role === "aprendiz"}
                 onClick={onClose}
@@ -111,7 +111,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               <Divider />
               <h1 className="font-bold">Reportes</h1>
               <Link
-                className="font-semibold text-success hover:text-default-800 underline flex justify-between transition-all"
+                className="font-semibold text-success hover:text-default-800 underline flex justify-between transition-all py-3 px-2"
                 href="/reportes/proyectos"
                 onClick={onClose}
               >
@@ -120,7 +120,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               </Link>
               <Divider />
               <Button
-                className="w-full"
+                className="w-full h-12"
                 color="danger"
                 size="sm"
                 variant="flat"

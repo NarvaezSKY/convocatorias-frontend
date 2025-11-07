@@ -2,18 +2,15 @@ import clsx from "clsx";
 import { toast } from "sonner";
 import { siteConfig } from "../config/site";
 import { ThemeSwitch } from "./theme-switch";
-
 import { useAuthStore } from "@/app/shared/auth.store";
 import { FaUserAlt } from "react-icons/fa";
 import { PiSignOutBold } from "react-icons/pi";
-
-
 import {
   Tooltip, Button, link as linkStyles, Chip, Navbar as HeroUINavbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, Link,
 } from "@heroui/react";
-
 import SENAIcon from "../../favicon_io/logoSena.png";
 import { roleConverter } from "@/app/shared/utils/roleConverter";
+
 
 export const Navbar = () => {
   const { user, logout, role, verifyError } = useAuthStore();
@@ -26,7 +23,7 @@ export const Navbar = () => {
 
   return (
     <HeroUINavbar
-      className="border-b border-gray-200 bg-default-100 fixed top-0 z-50 w-full h-20"
+      className="border-b border-gray-200 bg-test fixed top-0 z-50 w-full h-22"
       maxWidth="xl"
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -36,42 +33,20 @@ export const Navbar = () => {
             color="foreground"
             href="/home"
           >
-            {/* <Logo /> */}
             <img
               alt="SENA Logo"
-              className="w-20 m-2"
+              className="w-23 m-2"
               src={SENAIcon}
             />
-            <p className="font-bold leading-none text-default-800 text-lg">
-              Innovación y<br />
+            <p className="font-extrabold leading-none text-success text-2xl ml-1">
+              Innovación y
               Competitividad
             </p>
           </Link>
         </NavbarBrand>
         <NavbarItem className="ml-6  hidden lg:flex">
           <div className="hidden lg:flex gap-4 justify-start ml-2 w-full">
-            {isAuthenticated && (
-              <div className="flex items-center gap-2">
-                <Tooltip content="Ver tu perfil" placement="bottom">
-                  <div className="flex flex-row items-center gap-2">
-                    <FaUserAlt />{" "}
-                    <p>
-                      <Link className="text-default-800" href={`/profile/${user.userId}`}>{user?.username}</Link>
-                    </p>
-                  </div>
-                </Tooltip>
-                <div>
-                  <Chip
-                    className="text-xs"
-                    color="warning"
-                    size="sm"
-                    variant="bordered"
-                  >
-                    {roleConverter(role as string)}
-                  </Chip>
-                </div>
-              </div>
-            )}
+            {/* Usuario movido al lado del ThemeSwitch */}
           </div>
         </NavbarItem>
       </NavbarContent>
@@ -91,6 +66,29 @@ export const Navbar = () => {
                 {item.label}
               </Link>
             ))}
+
+          {isAuthenticated && (
+            <div className="flex items-center gap-2 mr-4">
+              <Tooltip content="Ver tu perfil" placement="bottom">
+                <div className="flex flex-row items-center gap-2">
+                  <FaUserAlt color="gray" size={20} />{" "}
+                  <p>
+                    <Link className="text-gray font-bold text-lg" href={`/profile/${user.userId}`}>{user?.username}</Link>
+                  </p>
+                </div>
+              </Tooltip>
+              <div>
+                <Chip
+                  className="text-xs"
+                  color="warning"
+                  size="sm"
+                  variant="bordered"
+                >
+                  {roleConverter(role as string)}
+                </Chip>
+              </div>
+            </div>
+          )}
 
           <ThemeSwitch />
         </NavbarItem>

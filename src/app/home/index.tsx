@@ -12,7 +12,7 @@ import Filtros from "./components/Filters";
 import { useConvocatorias } from "./hooks/UseConvocatorias";
 import { MdFileUpload } from "react-icons/md";
 import { toast } from "sonner";
-import { Divider } from "@heroui/react";
+import { Divider, Tooltip } from "@heroui/react";
 
 export const Home = () => {
   const [filtros, setFiltros] = useState<ISearchConvocatoriasReq>({});
@@ -36,24 +36,26 @@ export const Home = () => {
 
   return (
     <DefaultLayout>
-      <div className="flex flex-col gap-4 bg-default-100 p-4 rounded-lg shadow-md w-full border-2 border-success-100 mt-6 overflow-x-auto">
+      <div className="flex flex-col gap-4 bg-test p-4 rounded-lg shadow-md w-full border-2 border-success-100 mt-6 overflow-x-auto">
 
         <div className="w-full flex justify-between items-center">
           <div className="flex gap-2">
-            <h1 className="text-3xl font-bold">
-              Seguimiento Innovación Y Competitividad
+            <h1 className="text-4xl font-extrabold text-success">
+              Proyectos
             </h1>
-            <Button
-              isIconOnly
-              className="mb-4"
-              color="primary"
-              radius="full"
-              size="md"
-              variant="flat"
-              onClick={() => setMostrarFiltros((prev) => !prev)}
-            >
-              {mostrarFiltros ? <IoMdCloseCircle /> : <FaSearch />}
-            </Button>
+            <Tooltip content="Buscar proyectos">
+              <Button
+                isIconOnly
+                className="mb-2 mt-1"
+                color="primary"
+                radius="full"
+                size="md"
+                variant="flat"
+                onClick={() => setMostrarFiltros((prev) => !prev)}
+              >
+                {mostrarFiltros ? <IoMdCloseCircle /> : <FaSearch />}
+              </Button>
+            </Tooltip>
           </div>
           {(role === "superadmin" ||
             role === "dinamizador" ||
@@ -103,7 +105,7 @@ export const Home = () => {
 
         <ReusableModal
           isOpen={isOpen}
-          modalTitle="Subir Convocatoria"
+          modalTitle="Subir proyecto"
           onClose={() => setIsOpen(false)}
           onSubmit={() => setIsOpen(false)}
         >

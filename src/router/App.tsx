@@ -129,7 +129,7 @@ function App() {
       <Route
         element={
           <ProtectedRoute>
-            <Page title="Lista de Usuarios | Innovación y Competitividad">
+            <Page title="Lista de usuarios | Innovación y Competitividad">
               <UserList />
             </Page>
           </ProtectedRoute>

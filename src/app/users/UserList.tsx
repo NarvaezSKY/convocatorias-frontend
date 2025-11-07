@@ -75,7 +75,7 @@ export const UserList = () => {
           />
         </div>
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold mb-2">Lista de Usuarios</h2>
+          <h2 className="text-2xl font-bold mb-2 text-success">Lista de usuarios:</h2>
 
           {loading && <Spinner size="md" />}
         </div>

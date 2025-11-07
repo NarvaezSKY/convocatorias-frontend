@@ -16,7 +16,7 @@ export const SearchUsers = ({
   return (
     <div>
       <Card className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Buscar usuarios</h1>
+        <h1 className="text-3xl font-bold mb-4 text-success">Buscar usuarios</h1>
         <div className="flex gap-2">
           <Input
             className="w-full"

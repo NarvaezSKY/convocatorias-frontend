@@ -16,9 +16,9 @@ export default function DefaultLayout({
   const isAuthenticated = !!user && !verifyError;
 
   return (
-    <div className="relative flex flex-col h-screen">
+    <div className="relative flex flex-col h-full min-h-screen bg-default-100">
       <Navbar />
-      <div className="flex flex-1 mt-6">
+      <div className="flex flex-1 mt-8">
         {isAuthenticated && (
           <Button
             isIconOnly
@@ -42,7 +42,7 @@ export default function DefaultLayout({
           <div className="max-w-7xl mx-auto">{children}</div>
         </main>
       </div>
-      <footer className="w-full flex items-center justify-center py-3 font-semibold border-gray-300 border-t mt-6">
+      <footer className="w-full flex items-center justify-center bg-test py-3 font-semibold border-gray-300 border-t mt-6">
         <Link
           className="flex items-center gap-1 text-current"
           href="/home"
