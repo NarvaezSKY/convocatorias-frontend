@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { useInfiniteScroll } from "@heroui/use-infinite-scroll";
 import { useConvocatoriasStore } from "../../shared/convocatorias.store";
 import { toast } from "sonner";
@@ -14,9 +14,9 @@ export const useConvocatorias = () => {
     downloadReport,
   } = useConvocatoriasStore();
 
-  useEffect(() => {
-    getAllConvocatorias();
-  }, [getAllConvocatorias]);
+  // useEffect(() => {
+  //   getAllConvocatorias();
+  // }, [getAllConvocatorias]);
 
   const [loaderRef, scrollerRef] = useInfiniteScroll({
     hasMore: false,

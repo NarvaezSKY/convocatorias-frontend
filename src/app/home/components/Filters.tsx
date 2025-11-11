@@ -264,13 +264,14 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
               </Tooltip>
             </div>
           </div>
-          {filterLoading && (
-            <div className="flex justify-center items-center h-12 rounded-full">
-              <Spinner variant="simple" />
-            </div>
-          )}
         </form>
       </Card>
+      {filterLoading && (
+        <div className="flex justify-center mt-4 items-center h-12 rounded-full w-full">
+          <Spinner variant="simple" color="success" />
+          <span className="ml-2 text-success">Solo un momento...</span>
+        </div>
+      )}
     </div>
   );
 }

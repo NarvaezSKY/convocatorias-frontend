@@ -1,10 +1,11 @@
 import { Link } from "@heroui/link";
 import { Navbar } from "../components/navbar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@heroui/react";
 import { HiMenu } from "react-icons/hi";
 import { Sidebar } from "../components/sidebar";
 import { useAuthStore } from "@/app/shared/auth.store";
+import { useLocation } from "react-router-dom";
 
 export default function DefaultLayout({
   children,
@@ -14,6 +15,12 @@ export default function DefaultLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, verifyError  } = useAuthStore();
   const isAuthenticated = !!user && !verifyError;
+  const location = useLocation();
+
+  // Hacer scroll al inicio cuando cambia la ruta
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [location.pathname]);
 
   return (
     <div className="relative flex flex-col h-full min-h-screen bg-default-100">
