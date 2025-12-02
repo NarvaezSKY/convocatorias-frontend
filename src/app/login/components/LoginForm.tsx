@@ -72,11 +72,11 @@ export function LoginForm() {
                   <UserIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />
                 }
                 variant="bordered"
-                {...register("email", {
+                {...register("SENAemail", {
                   required: "El correo electrónico es obligatorio",
                 })}
-                errorMessage={errors.email?.message}
-                isInvalid={!!errors.email}
+                errorMessage={errors.SENAemail?.message}
+                isInvalid={!!errors.SENAemail}
               />
             </div>
 

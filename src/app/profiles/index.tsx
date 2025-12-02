@@ -9,12 +9,22 @@ import {
     Input,
     Link,
     Spinner,
+    Select,
+    SelectItem,
 } from "@heroui/react";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { FiEdit3, FiSave, FiUser } from "react-icons/fi";
 import { roleConverter } from "../shared/utils/roleConverter";
 import { useProfile } from "./hooks/useProfile";
-import defaultPfp from "../../../public/profile_default.png"
+import defaultPfp from "../assets/profile_default.png";
+import ConvocatoriasTable from "../home/components/ConvocatoriasTable";
+import { VscGithubProject } from "react-icons/vsc";
+import ReusableModal from "../shared/components/Modal";
+import React, { useEffect, useState } from "react";
+import { ISearchConvocatoriasReq } from "@/core/convocatorias/domain/search-convocatorias";
+import Filtros from "../home/components/Filters";
+import { toast } from "sonner";
+import { useConvocatorias } from "../home/hooks/UseConvocatorias";
 
 export const Profile = () => {
     const {
@@ -27,8 +37,26 @@ export const Profile = () => {
         handleSave,
         handleCancel,
         errors,
-        user
+        user,
+        searchProfileConvocatorias,
     } = useProfile();
+    const { handleSearch } = useConvocatorias();
+
+    // Los hooks siempre deben declararse antes de cualquier return condicional
+    const [isOpen, setIsOpen] = React.useState(false);
+    const [filtros, setFiltros] = useState<ISearchConvocatoriasReq>({});
+
+    useEffect(() => {
+        const delayDebounce = setTimeout(() => {
+            const filtrosLimpios = Object.fromEntries(
+                Object.entries(filtros).filter(([_, v]) => v?.toString().trim() !== "")
+            );
+
+            handleSearch(filtrosLimpios);
+        }, 500);
+
+        return () => clearTimeout(delayDebounce);
+    }, [filtros]);
 
     if (loading) {
         return (
@@ -65,7 +93,7 @@ export const Profile = () => {
                         </div>
                         <div className="flex gap-2 mt-2">
                             <p className="text-default-600 mt-1">Perfil de Usuario</p>
-                            <Chip variant="bordered" color="warning">
+                            <Chip variant="bordered" color={singleUser?.role == "dinamizador" || singleUser?.role == "superadmin" ? "warning" : "secondary"}>
                                 {roleConverter(singleUser?.role as string)}
                             </Chip>
                             <Chip
@@ -85,7 +113,7 @@ export const Profile = () => {
                                     startContent={<FiEdit3 />}
                                     onPress={() => setIsEditing(true)}
                                 >
-                                    Editar Perfil
+                                    Editar mis datos
                                 </Button>
                             ) : (
                                 <div className="flex gap-2">
@@ -99,7 +127,7 @@ export const Profile = () => {
                                     </Button>
                                     <Button
                                         color="warning"
-                                        variant="light"
+                                        variant="flat"
                                         onPress={handleCancel}
                                     >
                                         Cancelar
@@ -135,14 +163,46 @@ export const Profile = () => {
                                             setProfileData({ ...profileData, username: e.target.value })
                                         }
                                     />
+                                    {!isEditing ? (
+                                        <Input
+                                            label="Centro de Formación"
+                                            radius="md"
+                                            value={profileData.centroDeFormacion}
+                                            isReadOnly
+                                            variant="flat"
+                                        />
+                                    ) : (
+                                        <Select
+                                            label="Centro de Formación"
+                                            labelPlacement="inside"
+                                            placeholder="Selecciona un centro"
+                                            radius="md"
+                                            variant="bordered"
+                                            selectedKeys={profileData.centroDeFormacion ? [profileData.centroDeFormacion] : []}
+                                            onSelectionChange={(keys) => {
+                                                const value = Array.from(keys)[0] as string;
+                                                setProfileData({ ...profileData, centroDeFormacion: value || "" });
+                                            }}
+                                        >
+                                            <SelectItem key="9307 - CENTRO DE COMERCIO Y SERVICIOS">
+                                                9307 - CENTRO DE COMERCIO Y SERVICIOS
+                                            </SelectItem>
+                                            <SelectItem key="9221 - CENTRO DE TELEINFORMATICA Y PRODUCCIÓN INDUSTRIAL">
+                                                9221 - CENTRO DE TELEINFORMATICA Y PRODUCCIÓN INDUSTRIAL
+                                            </SelectItem>
+                                            <SelectItem key="9113 - CENTRO AGROPECUARIO">
+                                                9113 - CENTRO AGROPECUARIO
+                                            </SelectItem>
+                                        </Select>
+                                    )}
                                     <Input
-                                        label="Correo electrónico"
+                                        label="Correo electrónico institucional"
                                         radius="md"
-                                        value={profileData.email}
+                                        value={profileData.SENAemail}
                                         isReadOnly={!isEditing}
                                         variant={isEditing ? "bordered" : "flat"}
                                         onChange={(e) =>
-                                            setProfileData({ ...profileData, email: e.target.value })
+                                            setProfileData({ ...profileData, SENAemail: e.target.value })
                                         }
                                     />
                                     <Input
@@ -209,9 +269,38 @@ export const Profile = () => {
                                     }
                                 </div>
                             </CardBody>
+
                         </Card>
+                        <Divider className="my-6" />
+                        <div className="flex justify-between">
+                            <span className="text-lg font-bold text-success">Proyectos en los que ha participado:</span>
+                            {singleUser?._id === user?.userId && (
+                            <Button
+                                className="ml-2"
+                                color="primary"
+                                onClick={() => setIsOpen(true)}
+                                variant="flat" >
+                                <VscGithubProject />
+                                Agregar proyectos
+                            </Button>
+                            )}
+                        </div>
+                        <ConvocatoriasTable mode="profileConsult" />
                     </div>
                 </div>
+                <ReusableModal isOpen={isOpen} onClose={() => {setIsOpen(false); searchProfileConvocatorias({users: profileData.id})}} modalTitle="Seleccionar proyectos" size="5xl" >
+                    <Filtros
+                        showDownload={false}
+                        filtros={filtros}
+                        onChange={(nuevoFiltro: Partial<ISearchConvocatoriasReq>) =>
+                            setFiltros((prev) => ({ ...prev, ...nuevoFiltro }))
+                        }
+                        onReset={() => {
+                            toast.success("Filtros reseteados"), setFiltros({});
+                        }}
+                    />
+                    <ConvocatoriasTable mode="profile" />
+                </ReusableModal>
             </div>
         </DefaultLayout>
     );

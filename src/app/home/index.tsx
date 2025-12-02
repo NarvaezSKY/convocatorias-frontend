@@ -89,6 +89,7 @@ export const Home = () => {
           <>
             <Divider />
             <Filtros
+              showDownload
               filtros={filtros}
               onChange={(nuevoFiltro: Partial<ISearchConvocatoriasReq>) =>
                 setFiltros((prev) => ({ ...prev, ...nuevoFiltro }))
@@ -102,9 +103,9 @@ export const Home = () => {
 
         <Divider />
         <ConvocatoriasTable />
-
         <ReusableModal
           isOpen={isOpen}
+          size="xl"
           modalTitle="Subir proyecto"
           onClose={() => setIsOpen(false)}
           onSubmit={() => setIsOpen(false)}

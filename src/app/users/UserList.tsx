@@ -118,7 +118,7 @@ export const UserList = () => {
               : users.map((user) => (
                 <TableRow key={user._id} href={`/profile/${user._id}`} className="cursor-pointer hover:bg-default-200">
                   <TableCell>{user.username}</TableCell>
-                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.SENAemail}</TableCell>
                   <TableCell>{user.telefono}</TableCell>
                   <TableCell>
                     {roleConverter(user.role as string)}

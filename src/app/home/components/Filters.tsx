@@ -19,9 +19,10 @@ interface FiltrosProps {
   filtros: ISearchConvocatoriasReq;
   onChange: (filtro: Partial<ISearchConvocatoriasReq>) => void;
   onReset: () => void;
+  showDownload?: boolean; 
 }
 
-export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
+export default function Filtros({ filtros, onChange, onReset, showDownload }: FiltrosProps) {
   const { user } = useAuthStore();
   const { filterLoading } = useConvocatoriasStore();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -230,7 +231,7 @@ export default function Filtros({ filtros, onChange, onReset }: FiltrosProps) {
           </div>
           <div className="w-full grid grid-cols-2 gap-2 mb-1">
 
-            {user?.role === "superadmin" && (
+            {user?.role === "superadmin" && showDownload && (
               <div className="flex flex-col justify-end">
                 <Tooltip content="Generar reporte">
                   <Button

@@ -7,6 +7,8 @@ export interface IGetSingleUserRes {
     clasificacionMinCiencias: string;
     CvLAC: string;
     SemilleroInvestigacion: string;
+    centroDeFormacion: string;
+    SENAemail: string;
 
     role: string;
     estado: string;

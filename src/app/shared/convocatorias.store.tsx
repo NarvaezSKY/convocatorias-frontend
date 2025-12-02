@@ -11,10 +11,15 @@ import {
   getSingleConvocatoriaUseCase,
   deleteConvocatoriasUseCase,
   patchConvocatoriasUseCase,
+  addUserToConvocatoriaUseCase,
+  removeUserFromConvocatoriaUseCase
 } from "@/core/convocatorias/application";
+import { IAddUserToConvocatoriaReq } from "@/core/convocatorias/domain/add-user-to-convocatoria";
+import { IRemoveUserFromConvocatoriaReq } from "@/core/convocatorias/domain/remove-user-from-convocatoria";
 
 type State = {
   convocatorias: IGetAllConvocatoriasRes[];
+  profileConvocatorias: IGetAllConvocatoriasRes[];
   singleConvocatoria: IGetAllConvocatoriasRes | null;
   loading: boolean;
   error: string | null;
@@ -33,12 +38,17 @@ type Actions = {
   ) => Promise<void>;
   clearSingleConvocatoria: () => void;
   downloadReport: (data: ISearchConvocatoriasReq) => Promise<void>;
+  addUserToConvocatoria: (data: IAddUserToConvocatoriaReq) => Promise<void>;
+  removeUserFromConvocatoria: (data: IRemoveUserFromConvocatoriaReq) => Promise<void>;
+  searchProfileConvocatorias: (data: ISearchConvocatoriasReq) => Promise<void>;
+  clearProfileConvocatorias: () => void;
 };
 
 type Store = State & Actions;
 
 export const useConvocatoriasStore = create<Store>((set) => ({
   convocatorias: [],
+  profileConvocatorias: [],
   singleConvocatoria: null,
   loading: false,
   error: null,
@@ -144,6 +154,25 @@ export const useConvocatoriasStore = create<Store>((set) => ({
     }
   },
 
+  searchProfileConvocatorias: async (data) => {
+    set({ filterLoading: true, error: null });
+    try {
+      const convocatorias = await searchConvocatoriasUseCase(
+        convocatoriasRepository
+      )(data);
+      set({ profileConvocatorias: convocatorias });
+    } catch (error) {
+      console.error("Error searching convocatorias:", error);
+      set({ error: "Error searching convocatorias" });
+    } finally {
+      set({ filterLoading: false });
+    }
+  },
+
+  clearProfileConvocatorias: () => {
+    set({ profileConvocatorias: [] });
+  },
+
   deleteConvocatorias: async (id) => {
     set({ loading: true, error: null });
     try {
@@ -160,4 +189,30 @@ export const useConvocatoriasStore = create<Store>((set) => ({
       set({ loading: false });
     }
   },
+
+  addUserToConvocatoria: async (data) => {
+    set({ loading: true, error: null });
+    try {
+      await addUserToConvocatoriaUseCase(convocatoriasRepository)(data);
+    } catch (error) {
+      console.error("Error adding user to convocatoria:", error);
+      set({ error: "Error adding user to convocatoria" });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  removeUserFromConvocatoria: async (data) => {
+    set({ loading: true, error: null });
+    try {
+      await removeUserFromConvocatoriaUseCase(convocatoriasRepository)(data);
+    } catch (error) {
+      console.error("Error removing user from convocatoria:", error);
+      set({ error: "Error removing user from convocatoria" });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+
 }));

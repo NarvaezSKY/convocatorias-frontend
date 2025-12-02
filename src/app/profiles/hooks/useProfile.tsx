@@ -1,4 +1,5 @@
 import { useAuthStore } from "@/app/shared/auth.store";
+import { useConvocatoriasStore } from "@/app/shared/convocatorias.store";
 import { useUsersStore } from "@/app/shared/users.store";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -7,6 +8,7 @@ import { toast } from "sonner";
 export const useProfile = () => {
     const { id } = useParams<{ id: string }>();
     const { getSingleUser, singleUser, loading, updateUser } = useUsersStore();
+    const { searchProfileConvocatorias } = useConvocatoriasStore();
     const { user } = useAuthStore();
     const [errors, setErrors] = useState<{ CvLAC?: string }>({});
 
@@ -20,8 +22,13 @@ export const useProfile = () => {
         SemilleroInvestigacion: "",
         clasificacionMinCiencias: "",
         CvLAC: "",
-        estado: ""
+        estado: "",
+        SENAemail: "",
+        centroDeFormacion: "",
+        id: "",
     });
+
+    // Traer el usuario y sus convocatorias cuando cambia el `id`.
 
     useEffect(() => {
         if (id) {
@@ -29,9 +36,17 @@ export const useProfile = () => {
         }
     }, [id]);
 
+    // Buscar proyectos por el id del perfil, evitando usar un estado anterior de singleUser
+    useEffect(() => {
+        if (id) {
+            searchProfileConvocatorias({ users: id });
+        }
+    }, [id]);
+
     useEffect(() => {
         if (singleUser) {
             setProfileData({
+                id: singleUser._id || "",
                 username: singleUser.username || "",
                 email: singleUser.email || "",
                 telefono: singleUser.telefono || "",
@@ -40,7 +55,9 @@ export const useProfile = () => {
                 SemilleroInvestigacion: singleUser.SemilleroInvestigacion || "",
                 clasificacionMinCiencias: singleUser.clasificacionMinCiencias || "",
                 CvLAC: singleUser.CvLAC || "",
-                estado: singleUser.estado || ""
+                estado: singleUser.estado || "",
+                SENAemail: singleUser.SENAemail || "",
+                centroDeFormacion: singleUser.centroDeFormacion || ""
             });
         }
     }, [singleUser]);
@@ -96,7 +113,10 @@ export const useProfile = () => {
                 SemilleroInvestigacion: singleUser.SemilleroInvestigacion || "",
                 clasificacionMinCiencias: singleUser.clasificacionMinCiencias || "",
                 CvLAC: singleUser.CvLAC || "",
-                estado: singleUser.estado || ""
+                estado: singleUser.estado || "",
+                SENAemail: singleUser.SENAemail || "",
+                centroDeFormacion: singleUser.centroDeFormacion || "",
+                id: singleUser._id || "", 
             });
         }
     };
@@ -112,7 +132,8 @@ export const useProfile = () => {
         handleCancel,
         defaultValues: profileData,
         errors,
-        user
+        user,
+        searchProfileConvocatorias
     };
 
 };

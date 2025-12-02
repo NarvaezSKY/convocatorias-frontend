@@ -12,6 +12,7 @@ export const useConvocatorias = () => {
     deleteConvocatorias,
     searchConvocatorias,
     downloadReport,
+    profileConvocatorias,
   } = useConvocatoriasStore();
 
   // useEffect(() => {
@@ -69,5 +70,6 @@ export const useConvocatorias = () => {
     handleDelete,
     handleSearch,
     generarReporte,
+    profileConvocatorias
   };
 };

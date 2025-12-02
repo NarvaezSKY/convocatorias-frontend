@@ -15,6 +15,7 @@ import { UserList } from "@/app/users/UserList";
 import { useNavigate } from "react-router-dom";
 import { Profile } from "@/app/profiles";
 import { PublicRoute } from "./PublicRoute";
+import { Spinner } from "@heroui/react";
 
 function App() {
   const { verify } = useAuthStore();
@@ -23,6 +24,8 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    // Fallback para evitar pantallas en blanco si la verificación tarda demasiado
+    const fallback = setTimeout(() => setCheckingAuth(false), 3000);
     if (token) {
       verify()
         .catch(() => {
@@ -31,17 +34,25 @@ function App() {
           useAuthStore.getState().logout();
           // navigate("/");
         })
-        .finally(() => setCheckingAuth(false));
+        .finally(() => {
+          clearTimeout(fallback);
+          setCheckingAuth(false);
+        });
     } else {
       localStorage.removeItem("token");
       useAuthStore.getState().logout();
       // navigate("/");
+      clearTimeout(fallback);
       setCheckingAuth(false);
     }
   }, [verify, navigate]);
 
   if (checkingAuth) {
-    return null;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spinner color="success" size="lg" />
+      </div>
+    );
   }
 
   return (

@@ -15,4 +15,5 @@ export interface IGetAllConvocatoriasRes {
     valor_solicitado: number;
     valor_aprobado: number;
     diferencia_presupuesto: number;
+    users?: [string]
 }

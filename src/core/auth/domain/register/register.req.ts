@@ -4,10 +4,12 @@ export interface IRegisterReq {
     telefono: string;
     role: string;
     password: string;
+    SENAemail: string;
 
     // Optional fields
     areaDeTrabajo?: String,
     clasificacionMinCiencias?: String,
     CvLAC?: String,
     SemilleroInvestigacion?: String,
+    centroDeFormacion?: String
 }

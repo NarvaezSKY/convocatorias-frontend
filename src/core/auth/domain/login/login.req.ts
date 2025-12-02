@@ -1,5 +1,5 @@
 export interface ILoginReq {
-    email: string;
+    SENAemail: string;
     password: string;
 
 }

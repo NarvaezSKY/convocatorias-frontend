@@ -13,5 +13,6 @@ export interface ISearchConvocatoriasReq {
     observaciones?: string;
     user_id?: string;
     year?: string;
+    users?: string;
   }
   

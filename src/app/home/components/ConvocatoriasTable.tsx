@@ -28,6 +28,7 @@ import { formatCurrency } from "../utils/FormatCurrency";
 import { CiCalendar } from "react-icons/ci";
 import ProjectPlanningGridV2 from "../planDesarrollo/components/planDesarrolloV2";
 import { useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const columns = [
   { key: "year", label: "Año" },
@@ -54,9 +55,13 @@ const columns = [
   { key: "acciones", label: "Acciones" },
 ];
 
+interface ConvocatoriasTableProps {
+  mode?: "home" | "profile" | "profileConsult";
+}
+
 const rowsPerPage = 10;
 
-export default function ConvocatoriasTable() {
+export default function ConvocatoriasTable({ mode = "home" }: ConvocatoriasTableProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const proyectoParam = searchParams.get("proyecto");
   const newParams = new URLSearchParams(searchParams);
@@ -84,9 +89,9 @@ export default function ConvocatoriasTable() {
   // const [planningOpen, setPlanningOpen] = useState(false);
   const [page, setPage] = useState(1);
 
-  const { convocatorias } = useConvocatorias();
+  const { convocatorias, profileConvocatorias } = useConvocatorias();
   const { user } = useAuthStore();
-  const { getSingleConvocatoria, singleConvocatoria } = useConvocatoriasStore();
+  const { getSingleConvocatoria, singleConvocatoria, filterLoading, loading, addUserToConvocatoria } = useConvocatoriasStore();
 
   const handleEdit = async (id: string) => {
     await getSingleConvocatoria(id);
@@ -98,16 +103,36 @@ export default function ConvocatoriasTable() {
     setIsDeleteOpen(true);
   };
 
+  const handleParticipate = async (convocatoriaId: string) => {
+    if (!user?.userId) {
+      toast.error("Debes iniciar sesión para participar");
+      return;
+    }
+    try {
+      await addUserToConvocatoria({ convocatoria_id: convocatoriaId, userId: user.userId });
+      toast.success("Has marcado participación en este proyecto");
+    } catch (e) {
+      toast.error("No se pudo registrar tu participación");
+      console.error(e);
+    }
+  }
+
+  // Fuente de datos según el modo
+  const sourceData = useMemo(() => {
+    if (mode === "profileConsult") {
+      return profileConvocatorias ?? [];
+    }
+    return convocatorias;
+  }, [mode, profileConvocatorias, convocatorias]);
+
   const pages = useMemo(() => {
-    return convocatorias?.length
-      ? Math.ceil(convocatorias.length / rowsPerPage)
-      : 0;
-  }, [convocatorias]);
+    return sourceData.length ? Math.ceil(sourceData.length / rowsPerPage) : 0;
+  }, [sourceData]);
 
   const paginatedData = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
-    return convocatorias.slice(start, start + rowsPerPage);
-  }, [page, convocatorias]);
+    return sourceData.slice(start, start + rowsPerPage);
+  }, [page, sourceData]);
 
   return (
     <>
@@ -152,10 +177,10 @@ export default function ConvocatoriasTable() {
           )}
         </TableHeader>
         <TableBody
-          emptyContent={"No se encontraron convocatorias"}
+          emptyContent="No se encontraron convocatorias"
           items={paginatedData}
           loadingContent={<Spinner color="white" />}
-          loadingState={convocatorias.length === 0 ? "loading" : "idle"}
+          loadingState={(loading || filterLoading) ? "loading" : "idle"}
         >
           {(item) => (
             <TableRow key={item._id}>
@@ -167,78 +192,96 @@ export default function ConvocatoriasTable() {
                       : ""
                   }
                 >
-                  {columnKey === "acciones" &&
-                    [
-                      "superadmin",
-                      "dinamizador",
-                      "Linvestigador",
-                      "investigador",
-                    ].includes(user?.role ?? "") ? (
-                    <div className="flex gap-2">
-                      <Tooltip content="Editar proyecto" placement="top">
-                        <Button
-                          isIconOnly
-                          color="warning"
-                          radius="full"
-                          size="md"
-                          variant="bordered"
-                          onClick={() => handleEdit(item._id)}
-                        >
-                          <FaEdit />
-                        </Button>
-                      </Tooltip>
-                      <Tooltip content="Eliminar proyecto" placement="top">
-                        <Button
-                          isIconOnly
-                          color="danger"
-                          radius="full"
-                          size="md"
-                          variant="bordered"
-                          onClick={() => {
-                            handleDelete(item._id);
-                          }}
-                        >
-                          <RiDeleteBin2Line />
-                        </Button>
-                      </Tooltip>
-                      <Tooltip content="Ver plan de desarrollo" placement="top">
-                        <Button
-                          isIconOnly
-                          color="primary"
-                          radius="full"
-                          size="md"
-                          variant="bordered"
-                          onClick={() => {
-                            // setPlanningOpen((prev) => !prev);
-                            handleSetParam(item._id);
-                            // getSingleConvocatoria(item._id);
-                          }}
-                        >
-                          <CiCalendar />
-                        </Button>
-                      </Tooltip>
-                    </div>
-                  ) : columnKey === "url" ? (
-                    <a
-                      className="text-primary underline"
-                      href={getKeyValue(
-                        item as { [key: string]: any },
-                        columnKey
-                      )}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      {getKeyValue(item as { [key: string]: any }, columnKey)}
-                    </a>
-                  ) : columnKey === "diferencia_presupuesto" ||
-                    columnKey === "valor_solicitado" ||
-                    columnKey === "valor_aprobado" ? (
-                    formatCurrency(
-                      getKeyValue(item as { [key: string]: any }, columnKey)
+                  {columnKey === "acciones"
+                    ? (
+                      mode === "profile"
+                        ? (
+                          <Button
+                            color="primary"
+                            size="sm"
+                            variant="flat"
+                            onClick={() => handleParticipate(item._id)}
+                          >
+                            Participé en este proyecto
+                          </Button>
+                        )
+                        : ([
+                          "superadmin",
+                          "dinamizador",
+                          "Linvestigador",
+                          "investigador",
+                        ].includes(user?.role ?? "")
+                          ? (
+                            <div className="flex gap-2">
+                              <Tooltip content="Editar proyecto" placement="top">
+                                <Button
+                                  isIconOnly
+                                  color="warning"
+                                  radius="full"
+                                  size="md"
+                                  variant="bordered"
+                                  onClick={() => handleEdit(item._id)}
+                                >
+                                  <FaEdit />
+                                </Button>
+                              </Tooltip>
+                              <Tooltip content="Eliminar proyecto" placement="top">
+                                <Button
+                                  isIconOnly
+                                  color="danger"
+                                  radius="full"
+                                  size="md"
+                                  variant="bordered"
+                                  onClick={() => {
+                                    handleDelete(item._id);
+                                  }}
+                                >
+                                  <RiDeleteBin2Line />
+                                </Button>
+                              </Tooltip>
+                              <Tooltip content="Ver plan de desarrollo" placement="top">
+                                <Button
+                                  isIconOnly
+                                  color="primary"
+                                  radius="full"
+                                  size="md"
+                                  variant="bordered"
+                                  onClick={() => {
+                                    handleSetParam(item._id);
+                                  }}
+                                >
+                                  <CiCalendar />
+                                </Button>
+                              </Tooltip>
+                            </div>
+                          )
+                          : null)
                     )
-                  ) : (
-                    getKeyValue(item as { [key: string]: any }, columnKey)
-                  )}
+                    : columnKey === "url"
+                      ? (
+                        <a
+                          className="text-primary underline"
+                          href={getKeyValue(
+                            item as { [key: string]: any },
+                            columnKey
+                          )}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          {getKeyValue(item as { [key: string]: any }, columnKey)}
+                        </a>
+                      )
+                      : columnKey === "diferencia_presupuesto" ||
+                        columnKey === "valor_solicitado" ||
+                        columnKey === "valor_aprobado"
+                        ? (
+                          formatCurrency(
+                            getKeyValue(item as { [key: string]: any }, columnKey)
+                          )
+                        )
+                        : (
+                          getKeyValue(item as { [key: string]: any }, columnKey)
+                        )}
                 </TableCell>
               )}
             </TableRow>
@@ -252,6 +295,7 @@ export default function ConvocatoriasTable() {
         singleConvocatoria && (
           <ReusableModal
             isOpen={isOpen}
+            size="xl"
             modalTitle="Editar Convocatoria"
             onClose={() => setIsOpen(false)}
             onSubmit={() => setIsOpen(false)}

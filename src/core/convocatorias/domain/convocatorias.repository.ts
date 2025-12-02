@@ -2,6 +2,8 @@ import { ISearchConvocatoriasReq } from './search-convocatorias';
 import { IGetAllConvocatoriasRes } from './get-all-convocatorias';
 import { IUploadConvocatoriaReq } from './upload-convocatorias';
 import { IPatchConvocatoriasReq } from './patch-convocatorias';
+import { IAddUserToConvocatoriaReq } from './add-user-to-convocatoria';
+import { IRemoveUserFromConvocatoriaReq } from './remove-user-from-convocatoria';
 
 export interface IConvocatoriasRepository {
   getAllConvocatorias(): Promise<IGetAllConvocatoriasRes[]>;
@@ -11,4 +13,6 @@ export interface IConvocatoriasRepository {
   getSingleConvocatoria (id: string): Promise<IGetAllConvocatoriasRes>
   patchConvocatorias(id: string, data: IPatchConvocatoriasReq): Promise<any>;
   downloadReport(data: ISearchConvocatoriasReq): Promise<Blob>;
+  addUserToConvocatoria(data: IAddUserToConvocatoriaReq): Promise<any>;
+  removeUserFromConvocatoria(data: IRemoveUserFromConvocatoriaReq): Promise<any>;
 }

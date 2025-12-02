@@ -4,6 +4,8 @@ import { IGetAllConvocatoriasRes } from "../domain/get-all-convocatorias";
 import { ISearchConvocatoriasReq } from "../domain/search-convocatorias";
 import { IUploadConvocatoriaReq } from "../domain/upload-convocatorias";
 import { IPatchConvocatoriasReq } from "../domain/patch-convocatorias";
+import { IAddUserToConvocatoriaReq } from "../domain/add-user-to-convocatoria";
+import { IRemoveUserFromConvocatoriaReq } from "../domain/remove-user-from-convocatoria";
 
 const getAllConvocatorias = async (): Promise<IGetAllConvocatoriasRes[]> => {
     try {
@@ -26,11 +28,14 @@ const uploadConvocatorias = async (data: IUploadConvocatoriaReq): Promise<any> =
 };
 
 const searchConvocatorias = async (
-    data: ISearchConvocatoriasReq
+    data: ISearchConvocatoriasReq,
+    signal?: AbortSignal
 ): Promise<IGetAllConvocatoriasRes[]> => {
     try {
+        console.log(data);
         const response = await axiosInstance.get(`/convocatorias/filter`, {
             params: data,
+            signal,
         });
         return response.data;
     } catch (error) {
@@ -84,6 +89,28 @@ const patchConvocatorias = async (id: string, data: IPatchConvocatoriasReq): Pro
     }
 };
 
+const addUserToConvocatoria = async (data: IAddUserToConvocatoriaReq): Promise<any> => {
+    try {
+        const { convocatoria_id, userId } = data;
+        const response = await axiosInstance.post(`/convocatorias/${convocatoria_id}/users/add`, { userId });
+        return response.data;
+    } catch (error) {
+        console.error("Error adding user to convocatoria:", error);
+        throw error;
+    }
+};
+
+const removeUserFromConvocatoria = async (data: IRemoveUserFromConvocatoriaReq): Promise<any> => {
+    try {
+        const { convocatoria_id, user_id } = data;
+        const response = await axiosInstance.post(`/convocatorias/${convocatoria_id}/users/remove`, { user_id });
+        return response.data;
+    } catch (error) {
+        console.error("Error removing user from convocatoria:", error);
+        throw error;
+    }
+};
+
 export const convocatoriasRepository: IConvocatoriasRepository = {
     getAllConvocatorias,
     searchConvocatorias,
@@ -91,5 +118,7 @@ export const convocatoriasRepository: IConvocatoriasRepository = {
     deleteConvocatorias,
     getSingleConvocatoria,
     patchConvocatorias,
-    downloadReport
+    downloadReport,
+    addUserToConvocatoria,
+    removeUserFromConvocatoria
 };

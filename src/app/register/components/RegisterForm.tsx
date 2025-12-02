@@ -98,7 +98,7 @@ export function RegisterForm() {
               />
             </div>
 
-            {/* Campo de email */}
+            {/* Campo de email SENA */}
             <div className="space-y-2 w-full">
               <Input
                 isRequired
@@ -108,7 +108,37 @@ export function RegisterForm() {
                   inputWrapper:
                     "border-gray-200 hover:border-gray-300 focus-within:!border-blue-500 h-14",
                 }}
-                label="Correo electrónico"
+                label="Correo electrónico SENA"
+                labelPlacement="outside"
+                placeholder="Ingresa tu correo electrónico (@sena.edu.co)"
+                startContent={
+                  <EmailIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />
+                }
+                type="email"
+                variant="bordered"
+                {...register("SENAemail", {
+                  required: "El correo SENA es obligatorio",
+                  pattern: {
+                    // Debe terminar exactamente en @sena.edu.co
+                    value: /^[\w.-]+@sena\.edu\.co$/i,
+                    message: "Correo SENA inválido, debe terminar en '@sena.edu.co'",
+                  },
+                })}
+                errorMessage={errors.SENAemail?.message}
+                isInvalid={!!errors.SENAemail}
+              />
+            </div>
+            {/* Campo de email personal*/}
+            <div className="space-y-2 w-full">
+              <Input
+                isRequired
+                autoComplete="email"
+                classNames={{
+                  input: "text-sm",
+                  inputWrapper:
+                    "border-gray-200 hover:border-gray-300 focus-within:!border-blue-500 h-14",
+                }}
+                label="Correo electrónico personal"
                 labelPlacement="outside"
                 placeholder="Ingresa tu correo electrónico"
                 startContent={

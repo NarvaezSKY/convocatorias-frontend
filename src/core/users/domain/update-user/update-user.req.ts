@@ -7,4 +7,6 @@ export interface IUpdateUserReq {
     SemilleroInvestigacion?: string;
     clasificacionMinCiencias?: string;
     CvLAC?: string;
+    SENAemail?: string;
+    centroDeFormacion?: string
 }
