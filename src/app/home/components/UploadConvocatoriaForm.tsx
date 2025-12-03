@@ -87,6 +87,16 @@ export function UploadConvocatoriaForm({
         errorMessage={errors.year?.message}
         isInvalid={!!errors.year}
       >
+        <SelectItem key="2015">2015</SelectItem>
+        <SelectItem key="2016">2016</SelectItem>
+        <SelectItem key="2017">2017</SelectItem>
+        <SelectItem key="2018">2018</SelectItem>
+        <SelectItem key="2019">2019</SelectItem>
+        <SelectItem key="2020">2020</SelectItem>
+        <SelectItem key="2021">2021</SelectItem>
+        <SelectItem key="2022">2022</SelectItem>
+        <SelectItem key="2023">2023</SelectItem>
+        <SelectItem key="2024">2024</SelectItem>
         <SelectItem key="2025">2025</SelectItem>
         <SelectItem key="2026">2026</SelectItem>
       </Select>

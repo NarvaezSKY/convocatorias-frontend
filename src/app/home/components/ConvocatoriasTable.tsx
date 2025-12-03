@@ -88,10 +88,11 @@ export default function ConvocatoriasTable({ mode = "home" }: ConvocatoriasTable
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   // const [planningOpen, setPlanningOpen] = useState(false);
   const [page, setPage] = useState(1);
+  const [selectedKeys, setSelectedKeys] = useState<any>(new Set([]));
 
   const { convocatorias, profileConvocatorias } = useConvocatorias();
   const { user } = useAuthStore();
-  const { getSingleConvocatoria, singleConvocatoria, filterLoading, loading, addUserToConvocatoria } = useConvocatoriasStore();
+  const { getSingleConvocatoria, singleConvocatoria, filterLoading, loading, addUserToConvocatoria, removeUserFromConvocatoria } = useConvocatoriasStore();
 
   const handleEdit = async (id: string) => {
     await getSingleConvocatoria(id);
@@ -103,19 +104,29 @@ export default function ConvocatoriasTable({ mode = "home" }: ConvocatoriasTable
     setIsDeleteOpen(true);
   };
 
-  const handleParticipate = async (convocatoriaId: string) => {
+  const handleSaveParticipation = async () => {
     if (!user?.userId) {
       toast.error("Debes iniciar sesión para participar");
       return;
     }
+    const keysArray = selectedKeys === "all" ? sourceData.map(d => d._id) : Array.from(selectedKeys as Set<string>);
+    if (!keysArray.length) {
+      toast.error("Selecciona al menos un proyecto");
+      return;
+    }
     try {
-      await addUserToConvocatoria({ convocatoria_id: convocatoriaId, userId: user.userId });
-      toast.success("Has marcado participación en este proyecto");
+      await Promise.all(
+        keysArray.map((convocatoriaId) =>
+          addUserToConvocatoria({ convocatoria_id: convocatoriaId, userId: user.userId })
+        )
+      );
+      toast.success("Participación guardada para los proyectos seleccionados");
+      setSelectedKeys(new Set([]));
     } catch (e) {
       toast.error("No se pudo registrar tu participación");
       console.error(e);
     }
-  }
+  };
 
   // Fuente de datos según el modo
   const sourceData = useMemo(() => {
@@ -134,11 +145,33 @@ export default function ConvocatoriasTable({ mode = "home" }: ConvocatoriasTable
     return sourceData.slice(start, start + rowsPerPage);
   }, [page, sourceData]);
 
+  // Reordenar columnas: en modo "profile" colocar "Acciones" primero
+  const computedColumns = useMemo(() => {
+    if (mode === "profile") {
+      const acciones = columns.find((c) => c.key === "acciones")!;
+      const rest = columns.filter((c) => c.key !== "acciones");
+      return [acciones, ...rest];
+    }
+    return columns;
+  }, [mode]);
+
   return (
     <>
       <Table
         isStriped
         aria-label="Tabla de Convocatorias con paginación"
+        selectionMode={mode === "profile" ? "multiple" : "none"}
+        selectedKeys={mode === "profile" ? selectedKeys : undefined}
+        onSelectionChange={mode === "profile" ? setSelectedKeys : undefined}
+        topContent={
+          mode === "profile" ? (
+            <div className="flex w-full justify-end">
+              <Button color="success" size="lg" variant="flat" fullWidth onClick={handleSaveParticipation}>
+                Guardar
+              </Button>
+            </div>
+          ) : null
+        }
         bottomContent={
           pages > 0 ? (
             <div className="flex w-full justify-center">
@@ -160,7 +193,7 @@ export default function ConvocatoriasTable({ mode = "home" }: ConvocatoriasTable
         }}
         topContentPlacement="inside"
       >
-        <TableHeader columns={columns}>
+        <TableHeader columns={computedColumns}>
           {(column) => (
             <TableColumn
               key={column.key}
@@ -196,15 +229,33 @@ export default function ConvocatoriasTable({ mode = "home" }: ConvocatoriasTable
                     ? (
                       mode === "profile"
                         ? (
-                          <Button
-                            color="primary"
-                            size="sm"
-                            variant="flat"
-                            onClick={() => handleParticipate(item._id)}
-                          >
-                            Participé en este proyecto
-                          </Button>
+                          // En modo perfil, se usa selección múltiple y el botón Guardar en el topContent
+                          null
                         )
+                        : mode === "profileConsult"
+                          ? (
+                            <Button
+                              color="danger"
+                              size="sm"
+                              variant="flat"
+                              onClick={async () => {
+                                if (!user?.userId) {
+                                  toast.error("Debes iniciar sesión");
+                                  return;
+                                }
+                                try {
+                                  await removeUserFromConvocatoria({ convocatoria_id: item._id, userId: user.userId });
+                                  console.log(item._id, user.userId);
+                                  toast.success("Proyecto removido de tu perfil");
+                                } catch (e) {
+                                  toast.error("No se pudo remover el proyecto");
+                                  console.error(e);
+                                }
+                              }}
+                            >
+                              Remover este proyecto de mi perfil
+                            </Button>
+                          )
                         : ([
                           "superadmin",
                           "dinamizador",

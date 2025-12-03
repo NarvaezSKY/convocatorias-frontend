@@ -205,7 +205,14 @@ export const useConvocatoriasStore = create<Store>((set) => ({
   removeUserFromConvocatoria: async (data) => {
     set({ loading: true, error: null });
     try {
+      console.log("data from store", data);
       await removeUserFromConvocatoriaUseCase(convocatoriasRepository)(data);
+      // Actualizar localmente las convocatorias del perfil al eliminar
+      set((state) => ({
+        profileConvocatorias: state.profileConvocatorias.filter(
+          (c) => c._id !== data.convocatoria_id
+        ),
+      }));
     } catch (error) {
       console.error("Error removing user from convocatoria:", error);
       set({ error: "Error removing user from convocatoria" });
@@ -213,6 +220,8 @@ export const useConvocatoriasStore = create<Store>((set) => ({
       set({ loading: false });
     }
   },
+
+  
 
 
 }));

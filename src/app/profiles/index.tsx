@@ -206,6 +206,16 @@ export const Profile = () => {
                                         }
                                     />
                                     <Input
+                                        label="Correo electrónico personal"
+                                        radius="md"
+                                        value={profileData.email}
+                                        isReadOnly={!isEditing}
+                                        variant={isEditing ? "bordered" : "flat"}
+                                        onChange={(e) =>
+                                            setProfileData({ ...profileData, email: e.target.value })
+                                        }
+                                    />
+                                    <Input
                                         label="Teléfono"
                                         radius="md"
                                         value={profileData.telefono}

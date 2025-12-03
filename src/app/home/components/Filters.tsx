@@ -19,7 +19,7 @@ interface FiltrosProps {
   filtros: ISearchConvocatoriasReq;
   onChange: (filtro: Partial<ISearchConvocatoriasReq>) => void;
   onReset: () => void;
-  showDownload?: boolean; 
+  showDownload?: boolean;
 }
 
 export default function Filtros({ filtros, onChange, onReset, showDownload }: FiltrosProps) {
@@ -161,12 +161,18 @@ export default function Filtros({ filtros, onChange, onReset, showDownload }: Fi
                 const value = (e.target as HTMLSelectElement).value;
                 onChange({ year: value });
               }}>
-              <SelectItem key="2025">
-                2025
-              </SelectItem>
-              <SelectItem key="2026">
-                2026
-              </SelectItem>
+              <SelectItem key="2015">2015</SelectItem>
+              <SelectItem key="2016">2016</SelectItem>
+              <SelectItem key="2017">2017</SelectItem>
+              <SelectItem key="2018">2018</SelectItem>
+              <SelectItem key="2019">2019</SelectItem>
+              <SelectItem key="2020">2020</SelectItem>
+              <SelectItem key="2021">2021</SelectItem>
+              <SelectItem key="2022">2022</SelectItem>
+              <SelectItem key="2023">2023</SelectItem>
+              <SelectItem key="2024">2024</SelectItem>
+              <SelectItem key="2025">2025</SelectItem>
+              <SelectItem key="2026">2026</SelectItem>
 
             </Select>
           </div>
