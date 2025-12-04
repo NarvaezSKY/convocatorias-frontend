@@ -57,11 +57,12 @@ const columns = [
 
 interface ConvocatoriasTableProps {
   mode?: "home" | "profile" | "profileConsult";
+  isOwnProfile?: boolean;
 }
 
 const rowsPerPage = 10;
 
-export default function ConvocatoriasTable({ mode = "home" }: ConvocatoriasTableProps) {
+export default function ConvocatoriasTable({ mode = "home", isOwnProfile = false }: ConvocatoriasTableProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const proyectoParam = searchParams.get("proyecto");
   const newParams = new URLSearchParams(searchParams);
@@ -160,18 +161,6 @@ export default function ConvocatoriasTable({ mode = "home" }: ConvocatoriasTable
       <Table
         isStriped
         aria-label="Tabla de Convocatorias con paginación"
-        selectionMode={mode === "profile" ? "multiple" : "none"}
-        selectedKeys={mode === "profile" ? selectedKeys : undefined}
-        onSelectionChange={mode === "profile" ? setSelectedKeys : undefined}
-        topContent={
-          mode === "profile" ? (
-            <div className="flex w-full justify-end">
-              <Button color="success" size="lg" variant="flat" fullWidth onClick={handleSaveParticipation}>
-                Guardar
-              </Button>
-            </div>
-          ) : null
-        }
         bottomContent={
           pages > 0 ? (
             <div className="flex w-full justify-center">
@@ -191,7 +180,19 @@ export default function ConvocatoriasTable({ mode = "home" }: ConvocatoriasTable
         classNames={{
           table: "min-h-[400px] table-auto",
         }}
+        selectedKeys={mode === "profile" ? selectedKeys : undefined}
+        selectionMode={mode === "profile" ? "multiple" : "none"}
+        topContent={
+          mode === "profile" ? (
+            <div className="flex w-full justify-end">
+              <Button fullWidth color="success" size="lg" variant="flat" onClick={handleSaveParticipation}>
+                Guardar
+              </Button>
+            </div>
+          ) : null
+        }
         topContentPlacement="inside"
+        onSelectionChange={mode === "profile" ? setSelectedKeys : undefined}
       >
         <TableHeader columns={computedColumns}>
           {(column) => (
@@ -221,7 +222,7 @@ export default function ConvocatoriasTable({ mode = "home" }: ConvocatoriasTable
                 <TableCell
                   className={
                     columnKey === "nombre" || columnKey === "observaciones"
-                      ? "whitespace-normal break-words"
+                      ? "whitespace-normal wrap-break-word"
                       : ""
                   }
                 >
@@ -234,27 +235,29 @@ export default function ConvocatoriasTable({ mode = "home" }: ConvocatoriasTable
                         )
                         : mode === "profileConsult"
                           ? (
-                            <Button
-                              color="danger"
-                              size="sm"
-                              variant="flat"
-                              onClick={async () => {
-                                if (!user?.userId) {
-                                  toast.error("Debes iniciar sesión");
-                                  return;
-                                }
-                                try {
-                                  await removeUserFromConvocatoria({ convocatoria_id: item._id, userId: user.userId });
-                                  console.log(item._id, user.userId);
-                                  toast.success("Proyecto removido de tu perfil");
-                                } catch (e) {
-                                  toast.error("No se pudo remover el proyecto");
-                                  console.error(e);
-                                }
-                              }}
-                            >
-                              Remover este proyecto de mi perfil
-                            </Button>
+                            isOwnProfile ? (
+                              <Button
+                                color="danger"
+                                size="sm"
+                                variant="flat"
+                                onClick={async () => {
+                                  if (!user?.userId) {
+                                    toast.error("Debes iniciar sesión");
+                                    return;
+                                  }
+                                  try {
+                                    await removeUserFromConvocatoria({ convocatoria_id: item._id, userId: user.userId });
+                                    console.log(item._id, user.userId);
+                                    toast.success("Proyecto removido de tu perfil");
+                                  } catch (e) {
+                                    toast.error("No se pudo remover el proyecto");
+                                    console.error(e);
+                                  }
+                                }}
+                              >
+                                Remover este proyecto de mi perfil
+                              </Button>
+                            ) : null
                           )
                         : ([
                           "superadmin",
@@ -346,8 +349,8 @@ export default function ConvocatoriasTable({ mode = "home" }: ConvocatoriasTable
         singleConvocatoria && (
           <ReusableModal
             isOpen={isOpen}
-            size="xl"
             modalTitle="Editar Convocatoria"
+            size="xl"
             onClose={() => setIsOpen(false)}
             onSubmit={() => setIsOpen(false)}
           >
