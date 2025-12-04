@@ -37,12 +37,9 @@ export const Home = () => {
   return (
     <DefaultLayout>
       <div className="flex flex-col gap-4 bg-test p-4 rounded-lg shadow-md w-full border-2 border-success-100 mt-6 overflow-x-auto">
-
         <div className="w-full flex justify-between items-center">
           <div className="flex gap-2">
-            <h1 className="text-4xl font-extrabold text-success">
-              Proyectos
-            </h1>
+            <h1 className="text-4xl font-extrabold text-success">Proyectos</h1>
             <Tooltip content="Buscar proyectos">
               <Button
                 isIconOnly
@@ -59,18 +56,19 @@ export const Home = () => {
           </div>
           {(role === "superadmin" ||
             role === "dinamizador" ||
-            role === "Linvestigador") && (
-              <div className="flex flex-col gap-2">
-                <Button
-                  color="success"
-                  size="md"
-                  variant="flat"
-                  onClick={() => setIsOpen(true)}
-                >
-                  <MdFileUpload /> Subir Proyecto
-                </Button>
-              </div>
-            )}
+            role === "Linvestigador" ||
+            role === "coordinador") && (
+            <div className="flex flex-col gap-2">
+              <Button
+                color="success"
+                size="md"
+                variant="flat"
+                onClick={() => setIsOpen(true)}
+              >
+                <MdFileUpload /> Subir Proyecto
+              </Button>
+            </div>
+          )}
           {role === "investigador" && (
             <div className="flex flex-col gap-2">
               <Button
@@ -105,8 +103,8 @@ export const Home = () => {
         <ConvocatoriasTable />
         <ReusableModal
           isOpen={isOpen}
-          size="xl"
           modalTitle="Subir proyecto"
+          size="xl"
           onClose={() => setIsOpen(false)}
           onSubmit={() => setIsOpen(false)}
         >
