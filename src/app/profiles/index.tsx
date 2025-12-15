@@ -74,17 +74,17 @@ export const Profile = () => {
                 <div className="flex items-center justify-between mt-6">
                     <div>
                         <div className="flex items-center gap-2">
-                            <img src={defaultPfp} width={80} alt="" className="rounded-full border border-4 border-success" />
+                            <img alt="" className="rounded-full border-4 border-success" src={defaultPfp} width={80} />
                             <div className="flex items-center gap-2">
                                 <h1 className="text-4xl font-extrabold text-success ml-1">
                                     {singleUser?.username}
                                 </h1>
                                 {singleUser?.CvLAC && (
                                     <Link
-                                        color="success"
-                                        className="flex items-center gap-1 text-sm"
-                                        href={singleUser?.CvLAC}
                                         isExternal
+                                        className="flex items-center gap-1 text-sm"
+                                        color="success"
+                                        href={singleUser?.CvLAC}
                                     >
                                         <FaExternalLinkAlt /> Ver CvLAC
                                     </Link>
@@ -93,12 +93,12 @@ export const Profile = () => {
                         </div>
                         <div className="flex gap-2 mt-2">
                             <p className="text-default-600 mt-1">Perfil de Usuario</p>
-                            <Chip variant="bordered" color={singleUser?.role == "dinamizador" || singleUser?.role == "superadmin" ? "warning" : "secondary"}>
+                            <Chip color={singleUser?.role == "dinamizador" || singleUser?.role == "superadmin" ? "warning" : "secondary"} variant="bordered">
                                 {roleConverter(singleUser?.role as string)}
                             </Chip>
                             <Chip
-                                variant="bordered"
                                 color={singleUser?.estado === "activo" ? "success" : "danger"}
+                                variant="bordered"
                             >
                                 {singleUser?.estado}
                             </Chip>
@@ -109,8 +109,8 @@ export const Profile = () => {
                             !isEditing ? (
                                 <Button
                                     color="success"
-                                    variant="flat"
                                     startContent={<FiEdit3 />}
+                                    variant="flat"
                                     onPress={() => setIsEditing(true)}
                                 >
                                     Editar mis datos
@@ -119,8 +119,8 @@ export const Profile = () => {
                                 <div className="flex gap-2">
                                     <Button
                                         color="primary"
-                                        variant="flat"
                                         startContent={<FiSave />}
+                                        variant="flat"
                                         onPress={handleSave}
                                     >
                                         Guardar
@@ -154,10 +154,10 @@ export const Profile = () => {
                             <CardBody className="space-y-4">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <Input
+                                        isReadOnly={!isEditing}
                                         label="Nombre completo"
                                         radius="md"
                                         value={profileData.username}
-                                        isReadOnly={!isEditing}
                                         variant={isEditing ? "bordered" : "flat"}
                                         onChange={(e) =>
                                             setProfileData({ ...profileData, username: e.target.value })
@@ -165,10 +165,10 @@ export const Profile = () => {
                                     />
                                     {!isEditing ? (
                                         <Input
+                                            isReadOnly
                                             label="Centro de Formación"
                                             radius="md"
                                             value={profileData.centroDeFormacion}
-                                            isReadOnly
                                             variant="flat"
                                         />
                                     ) : (
@@ -177,8 +177,8 @@ export const Profile = () => {
                                             labelPlacement="inside"
                                             placeholder="Selecciona un centro"
                                             radius="md"
-                                            variant="bordered"
                                             selectedKeys={profileData.centroDeFormacion ? [profileData.centroDeFormacion] : []}
+                                            variant="bordered"
                                             onSelectionChange={(keys) => {
                                                 const value = Array.from(keys)[0] as string;
                                                 setProfileData({ ...profileData, centroDeFormacion: value || "" });
@@ -196,40 +196,40 @@ export const Profile = () => {
                                         </Select>
                                     )}
                                     <Input
+                                        isReadOnly={!isEditing}
                                         label="Correo electrónico institucional"
                                         radius="md"
                                         value={profileData.SENAemail}
-                                        isReadOnly={!isEditing}
                                         variant={isEditing ? "bordered" : "flat"}
                                         onChange={(e) =>
                                             setProfileData({ ...profileData, SENAemail: e.target.value })
                                         }
                                     />
                                     <Input
+                                        isReadOnly={!isEditing}
                                         label="Correo electrónico personal"
                                         radius="md"
                                         value={profileData.email}
-                                        isReadOnly={!isEditing}
                                         variant={isEditing ? "bordered" : "flat"}
                                         onChange={(e) =>
                                             setProfileData({ ...profileData, email: e.target.value })
                                         }
                                     />
                                     <Input
+                                        isReadOnly={!isEditing}
                                         label="Teléfono"
                                         radius="md"
                                         value={profileData.telefono}
-                                        isReadOnly={!isEditing}
                                         variant={isEditing ? "bordered" : "flat"}
                                         onChange={(e) =>
                                             setProfileData({ ...profileData, telefono: e.target.value })
                                         }
                                     />
                                     <Input
+                                        isReadOnly={!isEditing}
                                         label="Área de Trabajo"
                                         radius="md"
                                         value={profileData.areaDeTrabajo}
-                                        isReadOnly={!isEditing}
                                         variant={isEditing ? "bordered" : "flat"}
                                         onChange={(e) =>
                                             setProfileData({
@@ -239,10 +239,10 @@ export const Profile = () => {
                                         }
                                     />
                                     <Input
+                                        isReadOnly={!isEditing}
                                         label="Semillero de Investigación"
                                         radius="md"
                                         value={profileData.SemilleroInvestigacion}
-                                        isReadOnly={!isEditing}
                                         variant={isEditing ? "bordered" : "flat"}
                                         onChange={(e) =>
                                             setProfileData({
@@ -252,10 +252,10 @@ export const Profile = () => {
                                         }
                                     />
                                     <Input
+                                        isReadOnly={!isEditing}
                                         label="Clasificación MinCiencias"
                                         radius="md"
                                         value={profileData.clasificacionMinCiencias}
-                                        isReadOnly={!isEditing}
                                         variant={isEditing ? "bordered" : "flat"}
                                         onChange={(e) =>
                                             setProfileData({
@@ -266,10 +266,10 @@ export const Profile = () => {
                                     />
                                     {isEditing && (
                                         <Input
-                                            label="CVLAC"
-                                            type="url"
                                             errorMessage={errors.CvLAC}
+                                            label="CVLAC"
                                             radius="md"
+                                            type="url"
                                             value={profileData.CvLAC}
                                             variant={isEditing ? "bordered" : "flat"}
                                             onChange={(e) =>
@@ -288,20 +288,20 @@ export const Profile = () => {
                             <Button
                                 className="ml-2"
                                 color="primary"
-                                onClick={() => setIsOpen(true)}
-                                variant="flat" >
+                                variant="flat"
+                                onClick={() => setIsOpen(true)} >
                                 <VscGithubProject />
                                 Agregar proyectos
                             </Button>
                             )}
                         </div>
-                        <ConvocatoriasTable mode="profileConsult" />
+                        <ConvocatoriasTable isOwnProfile={singleUser?._id === user?.userId} mode="profileConsult" />
                     </div>
                 </div>
-                <ReusableModal isOpen={isOpen} onClose={() => {setIsOpen(false); searchProfileConvocatorias({users: profileData.id})}} modalTitle="Seleccionar proyectos" size="5xl" >
+                <ReusableModal isOpen={isOpen} modalTitle="Seleccionar proyectos" size="5xl" onClose={() => {setIsOpen(false); searchProfileConvocatorias({users: profileData.id})}} >
                     <Filtros
-                        showDownload={false}
                         filtros={filtros}
+                        showDownload={false}
                         onChange={(nuevoFiltro: Partial<ISearchConvocatoriasReq>) =>
                             setFiltros((prev) => ({ ...prev, ...nuevoFiltro }))
                         }

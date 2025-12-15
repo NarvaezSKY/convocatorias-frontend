@@ -23,6 +23,8 @@ const roles = [
   { key: "admin", label: "Supervisor" },
   { key: "dinamizador", label: "Dinamizador" },
   { key: "Linvestigador", label: "Lider Investigador" },
+  { key: "aprendiz", label: "Aprendiz" },
+  { key: "coordinador", label: "Coordinador" },
 ];
 import { useAuthStore } from "@/app/shared/auth.store";
 import { canModify } from "./utils/CanModify";
@@ -116,7 +118,7 @@ export const UserList = () => {
                 </TableRow>
               ))
               : users.map((user) => (
-                <TableRow key={user._id} href={`/profile/${user._id}`} className="cursor-pointer hover:bg-default-200">
+                <TableRow key={user._id} className="cursor-pointer hover:bg-default-200" href={`/profile/${user._id}`}>
                   <TableCell>{user.username}</TableCell>
                   <TableCell>{user.SENAemail}</TableCell>
                   <TableCell>{user.telefono}</TableCell>

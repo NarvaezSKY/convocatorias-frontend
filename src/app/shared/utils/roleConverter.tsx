@@ -16,6 +16,8 @@ export const roleConverter: RoleConverter = (role) => {
             return "Supervisor";
         case  "aprendiz":
             return "Aprendiz";
+        case "coordinador":
+            return "Coordinador";
         default:
             return role;
     }
