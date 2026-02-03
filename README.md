@@ -826,7 +826,7 @@ Este proyecto está licenciado bajo la **Licencia MIT**.
 ## 📞 Soporte
 
 Para soporte técnico o reportar problemas:
-- **Email**: soporte@sena.edu.co
+- **Email**: seguimientoidiregionalcauca@gmail.com
 - **Issues**: [GitHub Issues](https://github.com/tu-usuario/convocatorias-frontend/issues)
 
 ---

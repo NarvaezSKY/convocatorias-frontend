@@ -16,4 +16,9 @@ export interface IGetAllConvocatoriasRes {
     valor_aprobado: number;
     diferencia_presupuesto: number;
     users?: [string]
+    departamentosDeImpacto?: string
+    municipiosDeImpacto?: string
+    tiposPoblacionesAtendidas?: string
+    numeroBeneficiariosDirectos?: string
+    numeroBeneficiariosIndirectos?: string
 }

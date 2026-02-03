@@ -9,23 +9,21 @@ import {
   getKeyValue,
   Button,
   Pagination,
-  Card,
-  CardBody,
-  CardHeader,
   Tooltip,
 } from "@heroui/react";
 import { useConvocatorias } from "../hooks/UseConvocatorias";
 import { useAuthStore } from "@/app/shared/auth.store";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin2Line } from "react-icons/ri";
+import { CiCalendar } from "react-icons/ci";
 import { UploadConvocatoriaForm } from "./UploadConvocatoriaForm";
+import { ProjectInfoCard } from "./ProjectInfoCard";
 import { IUploadConvocatoriaReq } from "@/core/convocatorias/domain/upload-convocatorias";
 import { useState, useMemo, useEffect } from "react";
 import ReusableModal from "@/app/shared/components/Modal";
 import { useConvocatoriasStore } from "@/app/shared/convocatorias.store";
 import { ConfirmDelete } from "./ConfirmDelete";
 import { formatCurrency } from "../utils/FormatCurrency";
-import { CiCalendar } from "react-icons/ci";
 import ProjectPlanningGridV2 from "../planDesarrollo/components/planDesarrolloV2";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -259,57 +257,57 @@ export default function ConvocatoriasTable({ mode = "home", isOwnProfile = false
                               </Button>
                             ) : null
                           )
-                        : ([
-                          "superadmin",
-                          "dinamizador",
-                          "Linvestigador",
-                          "investigador",
-                        ].includes(user?.role ?? "")
-                          ? (
-                            <div className="flex gap-2">
-                              <Tooltip content="Editar proyecto" placement="top">
-                                <Button
-                                  isIconOnly
-                                  color="warning"
-                                  radius="full"
-                                  size="md"
-                                  variant="bordered"
-                                  onClick={() => handleEdit(item._id)}
-                                >
-                                  <FaEdit />
-                                </Button>
-                              </Tooltip>
-                              <Tooltip content="Eliminar proyecto" placement="top">
-                                <Button
-                                  isIconOnly
-                                  color="danger"
-                                  radius="full"
-                                  size="md"
-                                  variant="bordered"
-                                  onClick={() => {
-                                    handleDelete(item._id);
-                                  }}
-                                >
-                                  <RiDeleteBin2Line />
-                                </Button>
-                              </Tooltip>
-                              <Tooltip content="Ver plan de desarrollo" placement="top">
-                                <Button
-                                  isIconOnly
-                                  color="primary"
-                                  radius="full"
-                                  size="md"
-                                  variant="bordered"
-                                  onClick={() => {
-                                    handleSetParam(item._id);
-                                  }}
-                                >
-                                  <CiCalendar />
-                                </Button>
-                              </Tooltip>
-                            </div>
-                          )
-                          : null)
+                          : ([
+                            "superadmin",
+                            "dinamizador",
+                            "Linvestigador",
+                            "investigador",
+                          ].includes(user?.role ?? "")
+                            ? (
+                              <div className="flex gap-2">
+                                <Tooltip content="Editar proyecto" placement="top">
+                                  <Button
+                                    isIconOnly
+                                    color="warning"
+                                    radius="full"
+                                    size="md"
+                                    variant="flat"
+                                    onClick={() => handleEdit(item._id)}
+                                  >
+                                    <FaEdit />
+                                  </Button>
+                                </Tooltip>
+                                <Tooltip content="Eliminar proyecto" placement="top">
+                                  <Button
+                                    isIconOnly
+                                    color="danger"
+                                    radius="full"
+                                    size="md"
+                                    variant="flat"
+                                    onClick={() => {
+                                      handleDelete(item._id);
+                                    }}
+                                  >
+                                    <RiDeleteBin2Line />
+                                  </Button>
+                                </Tooltip>
+                                <Tooltip content="Ver plan de desarrollo" placement="top">
+                                  <Button
+                                    isIconOnly
+                                    color="primary"
+                                    radius="full"
+                                    size="md"
+                                    variant="flat"
+                                    onClick={() => {
+                                      handleSetParam(item._id);
+                                    }}
+                                  >
+                                    <CiCalendar />
+                                  </Button>
+                                </Tooltip>
+                              </div>
+                            )
+                            : null)
                     )
                     : columnKey === "url"
                       ? (
@@ -349,7 +347,7 @@ export default function ConvocatoriasTable({ mode = "home", isOwnProfile = false
         singleConvocatoria && (
           <ReusableModal
             isOpen={isOpen}
-            modalTitle="Editar Convocatoria"
+            modalTitle="Editar proyecto"
             size="xl"
             onClose={() => setIsOpen(false)}
             onSubmit={() => setIsOpen(false)}
@@ -373,7 +371,7 @@ export default function ConvocatoriasTable({ mode = "home", isOwnProfile = false
         singleConvocatoria && (
           <ReusableModal
             isOpen={isDeleteOpen}
-            modalTitle="Eliminar Convocatoria"
+            modalTitle="Eliminar proyecto"
             onClose={() => setIsDeleteOpen(false)}
             onSubmit={() => setIsDeleteOpen(false)}
           >
@@ -394,7 +392,7 @@ export default function ConvocatoriasTable({ mode = "home", isOwnProfile = false
           <ReusableModal
             isOpen={!!proyectoParam}
             modalTitle="Plan Financiero"
-            size="full"
+            size="5xl"
             onClose={() => {
               clearParams();
             }}
@@ -403,38 +401,7 @@ export default function ConvocatoriasTable({ mode = "home", isOwnProfile = false
             }}
           >
             <div className="flex justify-end mt-4 flex-col gap-4">
-              <Card>
-                <CardHeader>
-                  <h2 className="text-lg font-bold">Proyecto:</h2>
-                </CardHeader>
-                <CardBody className="p-4">
-                  <div className="flex flex-col gap-2 w-full">
-                    <p className="truncate max-w-xl text-sm">
-                      <strong>Nombre:</strong> {singleConvocatoria?.nombre}
-                    </p>
-                    <p className="truncate max-w-xl text-sm">
-                      <strong>Consecutivo:</strong>{" "}
-                      {singleConvocatoria?.consecutivo}
-                    </p>
-                    <p className="truncate max-w-xl text-sm">
-                      <strong>Dirección:</strong>{" "}
-                      {singleConvocatoria?.direccion_oficina_regional}
-                    </p>
-                    <p className="truncate max-w-xl text-sm">
-                      <strong>Tipo de Postulación:</strong>{" "}
-                      {singleConvocatoria?.tipo_postulacion}
-                    </p>
-                    <p className="truncate max-w-xl text-sm">
-                      <strong>Estado:</strong>{" "}
-                      {singleConvocatoria?.nuevo_estado}
-                    </p>
-                    <p className="truncate max-w-xl text-sm">
-                      <strong>Observaciones:</strong>{" "}
-                      {singleConvocatoria?.observaciones}
-                    </p>
-                  </div>
-                </CardBody>
-              </Card>
+              <ProjectInfoCard project={singleConvocatoria} />
               <ProjectPlanningGridV2
                 convocatoria={singleConvocatoria}
                 onClose={() => clearParams()}

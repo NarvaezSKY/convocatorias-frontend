@@ -40,13 +40,13 @@ export const UsePlanFinanciero = () => {
       const plan = await getSinglePlanFinanciero(id);
 
       if (!plan || Object.keys(plan).length === 0) {
-        toast.error("Esta convocatoria no tiene plan financiero");
+        toast.error("Este proyecto no tiene plan financiero");
         return null;
       }
 
       return plan;
     } catch (error) {
-      toast.error("Esta convocatoria no tiene plan financiero");
+      toast.error("Este proyecto no tiene plan financiero");
       return null;
     }
   };

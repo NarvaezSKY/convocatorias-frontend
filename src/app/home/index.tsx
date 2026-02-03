@@ -104,7 +104,7 @@ export const Home = () => {
         <ReusableModal
           isOpen={isOpen}
           modalTitle="Subir proyecto"
-          size="xl"
+          size="2xl"
           onClose={() => setIsOpen(false)}
           onSubmit={() => setIsOpen(false)}
         >

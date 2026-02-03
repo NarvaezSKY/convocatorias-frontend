@@ -5,12 +5,18 @@ import {
   Textarea,
   Select,
   SelectItem,
+  Divider
 } from "@heroui/react";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState, useMemo } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { useUploadConvocatoria } from "../hooks/UseUploadForm";
 import { IUploadConvocatoriaReq } from "../../../core/convocatorias/domain/upload-convocatorias";
 import { useEditConvocatorias } from "../hooks/UseEditConvocatorias";
+import {
+  getDepartments,
+  getCitiesByDepartment,
+} from 'colombia-cities';
+import { poblacionTypes } from '../utils/Poblacion-types'
 
 interface Props {
   userId: string;
@@ -19,6 +25,21 @@ interface Props {
   convocatoriaId?: string;
   onClose?: () => void;
 }
+
+const yearOptions = [
+  "2015",
+  "2016",
+  "2017",
+  "2018",
+  "2019",
+  "2020",
+  "2021",
+  "2022",
+  "2023",
+  "2024",
+  "2025",
+  "2026",
+]
 
 export function UploadConvocatoriaForm({
   userId,
@@ -31,6 +52,7 @@ export function UploadConvocatoriaForm({
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<IUploadConvocatoriaReq>({
     defaultValues: initialValues,
@@ -46,6 +68,31 @@ export function UploadConvocatoriaForm({
     loading: isPatching,
     error: patchError,
   } = useEditConvocatorias();
+
+  const departments = useMemo(() => getDepartments(), []);
+  const [selectedDepartments, setSelectedDepartments] = useState<Set<string>>(new Set());
+  const [filteredCities, setFilteredCities] = useState<Array<{ codigo: string; nombre: string; departamento: string }>>([]);
+
+  // Actualizar ciudades cuando cambian los departamentos seleccionados
+  useEffect(() => {
+    if (selectedDepartments.size === 0) {
+      setFilteredCities([]);
+      return;
+    }
+
+    const cities: Array<{ codigo: string; nombre: string; departamento: string }> = [];
+    selectedDepartments.forEach(deptName => {
+      const dept = departments.find(d => d.nombre === deptName);
+      if (dept) {
+        const deptCities = getCitiesByDepartment(dept.nombre);
+        deptCities.forEach(city => {
+          cities.push({ ...city, departamento: dept.nombre });
+        });
+      }
+    });
+    setFilteredCities(cities);
+  }, [selectedDepartments, departments]);
+
 
   const onSubmit = async (data: IUploadConvocatoriaReq) => {
     const payload = { ...data, user_id: userId };
@@ -66,6 +113,10 @@ export function UploadConvocatoriaForm({
     if (initialValues) {
       console.log("initialValues", initialValues);
       reset(initialValues);
+      // Inicializar departamentos seleccionados si existen en initialValues
+      if (initialValues.departamentosDeImpacto && initialValues.departamentosDeImpacto.length > 0) {
+        setSelectedDepartments(new Set(initialValues.departamentosDeImpacto));
+      }
     }
   }, [initialValues, reset]);
 
@@ -87,18 +138,9 @@ export function UploadConvocatoriaForm({
         errorMessage={errors.year?.message}
         isInvalid={!!errors.year}
       >
-        <SelectItem key="2015">2015</SelectItem>
-        <SelectItem key="2016">2016</SelectItem>
-        <SelectItem key="2017">2017</SelectItem>
-        <SelectItem key="2018">2018</SelectItem>
-        <SelectItem key="2019">2019</SelectItem>
-        <SelectItem key="2020">2020</SelectItem>
-        <SelectItem key="2021">2021</SelectItem>
-        <SelectItem key="2022">2022</SelectItem>
-        <SelectItem key="2023">2023</SelectItem>
-        <SelectItem key="2024">2024</SelectItem>
-        <SelectItem key="2025">2025</SelectItem>
-        <SelectItem key="2026">2026</SelectItem>
+        {yearOptions.map((year) => (
+          <SelectItem key={year}>{year}</SelectItem>
+        ))}
       </Select>
 
       <Select
@@ -271,6 +313,102 @@ export function UploadConvocatoriaForm({
         type="url"
         variant="bordered"
         {...register("url")}
+      />
+      <Divider />
+      <h2 className="font-bold text-success text-xl">Poblaciones involucradas (opcional)</h2>
+
+      <Controller
+        name="departamentosDeImpacto"
+        control={control}
+        render={({ field }) => (
+          <Select
+            variant="bordered"
+            label="Departamentos de impacto"
+            placeholder="Selecciona los departamentos involucrados"
+            selectionMode="multiple"
+            selectedKeys={field.value ? new Set(field.value) : new Set()}
+            onSelectionChange={(keys) => {
+              const selectedArray = Array.from(keys as Set<string>);
+              field.onChange(selectedArray);
+              setSelectedDepartments(keys as Set<string>);
+            }}
+          >
+            {departments.map((department) => (
+              <SelectItem key={department.nombre} textValue={department.nombre}>
+                {department.nombre}
+              </SelectItem>
+            ))}
+          </Select>
+        )}
+      />
+
+      <Controller
+        name="municipiosDeImpacto"
+        control={control}
+        render={({ field }) => (
+          <Select
+            variant="bordered"
+            label="Municipios de impacto"
+            placeholder={selectedDepartments.size === 0 ? "Primero selecciona departamentos" : "Selecciona los municipios involucrados"}
+            selectionMode="multiple"
+            isDisabled={selectedDepartments.size === 0}
+            selectedKeys={field.value ? new Set(field.value) : new Set()}
+            onSelectionChange={(keys) => {
+              const selectedArray = Array.from(keys as Set<string>);
+              field.onChange(selectedArray);
+            }}
+          >
+            {filteredCities.map((city) => {
+              const displayText = `${city.nombre} (${city.departamento})`;
+              return (
+                <SelectItem key={displayText} textValue={displayText}>
+                  {displayText}
+                </SelectItem>
+              );
+            })}
+          </Select>
+        )}
+      />
+      <Controller
+        name="tiposPoblacionesAtendidas"
+        control={control}
+        render={({ field }) => (
+          <Select
+            label="Tipos de poblaciones atendidas"
+            placeholder="Selecciona las poblaciones beneficiadas"
+            variant="bordered"
+            selectionMode="multiple"
+            selectedKeys={field.value ? new Set(field.value) : new Set()}
+            onSelectionChange={(keys) => {
+              const selectedArray = Array.from(keys as Set<string>);
+              field.onChange(selectedArray);
+            }}
+            errorMessage={errors.tiposPoblacionesAtendidas?.message}
+            isInvalid={!!errors.tiposPoblacionesAtendidas}
+          >
+            {poblacionTypes.map((poblacion) => (
+              <SelectItem key={poblacion.name} textValue={poblacion.name}>
+                {poblacion.name}
+              </SelectItem>
+            ))}
+          </Select>
+        )}
+      />
+
+      <Input
+        type="number"
+        label="Total de beneficiarios (directos)"
+        placeholder="Si se desconoce el dato exacto, digita un aproximado"
+        variant="bordered"
+        {...register("numeroBeneficiariosDirectos")}
+      />
+
+      <Input
+        type="number"
+        label="Total de beneficiarios (indirectos)"
+        placeholder="Si se desconoce el dato exacto, digita un aproximado"
+        variant="bordered"
+        {...register("numeroBeneficiariosIndirectos")}
       />
 
       {error && <span className="text-danger text-sm -mt-2">{error}</span>}
