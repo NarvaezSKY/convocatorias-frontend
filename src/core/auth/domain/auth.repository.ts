@@ -1,3 +1,4 @@
+import { IChangePassReq } from "./change-password-session";
 import { IForgotPasswordRequest } from "./forgot-password";
 import { ILoginReq, ILoginRes } from "./login";
 import { IRegisterReq } from "./register";
@@ -11,4 +12,6 @@ export interface IAuthRepository {
     activateUser: (token: string) => Promise<void>;
     recoverPassword: (email: string) => Promise<void>;
     changePassword: (data: IForgotPasswordRequest) => Promise<void>;
+    changePassSession: (data: IChangePassReq) => Promise<void>;
+
 }

@@ -1,10 +1,19 @@
 import { create } from "zustand";
 import { authRepository } from "../../core/auth/infrastructure/auth.repository";
-import { loginUseCase, registerUseCase, verifyUseCase, recoverPasswordUseCase, activateUserUseCase, changePasswordUseCase } from "../../core/auth/application";
+import {
+  loginUseCase,
+  registerUseCase,
+  verifyUseCase,
+  recoverPasswordUseCase,
+  activateUserUseCase,
+  changePasswordUseCase,
+  changePassSessionUseCase
+} from "../../core/auth/application";
 import { ILoginReq, ILoginRes } from "../../core/auth/domain/login";
 import { IForgotPasswordRequest } from "@/core/auth/domain/forgot-password";
 import { IRegisterReq } from "../../core/auth/domain/register";
 import { IVerifyRes } from "@/core/auth/domain/verify";
+import { IChangePassReq } from "@/core/auth/domain/change-password-session";
 
 type State = {
   user: ILoginRes | null;
@@ -23,6 +32,7 @@ type Actions = {
   activateUser: (token: string) => Promise<void>;
   recoverPassword: (email: string) => Promise<void>;
   changePassword: (data: IForgotPasswordRequest) => Promise<void>;
+  changePassSession: (data: IChangePassReq) => Promise<void>;
 };
 
 type Store = State & Actions;
@@ -78,6 +88,19 @@ export const useAuthStore = create<Store>((set) => ({
     }
   },
 
+  changePassSession: async (data: IChangePassReq) => {
+    try {
+      await changePassSessionUseCase(authRepository)(data);
+      set({ registerError: null });
+    } catch (error) {
+      if (error instanceof Error) {
+        set({ registerError: error.message });
+      } else {
+        set({ registerError: "An unknown error occurred" });
+      }
+    }
+  },
+
   activateUser: async (token: string) => {
     try {
       await activateUserUseCase(authRepository)(token);
@@ -95,7 +118,14 @@ export const useAuthStore = create<Store>((set) => ({
     try {
       const response = await loginUseCase(authRepository)(data);
       localStorage.setItem("token", response.token);
-      set({ user: response, token: response.token, loginError: null, role: response.role, registerError: null, verifyError: null });
+      set({
+        user: response,
+        token: response.token,
+        loginError: null,
+        role: response.role,
+        registerError: null,
+        verifyError: null,
+      });
     } catch (error) {
       if (error instanceof Error && (error as any).response?.data?.message) {
         set({ loginError: (error as any).response.data.message });

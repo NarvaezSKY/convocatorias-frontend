@@ -44,7 +44,7 @@ export const ChangePasswordForm = ({ token }: ChangePasswordFormProps) => {
 					placeholder="Ingresa tu contraseña"
 					type={isPasswordVisible ? "text" : "password"}
 					variant="bordered"
-					startContent={<LockClosedIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
+					startContent={<LockClosedIcon className="w-5 h-5 text-gray-400 pointer-events-none shrink-0" />}
 					endContent={
 						<button className="focus:outline-none" type="button" onClick={togglePasswordVisibility}>
 							{isPasswordVisible ? (
@@ -74,7 +74,7 @@ export const ChangePasswordForm = ({ token }: ChangePasswordFormProps) => {
 					placeholder="Confirma tu contraseña"
 					type={isConfirmPasswordVisible ? "text" : "password"}
 					variant="bordered"
-					startContent={<LockClosedIcon className="w-5 h-5 text-gray-400 pointer-events-none flex-shrink-0" />}
+					startContent={<LockClosedIcon className="w-5 h-5 text-gray-400 pointer-events-none shrink-0" />}
 					endContent={
 						<button className="focus:outline-none" type="button" onClick={toggleConfirmPasswordVisibility}>
 							{isConfirmPasswordVisible ? (

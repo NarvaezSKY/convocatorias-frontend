@@ -18,6 +18,8 @@ import { TbLockPassword } from "react-icons/tb";
 import { roleConverter } from "../shared/utils/roleConverter";
 import { useProfile } from "./hooks/useProfile";
 import defaultPfp from "../assets/profile_default.png";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../shared/auth.store";
 import ConvocatoriasTable from "../home/components/ConvocatoriasTable";
 import { VscGithubProject } from "react-icons/vsc";
 import ReusableModal from "../shared/components/Modal";
@@ -26,7 +28,7 @@ import { ISearchConvocatoriasReq } from "@/core/convocatorias/domain/search-conv
 import Filtros from "../home/components/Filters";
 import { toast } from "sonner";
 import { useConvocatorias } from "../home/hooks/UseConvocatorias";
-import { ChangePassword } from "../recover-password/ChangePassword";
+import { ChangePasswordSessionForm } from "./components/ChangePasswordSessionForm";
 
 export const Profile = () => {
     const {
@@ -43,9 +45,12 @@ export const Profile = () => {
         searchProfileConvocatorias,
     } = useProfile();
     const { handleSearch } = useConvocatorias();
+    const navigate = useNavigate();
+    const logout = useAuthStore((state) => state.logout);
     // Los hooks siempre deben declararse antes de cualquier return condicional
     const [isOpen, setIsOpen] = React.useState(false);
     const [passwordOpen, setPasswordOpen] = React.useState(false);
+    const [successModalOpen, setSuccessModalOpen] = React.useState(false);
     const [filtros, setFiltros] = useState<ISearchConvocatoriasReq>({});
 
     useEffect(() => {
@@ -330,7 +335,44 @@ export const Profile = () => {
                 </ReusableModal>
 
                 <ReusableModal isOpen={passwordOpen} modalTitle="Cambiar contraseña" size="md" onClose={() => setPasswordOpen(false)} >
-                    <ChangePassword />
+                    <ChangePasswordSessionForm
+                        onSuccess={() => {
+                            setPasswordOpen(false);
+                            setSuccessModalOpen(true);
+                        }}
+                    />
+                </ReusableModal>
+
+                <ReusableModal
+                    isOpen={successModalOpen}
+                    modalTitle="Contraseña cambiada exitosamente"
+                    size="md"
+                    onClose={() => {
+                        setSuccessModalOpen(false);
+                        logout();
+                        navigate("/login");
+                    }}
+                >
+                    <div className="p-4 space-y-4">
+                        <p className="text-center text-lg">
+                            Tu contraseña ha sido cambiada exitosamente.
+                        </p>
+                        <p className="text-center text-default-600">
+                            Por seguridad, debes iniciar sesión nuevamente con tu nueva contraseña.
+                        </p>
+                        <Button
+                            className="w-full"
+                            color="success"
+                            variant="flat"
+                            onPress={() => {
+                                setSuccessModalOpen(false);
+                                logout();
+                                navigate("/login");
+                            }}
+                        >
+                            Entendido, ir al login
+                        </Button>
+                    </div>
                 </ReusableModal>
             </div>
         </DefaultLayout >

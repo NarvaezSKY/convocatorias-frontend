@@ -121,7 +121,7 @@ export default defineConfig([
       "react/self-closing-comp": "warn",
 
       "react/jsx-sort-props": [
-        "warn",
+        "off",
         {
           callbacksLast: true,
           shorthandFirst: true,

@@ -5,6 +5,7 @@ import { ILoginReq } from '../domain/login';
 import { IRegisterReq } from '../domain/register';
 import axios from 'axios';
 import { IForgotPasswordRequest } from '../domain/forgot-password';
+import { IChangePassReq } from '../domain/change-password-session';
 
 const login = async (data: ILoginReq) => {
     try {
@@ -86,6 +87,16 @@ const changePassword = async (data: IForgotPasswordRequest) => {
     }
 }
 
+const changePassSession=async (data: IChangePassReq) => {
+    try {
+        const response = await axiosInstance.patch("/auth/change-password-session", data);
+        return response.data;
+    } catch (error) {
+        console.error("Error during password change:", error);
+        throw error;
+    }
+}
+
 export const authRepository: IAuthRepository = {
     login,
     adminRegister,
@@ -93,5 +104,6 @@ export const authRepository: IAuthRepository = {
     verify,
     activateUser,
     recoverPassword,
-    changePassword
+    changePassword,
+    changePassSession
 }
