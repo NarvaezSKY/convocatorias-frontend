@@ -98,6 +98,7 @@ function App() {
         }
         path="/register"
       />
+
       <Route
         element={
           <Page title="Página no encontrada | Innovación y Competitividad">
@@ -114,10 +115,9 @@ function App() {
               <ActivateUser />
             </Page>
           </ProtectedRoute>
-
-
         }
         path="admin/activate/:token" />
+
       <Route
         element={
           <PublicRoute>
@@ -147,7 +147,6 @@ function App() {
         }
         path="/users"
       />
-
 
       <Route
         element={

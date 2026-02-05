@@ -14,6 +14,7 @@ import {
 } from "@heroui/react";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { FiEdit3, FiSave, FiUser } from "react-icons/fi";
+import { TbLockPassword } from "react-icons/tb";
 import { roleConverter } from "../shared/utils/roleConverter";
 import { useProfile } from "./hooks/useProfile";
 import defaultPfp from "../assets/profile_default.png";
@@ -25,6 +26,7 @@ import { ISearchConvocatoriasReq } from "@/core/convocatorias/domain/search-conv
 import Filtros from "../home/components/Filters";
 import { toast } from "sonner";
 import { useConvocatorias } from "../home/hooks/UseConvocatorias";
+import { ChangePassword } from "../recover-password/ChangePassword";
 
 export const Profile = () => {
     const {
@@ -41,9 +43,9 @@ export const Profile = () => {
         searchProfileConvocatorias,
     } = useProfile();
     const { handleSearch } = useConvocatorias();
-
     // Los hooks siempre deben declararse antes de cualquier return condicional
     const [isOpen, setIsOpen] = React.useState(false);
+    const [passwordOpen, setPasswordOpen] = React.useState(false);
     const [filtros, setFiltros] = useState<ISearchConvocatoriasReq>({});
 
     useEffect(() => {
@@ -265,17 +267,32 @@ export const Profile = () => {
                                         }
                                     />
                                     {isEditing && (
-                                        <Input
-                                            errorMessage={errors.CvLAC}
-                                            label="CVLAC"
-                                            radius="md"
-                                            type="url"
-                                            value={profileData.CvLAC}
-                                            variant={isEditing ? "bordered" : "flat"}
-                                            onChange={(e) =>
-                                                setProfileData({ ...profileData, CvLAC: e.target.value })
-                                            }
-                                        />)
+                                        <>
+                                            <Input
+                                                errorMessage={errors.CvLAC}
+                                                label="Añadir enlace CVLAC"
+                                                radius="md"
+                                                type="url"
+                                                value={profileData.CvLAC}
+                                                variant={isEditing ? "bordered" : "flat"}
+                                                onChange={(e) =>
+                                                    setProfileData({ ...profileData, CvLAC: e.target.value })
+                                                }
+                                            />
+                                            <Button
+                                                type="button"
+                                                radius="md"
+                                                size="lg"
+                                                className="h-full"
+                                                variant="flat"
+                                                color="secondary"
+                                                onClick={() => setPasswordOpen(true)}
+                                            >
+                                                <TbLockPassword />
+                                                Cambiar contraseña
+                                            </Button>
+                                        </>
+                                    )
                                     }
                                 </div>
                             </CardBody>
@@ -285,20 +302,20 @@ export const Profile = () => {
                         <div className="flex justify-between">
                             <span className="text-lg font-bold text-success">Proyectos en los que ha participado:</span>
                             {singleUser?._id === user?.userId && (
-                            <Button
-                                className="ml-2"
-                                color="primary"
-                                variant="flat"
-                                onClick={() => setIsOpen(true)} >
-                                <VscGithubProject />
-                                Agregar proyectos
-                            </Button>
+                                <Button
+                                    className="ml-2"
+                                    color="primary"
+                                    variant="flat"
+                                    onClick={() => setIsOpen(true)} >
+                                    <VscGithubProject />
+                                    Agregar proyectos
+                                </Button>
                             )}
                         </div>
                         <ConvocatoriasTable isOwnProfile={singleUser?._id === user?.userId} mode="profileConsult" />
                     </div>
                 </div>
-                <ReusableModal isOpen={isOpen} modalTitle="Seleccionar proyectos" size="5xl" onClose={() => {setIsOpen(false); searchProfileConvocatorias({users: profileData.id})}} >
+                <ReusableModal isOpen={isOpen} modalTitle="Seleccionar proyectos" size="5xl" onClose={() => { setIsOpen(false); searchProfileConvocatorias({ users: profileData.id }) }} >
                     <Filtros
                         filtros={filtros}
                         showDownload={false}
@@ -311,7 +328,11 @@ export const Profile = () => {
                     />
                     <ConvocatoriasTable mode="profile" />
                 </ReusableModal>
+
+                <ReusableModal isOpen={passwordOpen} modalTitle="Cambiar contraseña" size="md" onClose={() => setPasswordOpen(false)} >
+                    <ChangePassword />
+                </ReusableModal>
             </div>
-        </DefaultLayout>
+        </DefaultLayout >
     );
 };
