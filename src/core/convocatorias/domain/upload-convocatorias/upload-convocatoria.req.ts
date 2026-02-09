@@ -21,4 +21,6 @@ export interface IUploadConvocatoriaReq{
     tiposPoblacionesAtendidas?: string;
     numeroBeneficiariosDirectos?: string;
     numeroBeneficiariosIndirectos?: string;
+
+    programasRelacionados?: string[];
 }   

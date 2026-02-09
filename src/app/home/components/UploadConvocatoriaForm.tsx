@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import {
   Form,
   Input,
@@ -5,18 +6,16 @@ import {
   Textarea,
   Select,
   SelectItem,
-  Divider
+  Divider,
 } from "@heroui/react";
 import { useEffect, useState, useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useUploadConvocatoria } from "../hooks/UseUploadForm";
 import { IUploadConvocatoriaReq } from "../../../core/convocatorias/domain/upload-convocatorias";
 import { useEditConvocatorias } from "../hooks/UseEditConvocatorias";
-import {
-  getDepartments,
-  getCitiesByDepartment,
-} from 'colombia-cities';
-import { poblacionTypes } from '../utils/Poblacion-types'
+import { getDepartments, getCitiesByDepartment } from "colombia-cities";
+import { poblacionTypes } from "../utils/Poblacion-types";
+import { programasFormacion } from "../utils/programasFormacion";
 
 interface Props {
   userId: string;
@@ -39,7 +38,7 @@ const yearOptions = [
   "2024",
   "2025",
   "2026",
-]
+];
 
 export function UploadConvocatoriaForm({
   userId,
@@ -70,8 +69,24 @@ export function UploadConvocatoriaForm({
   } = useEditConvocatorias();
 
   const departments = useMemo(() => getDepartments(), []);
-  const [selectedDepartments, setSelectedDepartments] = useState<Set<string>>(new Set());
-  const [filteredCities, setFilteredCities] = useState<Array<{ codigo: string; nombre: string; departamento: string }>>([]);
+  const [selectedDepartments, setSelectedDepartments] = useState<Set<string>>(
+    new Set(),
+  );
+  const [filteredCities, setFilteredCities] = useState<
+    Array<{ codigo: string; nombre: string; departamento: string }>
+  >([]);
+  const [programaSearch, setProgramaSearch] = useState("");
+
+  const filteredProgramas = useMemo(() => {
+    const query = programaSearch.trim().toLowerCase();
+    if (!query) {
+      return programasFormacion;
+    }
+
+    return programasFormacion.filter((programa) =>
+      programa.label.toLowerCase().includes(query),
+    );
+  }, [programaSearch]);
 
   // Actualizar ciudades cuando cambian los departamentos seleccionados
   useEffect(() => {
@@ -80,19 +95,22 @@ export function UploadConvocatoriaForm({
       return;
     }
 
-    const cities: Array<{ codigo: string; nombre: string; departamento: string }> = [];
-    selectedDepartments.forEach(deptName => {
-      const dept = departments.find(d => d.nombre === deptName);
+    const cities: Array<{
+      codigo: string;
+      nombre: string;
+      departamento: string;
+    }> = [];
+    selectedDepartments.forEach((deptName) => {
+      const dept = departments.find((d) => d.nombre === deptName);
       if (dept) {
         const deptCities = getCitiesByDepartment(dept.nombre);
-        deptCities.forEach(city => {
+        deptCities.forEach((city) => {
           cities.push({ ...city, departamento: dept.nombre });
         });
       }
     });
     setFilteredCities(cities);
   }, [selectedDepartments, departments]);
-
 
   const onSubmit = async (data: IUploadConvocatoriaReq) => {
     const payload = { ...data, user_id: userId };
@@ -114,7 +132,10 @@ export function UploadConvocatoriaForm({
       console.log("initialValues", initialValues);
       reset(initialValues);
       // Inicializar departamentos seleccionados si existen en initialValues
-      if (initialValues.departamentosDeImpacto && initialValues.departamentosDeImpacto.length > 0) {
+      if (
+        initialValues.departamentosDeImpacto &&
+        initialValues.departamentosDeImpacto.length > 0
+      ) {
         setSelectedDepartments(new Set(initialValues.departamentosDeImpacto));
       }
     }
@@ -200,9 +221,7 @@ export function UploadConvocatoriaForm({
         errorMessage={errors.direccion_oficina_regional?.message}
         isInvalid={!!errors.direccion_oficina_regional}
       >
-        <SelectItem key="ACTUALIZACION_EQUIPO">
-          ACTUALIZACION_EQUIPO
-        </SelectItem>
+        <SelectItem key="ACTUALIZACION_EQUIPO">ACTUALIZACION_EQUIPO</SelectItem>
         <SelectItem key="P_METODOLOGIA_GENERAL_AJUSTADA">
           P_METODOLOGIA_GENERAL_AJUSTADA
         </SelectItem>
@@ -314,14 +333,70 @@ export function UploadConvocatoriaForm({
         variant="bordered"
         {...register("url")}
       />
+
+      <Controller
+        name="programasRelacionados"
+        control={control}
+        render={({ field }) => (
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-foreground">
+              Programas de formacion involucrados
+            </label>
+            <input
+              type="text"
+              value={programaSearch}
+              onChange={(event) => setProgramaSearch(event.target.value)}
+              placeholder="Busca por nombre del programa"
+              className="w-full rounded-medium border border-default-300 bg-transparent px-3 py-2 text-sm outline-none transition focus:border-default-500"
+            />
+            <div className="max-h-64 overflow-auto rounded-medium border border-default-200 p-2">
+              <div className="grid gap-2 sm:grid-cols-2">
+                {filteredProgramas.map((programa) => {
+                  const current = Array.isArray(field.value) ? field.value : [];
+                  const checked = current.includes(programa.value);
+
+                  return (
+                    <label
+                      key={programa.value}
+                      className="flex items-start gap-2 rounded-md px-2 py-1 hover:bg-default-100"
+                    >
+                      <input
+                        type="checkbox"
+                        className="mt-1"
+                        checked={checked}
+                        onChange={(event) => {
+                          if (event.target.checked) {
+                            field.onChange([...current, programa.value]);
+                            return;
+                          }
+
+                          field.onChange(
+                            current.filter((item) => item !== programa.value),
+                          );
+                        }}
+                      />
+                      <span className="text-sm text-foreground">
+                        {programa.label}
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+      />
       <Divider />
-      <h2 className="font-bold text-success text-xl">Poblaciones involucradas (opcional)</h2>
+      <h2 className="font-bold text-success text-xl">
+        Poblaciones involucradas (opcional)
+      </h2>
 
       <Controller
         name="departamentosDeImpacto"
         control={control}
         render={({ field }) => (
           <Select
+            isClearable
             variant="bordered"
             label="Departamentos de impacto"
             placeholder="Selecciona los departamentos involucrados"
@@ -347,9 +422,14 @@ export function UploadConvocatoriaForm({
         control={control}
         render={({ field }) => (
           <Select
+            isClearable
             variant="bordered"
             label="Municipios de impacto"
-            placeholder={selectedDepartments.size === 0 ? "Primero selecciona departamentos" : "Selecciona los municipios involucrados"}
+            placeholder={
+              selectedDepartments.size === 0
+                ? "Primero selecciona departamentos"
+                : "Selecciona los municipios involucrados"
+            }
             selectionMode="multiple"
             isDisabled={selectedDepartments.size === 0}
             selectedKeys={field.value ? new Set(field.value) : new Set()}
@@ -414,7 +494,13 @@ export function UploadConvocatoriaForm({
       {error && <span className="text-danger text-sm -mt-2">{error}</span>}
 
       <div className="flex gap-4 w-full">
-        <Button color="success" isDisabled={isLoading} type="submit" variant="flat" className="w-full">
+        <Button
+          color="success"
+          isDisabled={isLoading}
+          type="submit"
+          variant="flat"
+          className="w-full"
+        >
           {isLoading
             ? "Cargando..."
             : method === "edit"

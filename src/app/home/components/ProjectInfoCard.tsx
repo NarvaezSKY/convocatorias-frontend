@@ -30,12 +30,12 @@ export function ProjectInfoCard({ project }: ProjectInfoCardProps) {
                 {/* Nombre del Proyecto */}
                 <div className="bg-white dark:bg-default-100 rounded-xl p-4 shadow-sm">
                     <div className="flex items-start gap-3">
-                        <HiDocumentText className="text-2xl text-primary mt-1 flex-shrink-0" />
+                        <HiDocumentText className="text-2xl text-primary mt-1 shrink-0" />
                         <div className="flex-1 min-w-0">
                             <p className="text-xs text-default-500 font-semibold mb-1">
                                 NOMBRE DEL PROYECTO
                             </p>
-                            <p className="text-base font-medium break-words">
+                            <p className="text-base font-medium wrap-break-word">
                                 {project?.nombre}
                             </p>
                         </div>
@@ -52,7 +52,7 @@ export function ProjectInfoCard({ project }: ProjectInfoCardProps) {
                                 CENTRO DE FORMACIÓN
                             </p>
                         </div>
-                        <p className="text-sm break-words">
+                        <p className="text-sm wrap-break-word">
                             {project?.direccion_oficina_regional}
                         </p>
                     </div>
@@ -107,9 +107,31 @@ export function ProjectInfoCard({ project }: ProjectInfoCardProps) {
                                 OBSERVACIONES
                             </p>
                         </div>
-                        <p className="text-sm break-words text-default-700">
+                        <p className="text-sm wrap-break-word text-default-700">
                             {project?.observaciones}
                         </p>
+                    </div>
+                )}
+
+                {/* Programas relacionados */}
+                {project?.programasRelacionados && (
+                    <div className="bg-white dark:bg-default-100 rounded-lg p-4 shadow-sm">
+                        <p className="text-xs text-default-500 font-semibold mb-2">
+                            PROGRAMAS DE FORMACION INVOLUCRADOS
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                            {Array.isArray(project.programasRelacionados) ? (
+                                project.programasRelacionados.map((programa: string, idx: number) => (
+                                    <Chip key={idx} color="primary" size="sm" variant="flat">
+                                        {programa}
+                                    </Chip>
+                                ))
+                            ) : (
+                                <p className="text-sm wrap-break-word">
+                                    {project.programasRelacionados}
+                                </p>
+                            )}
+                        </div>
                     </div>
                 )}
 
@@ -191,7 +213,7 @@ export function ProjectInfoCard({ project }: ProjectInfoCardProps) {
                         {/* Beneficiarios */}
                         {(project?.numeroBeneficiariosDirectos ||
                             project?.numeroBeneficiariosIndirectos) && (
-                                <div className="bg-gradient-to-r from-success-50 to-primary-50 dark:from-success-900/20 dark:to-primary-900/20 rounded-lg p-4 shadow-sm md:col-span-2">
+                                <div className="bg-linear-to-r from-success-50 to-primary-50 dark:from-success-900/20 dark:to-primary-900/20 rounded-lg p-4 shadow-sm md:col-span-2">
                                     <div className="flex items-center gap-2 mb-3">
                                         <IoMdPeople className="text-2xl text-success" />
                                         <p className="text-xs text-default-500 font-semibold">

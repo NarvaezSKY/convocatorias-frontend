@@ -15,4 +15,11 @@ export interface IPatchConvocatoriasReq {
     valor_solicitado?: string;
     valor_aprobado?: string;
     diferencia_presupuesto?: string;
+
+    departamentosDeImpacto?: string;
+    municipiosDeImpacto?: string;
+    tiposPoblacionesAtendidas?: string;
+    numeroBeneficiariosDirectos?: string;
+    numeroBeneficiariosIndirectos?: string;
+    programasRelacionados?: string;
 }
