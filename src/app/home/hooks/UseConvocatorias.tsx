@@ -35,11 +35,21 @@ export const useConvocatorias = () => {
       });
   };
 
+  const normalizeFilterValue = (value: unknown) => {
+    if (Array.isArray(value)) {
+      return value.join(",");
+    }
+    if (value instanceof Set) {
+      return Array.from(value).join(",");
+    }
+    return value;
+  };
+
   const handleSearch = (searchParams: ISearchConvocatoriasReq) => {
     const filtrosLimpios = Object.fromEntries(
-      Object.entries(searchParams).filter(
-        ([_, v]) => v?.toString().trim() !== ""
-      )
+      Object.entries(searchParams)
+        .map(([key, value]) => [key, normalizeFilterValue(value)])
+        .filter(([_, value]) => value?.toString().trim() !== "")
     );
     if (Object.keys(filtrosLimpios).length > 0) {
       searchConvocatorias(filtrosLimpios);
@@ -50,7 +60,9 @@ export const useConvocatorias = () => {
 
   const generarReporte = async (filtros: ISearchConvocatoriasReq) => {
     const filtrosLimpios = Object.fromEntries(
-      Object.entries(filtros).filter(([_, v]) => v?.toString().trim() !== "")
+      Object.entries(filtros)
+        .map(([key, value]) => [key, normalizeFilterValue(value)])
+        .filter(([_, value]) => value?.toString().trim() !== "")
     );
 
     try {

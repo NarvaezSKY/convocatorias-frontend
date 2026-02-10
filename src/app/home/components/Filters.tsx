@@ -1,6 +1,9 @@
 import {
+  Autocomplete,
+  AutocompleteItem,
   Button,
   Card,
+  Chip,
   Input,
   Spinner,
   Tooltip,
@@ -16,6 +19,7 @@ import { useAuthStore } from "@/app/shared/auth.store";
 import { useConvocatoriasStore } from "@/app/shared/convocatorias.store";
 import { getDepartments, getCitiesByDepartment } from 'colombia-cities';
 import { poblacionTypes } from '../utils/Poblacion-types';
+import { programasFormacion } from "../utils/programasFormacion";
 
 interface FiltrosProps {
   filtros: ISearchConvocatoriasReq;
@@ -31,6 +35,24 @@ export default function Filtros({ filtros, onChange, onReset, showDownload }: Fi
   const departments = useMemo(() => getDepartments(), []);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [filteredCities, setFilteredCities] = useState<Array<{ codigo: string; nombre: string; departamento: string }>>([]);
+  const [programasInputValue, setProgramasInputValue] = useState("");
+
+  const selectedProgramas = Array.isArray(filtros.programasRelacionados)
+    ? filtros.programasRelacionados
+    : [];
+  const programasLabelByValue = useMemo(() => {
+    const entries = programasFormacion.map(
+      (programa) => [programa.value, programa.label] as const,
+    );
+    return new Map(entries);
+  }, []);
+  const handleRemovePrograma = (programaValue: string) => {
+    const nextProgramas = selectedProgramas.filter(
+      (programa) => programa !== programaValue,
+    );
+    onChange({ programasRelacionados: nextProgramas });
+  };
+
 
   // Actualizar ciudades cuando cambian los departamentos seleccionados
   useEffect(() => {
@@ -92,12 +114,6 @@ export default function Filtros({ filtros, onChange, onReset, showDownload }: Fi
           </div>
 
           <div className="flex flex-col gap-2 w-full max-w-xs">
-            {/* <label
-              className="text-sm text-neutral-700"
-              htmlFor="tipo_postulacion"
-            >
-              Estado
-            </label> */}
 
             <Select
               fullWidth
@@ -334,6 +350,51 @@ export default function Filtros({ filtros, onChange, onReset, showDownload }: Fi
                 </SelectItem>
               ))}
             </Select>
+          </div>
+
+          <div className="flex flex-col gap-2 w-full max-w-xs">
+            <Autocomplete
+              label="Programas de formacion"
+              placeholder="Busca por nombre del programa"
+              variant="bordered"
+              size="sm"
+              radius="sm"
+              inputValue={programasInputValue}
+              onInputChange={setProgramasInputValue}
+              onSelectionChange={(key) => {
+                const value = key ? String(key) : "";
+                if (!value || selectedProgramas.includes(value)) {
+                  setProgramasInputValue("");
+                  return;
+                }
+
+                onChange({
+                  programasRelacionados: [...selectedProgramas, value],
+                });
+                setProgramasInputValue("");
+              }}
+            >
+              {programasFormacion.map((programa) => (
+                <AutocompleteItem key={programa.value}>
+                  {programa.label}
+                </AutocompleteItem>
+              ))}
+            </Autocomplete>
+            {selectedProgramas.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {selectedProgramas.map((programa) => (
+                  <Chip
+                    key={programa}
+                    color="primary"
+                    size="sm"
+                    variant="flat"
+                    onClose={() => handleRemovePrograma(programa)}
+                  >
+                    {programasLabelByValue.get(programa) ?? programa}
+                  </Chip>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col gap-1">

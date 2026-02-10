@@ -1,5 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import {
+  Autocomplete,
+  AutocompleteItem,
   Form,
   Input,
   Button,
@@ -7,6 +9,7 @@ import {
   Select,
   SelectItem,
   Divider,
+  Chip,
 } from "@heroui/react";
 import { useEffect, useState, useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -75,18 +78,13 @@ export function UploadConvocatoriaForm({
   const [filteredCities, setFilteredCities] = useState<
     Array<{ codigo: string; nombre: string; departamento: string }>
   >([]);
-  const [programaSearch, setProgramaSearch] = useState("");
-
-  const filteredProgramas = useMemo(() => {
-    const query = programaSearch.trim().toLowerCase();
-    if (!query) {
-      return programasFormacion;
-    }
-
-    return programasFormacion.filter((programa) =>
-      programa.label.toLowerCase().includes(query),
+  const [programasInputValue, setProgramasInputValue] = useState("");
+  const programasLabelByValue = useMemo(() => {
+    const entries = programasFormacion.map(
+      (programa) => [programa.value, programa.label] as const,
     );
-  }, [programaSearch]);
+    return new Map(entries);
+  }, []);
 
   // Actualizar ciudades cuando cambian los departamentos seleccionados
   useEffect(() => {
@@ -338,51 +336,59 @@ export function UploadConvocatoriaForm({
         name="programasRelacionados"
         control={control}
         render={({ field }) => (
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">
-              Programas de formacion involucrados
-            </label>
-            <input
-              type="text"
-              value={programaSearch}
-              onChange={(event) => setProgramaSearch(event.target.value)}
+          <div className="space-y-2 w-full">
+            <Autocomplete
+              label="Programas de formacion involucrados"
               placeholder="Busca por nombre del programa"
-              className="w-full rounded-medium border border-default-300 bg-transparent px-3 py-2 text-sm outline-none transition focus:border-default-500"
-            />
-            <div className="max-h-64 overflow-auto rounded-medium border border-default-200 p-2">
-              <div className="grid gap-2 sm:grid-cols-2">
-                {filteredProgramas.map((programa) => {
-                  const current = Array.isArray(field.value) ? field.value : [];
-                  const checked = current.includes(programa.value);
+              fullWidth
+              className="w-full"
+              variant="bordered"
+              size="md"
+              radius="md"
+              inputValue={programasInputValue}
+              onInputChange={setProgramasInputValue}
+              onSelectionChange={(key) => {
+                const value = key ? String(key) : "";
+                const current = Array.isArray(field.value)
+                  ? field.value
+                  : [];
+                if (!value || current.includes(value)) {
+                  setProgramasInputValue("");
+                  return;
+                }
 
-                  return (
-                    <label
-                      key={programa.value}
-                      className="flex items-start gap-2 rounded-md px-2 py-1 hover:bg-default-100"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mt-1"
-                        checked={checked}
-                        onChange={(event) => {
-                          if (event.target.checked) {
-                            field.onChange([...current, programa.value]);
-                            return;
-                          }
-
-                          field.onChange(
-                            current.filter((item) => item !== programa.value),
-                          );
-                        }}
-                      />
-                      <span className="text-sm text-foreground">
-                        {programa.label}
-                      </span>
-                    </label>
-                  );
-                })}
+                field.onChange([...current, value]);
+                setProgramasInputValue("");
+              }}
+            >
+              {programasFormacion.map((programa) => (
+                <AutocompleteItem key={programa.value}>
+                  {programa.label}
+                </AutocompleteItem>
+              ))}
+            </Autocomplete>
+            {Array.isArray(field.value) && field.value.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {field.value.map((programa) => (
+                  <Chip
+                    key={programa}
+                    color="primary"
+                    size="sm"
+                    variant="flat"
+                    onClose={() => {
+                      const current = Array.isArray(field.value)
+                        ? field.value
+                        : [];
+                      field.onChange(
+                        current.filter((item) => item !== programa),
+                      );
+                    }}
+                  >
+                    {programasLabelByValue.get(programa) ?? programa}
+                  </Chip>
+                ))}
               </div>
-            </div>
+            )}
           </div>
         )}
       />

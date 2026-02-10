@@ -1,10 +1,10 @@
 export interface ISearchConvocatoriasReq {
   _id?: string;
-  convocatoria?: string;
+  convocatoria?: string | string[];
   consecutivo?: string;
-  direccion_oficina_regional?: string;
-  tipo_postulacion?: string;
-  nuevo_estado?: string;
+  direccion_oficina_regional?: string | string[];
+  tipo_postulacion?: string | string[];
+  nuevo_estado?: string | string[];
   nombre?: string;
   valor?: string;
   fecha_aprobacion?: string;
@@ -12,12 +12,12 @@ export interface ISearchConvocatoriasReq {
   fecha_fin?: string;
   observaciones?: string;
   user_id?: string;
-  year?: string;
+  year?: string | string[];
   users?: string;
-  departamentosDeImpacto?: string;
-  municipiosDeImpacto?: string;
-  tiposPoblacionesAtendidas?: string;
+  departamentosDeImpacto?: string | string[];
+  municipiosDeImpacto?: string | string[];
+  tiposPoblacionesAtendidas?: string | string[];
   numeroBeneficiariosDirectos?: string;
   numeroBeneficiariosIndirectos?: string;
-  programasRelacionados?: string;
+  programasRelacionados?: string | string[];
 }
