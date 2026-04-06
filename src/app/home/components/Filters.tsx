@@ -144,6 +144,7 @@ export default function Filtros({ filtros, onChange, onReset, showDownload }: Fi
               </SelectItem>
               <SelectItem key="AVAL REGIONAL">Aval Regional</SelectItem>
               <SelectItem key="En ejecución">En ejecución</SelectItem>
+              <SelectItem key="Finalizado">Finalizado</SelectItem>
             </Select>
           </div>
 
