@@ -1,6 +1,8 @@
+import { IBeneficiarioPorMunicipio } from "../upload-convocatorias";
+
 export interface IGetAllConvocatoriasRes {
     _id: string;
-    convocatoria: number;
+    convocatoria: number | string;
     consecutivo: string;
     direccion_oficina_regional: string;
     tipo_postulacion: string;
@@ -15,10 +17,12 @@ export interface IGetAllConvocatoriasRes {
     valor_solicitado: number;
     valor_aprobado: number;
     diferencia_presupuesto: number;
-    users?: [string]
-    departamentosDeImpacto?: string
-    municipiosDeImpacto?: string
-    tiposPoblacionesAtendidas?: string
-    numeroBeneficiariosDirectos?: string
-    numeroBeneficiariosIndirectos?: string
+    users?: string[]
+    departamentosDeImpacto?: string[]
+    municipiosDeImpacto?: string[]
+    tiposPoblacionesAtendidas?: string[]
+    numeroBeneficiariosDirectos?: number
+    numeroBeneficiariosIndirectos?: number
+    beneficiariosPorMunicipio?: IBeneficiarioPorMunicipio[]
+    programasRelacionados?: string[]
 }

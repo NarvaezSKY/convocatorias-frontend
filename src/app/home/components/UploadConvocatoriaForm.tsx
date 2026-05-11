@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import {
   Autocomplete,
   AutocompleteItem,
@@ -12,7 +11,7 @@ import {
   Chip,
 } from "@heroui/react";
 import { useEffect, useState, useMemo } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { useUploadConvocatoria } from "../hooks/UseUploadForm";
 import { IUploadConvocatoriaReq } from "../../../core/convocatorias/domain/upload-convocatorias";
 import { useEditConvocatorias } from "../hooks/UseEditConvocatorias";
@@ -55,6 +54,7 @@ export function UploadConvocatoriaForm({
     handleSubmit,
     reset,
     control,
+    setValue,
     formState: { errors },
   } = useForm<IUploadConvocatoriaReq>({
     defaultValues: initialValues,
@@ -85,6 +85,21 @@ export function UploadConvocatoriaForm({
     );
     return new Map(entries);
   }, []);
+  const selectedMunicipios = useWatch({
+    control,
+    name: "municipiosDeImpacto",
+    defaultValue: [],
+  }) ?? [];
+  const beneficiariosPorMunicipio = useWatch({
+    control,
+    name: "beneficiariosPorMunicipio",
+    defaultValue: [],
+  }) ?? [];
+
+  const toSafeNumber = (value: unknown) => {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
 
   // Actualizar ciudades cuando cambian los departamentos seleccionados
   useEffect(() => {
@@ -111,7 +126,30 @@ export function UploadConvocatoriaForm({
   }, [selectedDepartments, departments]);
 
   const onSubmit = async (data: IUploadConvocatoriaReq) => {
-    const payload = { ...data, user_id: userId };
+    const beneficiariosLimpios = (data.beneficiariosPorMunicipio ?? [])
+      .filter((item) => item?.municipio)
+      .map((item) => ({
+        municipio: item.municipio,
+        directos: toSafeNumber(item.directos),
+        indirectos: toSafeNumber(item.indirectos),
+      }));
+
+    const numeroBeneficiariosDirectos = beneficiariosLimpios.reduce(
+      (acc, item) => acc + item.directos,
+      0,
+    );
+    const numeroBeneficiariosIndirectos = beneficiariosLimpios.reduce(
+      (acc, item) => acc + item.indirectos,
+      0,
+    );
+
+    const payload = {
+      ...data,
+      user_id: userId,
+      beneficiariosPorMunicipio: beneficiariosLimpios,
+      numeroBeneficiariosDirectos,
+      numeroBeneficiariosIndirectos,
+    };
 
     if (method === "upload") {
       await uploadConvocatoria(payload);
@@ -138,6 +176,44 @@ export function UploadConvocatoriaForm({
       }
     }
   }, [initialValues, reset]);
+
+  useEffect(() => {
+    const municipios = Array.isArray(selectedMunicipios)
+      ? selectedMunicipios
+      : [];
+    const currentBeneficiarios = Array.isArray(beneficiariosPorMunicipio)
+      ? beneficiariosPorMunicipio
+      : [];
+
+    const nextBeneficiarios = municipios.map((municipio) => {
+      const existente = currentBeneficiarios.find(
+        (item) => item?.municipio === municipio,
+      );
+
+      return {
+        municipio,
+        directos: toSafeNumber(existente?.directos),
+        indirectos: toSafeNumber(existente?.indirectos),
+      };
+    });
+
+    const hasChanged =
+      nextBeneficiarios.length !== currentBeneficiarios.length ||
+      nextBeneficiarios.some((item, index) => {
+        const current = currentBeneficiarios[index];
+        return (
+          current?.municipio !== item.municipio ||
+          toSafeNumber(current?.directos) !== item.directos ||
+          toSafeNumber(current?.indirectos) !== item.indirectos
+        );
+      });
+
+    if (hasChanged) {
+      setValue("beneficiariosPorMunicipio", nextBeneficiarios, {
+        shouldDirty: true,
+      });
+    }
+  }, [selectedMunicipios, beneficiariosPorMunicipio, setValue]);
 
   const isLoading = isUploading || isPatching;
   const error = uploadError || patchError;
@@ -482,20 +558,83 @@ export function UploadConvocatoriaForm({
         )}
       />
 
+      {Array.isArray(selectedMunicipios) && selectedMunicipios.length > 0 ? (
+        <div className="space-y-3 w-full">
+          <h3 className="font-semibold text-success">
+            Beneficiarios por municipio
+          </h3>
+          {selectedMunicipios.map((municipio, index) => (
+            <div
+              key={municipio}
+              className="grid grid-cols-1 md:grid-cols-2 gap-3 border border-default-200 rounded-medium p-3"
+            >
+              <Input
+                label="Municipio"
+                variant="bordered"
+                isReadOnly
+                value={municipio}
+              />
+              <div className="hidden md:block" />
+              <Input
+                type="number"
+                label="Beneficiarios directos"
+                min={0}
+                variant="bordered"
+                {...register(`beneficiariosPorMunicipio.${index}.directos` as const, {
+                  valueAsNumber: true,
+                  min: 0,
+                })}
+              />
+              <Input
+                type="number"
+                label="Beneficiarios indirectos"
+                min={0}
+                variant="bordered"
+                {...register(`beneficiariosPorMunicipio.${index}.indirectos` as const, {
+                  valueAsNumber: true,
+                  min: 0,
+                })}
+              />
+              <input
+                type="hidden"
+                {...register(`beneficiariosPorMunicipio.${index}.municipio` as const)}
+                value={municipio}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-default-500">
+          Selecciona uno o más municipios para registrar beneficiarios por cada uno.
+        </p>
+      )}
+
       <Input
         type="number"
         label="Total de beneficiarios (directos)"
-        placeholder="Si se desconoce el dato exacto, digita un aproximado"
+        placeholder="Se calcula automáticamente con base en los municipios"
         variant="bordered"
-        {...register("numeroBeneficiariosDirectos")}
+        isReadOnly
+        value={String(
+          (beneficiariosPorMunicipio ?? []).reduce(
+            (acc, item) => acc + toSafeNumber(item?.directos),
+            0,
+          ),
+        )}
       />
 
       <Input
         type="number"
         label="Total de beneficiarios (indirectos)"
-        placeholder="Si se desconoce el dato exacto, digita un aproximado"
+        placeholder="Se calcula automáticamente con base en los municipios"
         variant="bordered"
-        {...register("numeroBeneficiariosIndirectos")}
+        isReadOnly
+        value={String(
+          (beneficiariosPorMunicipio ?? []).reduce(
+            (acc, item) => acc + toSafeNumber(item?.indirectos),
+            0,
+          ),
+        )}
       />
 
       {error && <span className="text-danger text-sm -mt-2">{error}</span>}

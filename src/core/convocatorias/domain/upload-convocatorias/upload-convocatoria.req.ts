@@ -1,5 +1,11 @@
+export interface IBeneficiarioPorMunicipio {
+    municipio: string;
+    directos?: number;
+    indirectos?: number;
+}
+
 export interface IUploadConvocatoriaReq{
-    year: number
+    year: number | string
     convocatoria: string;
     consecutivo: string;
     direccion_oficina_regional: string;
@@ -11,16 +17,17 @@ export interface IUploadConvocatoriaReq{
     fecha_fin?: string;
     observaciones?: string;
     user_id: string;
-    url: string;
-    valor_solicitado: string;
-    valor_aprobado: string;
-    diferencia_presupuesto: string;
+    url?: string;
+    valor_solicitado: number | string;
+    valor_aprobado: number | string;
+    diferencia_presupuesto?: number | string;
 
-    departamentosDeImpacto?: string;
-    municipiosDeImpacto?: string;
-    tiposPoblacionesAtendidas?: string;
-    numeroBeneficiariosDirectos?: string;
-    numeroBeneficiariosIndirectos?: string;
+    departamentosDeImpacto?: string[];
+    municipiosDeImpacto?: string[];
+    tiposPoblacionesAtendidas?: string[];
+    numeroBeneficiariosDirectos?: number | string;
+    numeroBeneficiariosIndirectos?: number | string;
+    beneficiariosPorMunicipio?: IBeneficiarioPorMunicipio[];
 
     programasRelacionados?: string[];
 }   

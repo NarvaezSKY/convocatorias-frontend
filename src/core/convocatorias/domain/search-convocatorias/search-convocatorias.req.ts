@@ -19,5 +19,6 @@ export interface ISearchConvocatoriasReq {
   tiposPoblacionesAtendidas?: string | string[];
   numeroBeneficiariosDirectos?: string;
   numeroBeneficiariosIndirectos?: string;
+  beneficiariosPorMunicipio?: string;
   programasRelacionados?: string | string[];
 }

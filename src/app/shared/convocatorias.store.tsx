@@ -17,6 +17,40 @@ import {
 import { IAddUserToConvocatoriaReq } from "@/core/convocatorias/domain/add-user-to-convocatoria";
 import { IRemoveUserFromConvocatoriaReq } from "@/core/convocatorias/domain/remove-user-from-convocatoria";
 
+const toNumber = (value: unknown): number => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const normalizeConvocatoria = (
+  convocatoria: IGetAllConvocatoriasRes,
+): IGetAllConvocatoriasRes => {
+  const beneficiarios = Array.isArray(convocatoria.beneficiariosPorMunicipio)
+    ? convocatoria.beneficiariosPorMunicipio
+    : [];
+
+  if (beneficiarios.length === 0) {
+    return convocatoria;
+  }
+
+  const totalDirectos = beneficiarios.reduce(
+    (acc, item) => acc + toNumber(item?.directos),
+    0,
+  );
+  const totalIndirectos = beneficiarios.reduce(
+    (acc, item) => acc + toNumber(item?.indirectos),
+    0,
+  );
+
+  return {
+    ...convocatoria,
+    numeroBeneficiariosDirectos:
+      convocatoria.numeroBeneficiariosDirectos ?? totalDirectos,
+    numeroBeneficiariosIndirectos:
+      convocatoria.numeroBeneficiariosIndirectos ?? totalIndirectos,
+  };
+};
+
 type State = {
   convocatorias: IGetAllConvocatoriasRes[];
   profileConvocatorias: IGetAllConvocatoriasRes[];
@@ -59,8 +93,9 @@ export const useConvocatoriasStore = create<Store>((set) => ({
       const convocatorias = await getAllConvocatoriasUseCase(
         convocatoriasRepository
       )();
-      set({ convocatorias, error: null, loading: false });
-      return convocatorias;
+      const normalizedConvocatorias = convocatorias.map(normalizeConvocatoria);
+      set({ convocatorias: normalizedConvocatorias, error: null, loading: false });
+      return normalizedConvocatorias;
     } catch (error) {
       console.error("Error fetching convocatorias:", error);
       set({ error: "Error fetching convocatorias", loading: false });
@@ -100,8 +135,9 @@ export const useConvocatoriasStore = create<Store>((set) => ({
         throw new Error("Convocatoria not found");
       }
 
-      set({ singleConvocatoria: convocatoria });
-      return convocatoria;
+      const normalizedConvocatoria = normalizeConvocatoria(convocatoria);
+      set({ singleConvocatoria: normalizedConvocatoria });
+      return normalizedConvocatoria;
     } catch (error) {
       console.error("Error fetching single convocatoria:", error);
       set({ error: "Error fetching single convocatoria" });
@@ -145,7 +181,7 @@ export const useConvocatoriasStore = create<Store>((set) => ({
       const convocatorias = await searchConvocatoriasUseCase(
         convocatoriasRepository
       )(data);
-      set({ convocatorias });
+      set({ convocatorias: convocatorias.map(normalizeConvocatoria) });
     } catch (error) {
       console.error("Error searching convocatorias:", error);
       set({ error: "Error searching convocatorias" });
@@ -160,7 +196,7 @@ export const useConvocatoriasStore = create<Store>((set) => ({
       const convocatorias = await searchConvocatoriasUseCase(
         convocatoriasRepository
       )(data);
-      set({ profileConvocatorias: convocatorias });
+      set({ profileConvocatorias: convocatorias.map(normalizeConvocatoria) });
     } catch (error) {
       console.error("Error searching convocatorias:", error);
       set({ error: "Error searching convocatorias" });

@@ -1,3 +1,5 @@
+import { IBeneficiarioPorMunicipio } from "../upload-convocatorias";
+
 export interface IPatchConvocatoriasReq {
     convocatoria?: string;
     consecutivo?: string;
@@ -12,14 +14,15 @@ export interface IPatchConvocatoriasReq {
     observaciones?: string;
     user_id?: string;
     url?: string;
-    valor_solicitado?: string;
-    valor_aprobado?: string;
-    diferencia_presupuesto?: string;
+    valor_solicitado?: number | string;
+    valor_aprobado?: number | string;
+    diferencia_presupuesto?: number | string;
 
-    departamentosDeImpacto?: string;
-    municipiosDeImpacto?: string;
-    tiposPoblacionesAtendidas?: string;
-    numeroBeneficiariosDirectos?: string;
-    numeroBeneficiariosIndirectos?: string;
-    programasRelacionados?: string;
+    departamentosDeImpacto?: string[];
+    municipiosDeImpacto?: string[];
+    tiposPoblacionesAtendidas?: string[];
+    numeroBeneficiariosDirectos?: number | string;
+    numeroBeneficiariosIndirectos?: number | string;
+    beneficiariosPorMunicipio?: IBeneficiarioPorMunicipio[];
+    programasRelacionados?: string[];
 }
