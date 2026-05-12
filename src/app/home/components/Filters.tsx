@@ -407,7 +407,7 @@ export default function Filtros({ filtros, onChange, onReset, showDownload }: Fi
               radius="sm"
               size="sm"
               type="number"
-              value={filtros.numeroBeneficiariosDirectos || ""}
+              value={filtros.numeroBeneficiariosDirectos ?? ""}
               variant="bordered"
               onChange={handleChange}
             />
@@ -422,7 +422,7 @@ export default function Filtros({ filtros, onChange, onReset, showDownload }: Fi
               radius="sm"
               size="sm"
               type="number"
-              value={filtros.numeroBeneficiariosIndirectos || ""}
+              value={filtros.numeroBeneficiariosIndirectos ?? ""}
               variant="bordered"
               onChange={handleChange}
             />

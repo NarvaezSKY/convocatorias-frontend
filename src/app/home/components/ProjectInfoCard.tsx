@@ -14,7 +14,21 @@ interface ProjectInfoCardProps {
     project: any;
 }
 
+const toBeneficiariosNumber = (value: unknown): number | null => {
+    if (value === null || value === undefined || value === "") {
+        return null;
+    }
+
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+};
+
 export function ProjectInfoCard({ project }: ProjectInfoCardProps) {
+    const beneficiariosDirectos = toBeneficiariosNumber(project?.numeroBeneficiariosDirectos);
+    const beneficiariosIndirectos = toBeneficiariosNumber(project?.numeroBeneficiariosIndirectos);
+    const hasBeneficiarios =
+        beneficiariosDirectos !== null || beneficiariosIndirectos !== null;
+
     return (
         <Card className="bg-default-100">
             <CardHeader className="flex gap-3 pb-4">
@@ -211,8 +225,7 @@ export function ProjectInfoCard({ project }: ProjectInfoCardProps) {
                         )}
 
                         {/* Beneficiarios */}
-                        {(project?.numeroBeneficiariosDirectos ||
-                            project?.numeroBeneficiariosIndirectos) && (
+                        {hasBeneficiarios && (
                                 <div className="bg-linear-to-r from-success-50 to-primary-50 dark:from-success-900/20 dark:to-primary-900/20 rounded-lg p-4 shadow-sm md:col-span-2">
                                     <div className="flex items-center gap-2 mb-3">
                                         <IoMdPeople className="text-2xl text-success" />
@@ -221,18 +234,18 @@ export function ProjectInfoCard({ project }: ProjectInfoCardProps) {
                                         </p>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
-                                        {project?.numeroBeneficiariosDirectos && (
+                                        {beneficiariosDirectos !== null && (
                                             <div className="text-center">
                                                 <p className="text-3xl font-bold text-success">
-                                                    {project.numeroBeneficiariosDirectos.toLocaleString()}
+                                                    {beneficiariosDirectos.toLocaleString("es-CO")}
                                                 </p>
                                                 <p className="text-xs text-default-500 mt-1">Directos</p>
                                             </div>
                                         )}
-                                        {project?.numeroBeneficiariosIndirectos && (
+                                        {beneficiariosIndirectos !== null && (
                                             <div className="text-center">
                                                 <p className="text-3xl font-bold text-primary">
-                                                    {project.numeroBeneficiariosIndirectos.toLocaleString()}
+                                                    {beneficiariosIndirectos.toLocaleString("es-CO")}
                                                 </p>
                                                 <p className="text-xs text-default-500 mt-1">Indirectos</p>
                                             </div>
