@@ -3470,6 +3470,11 @@ detect-libc@^2.0.3:
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-2.1.2.tgz#689c5dcdc1900ef5583a4cb9f6d7b473742074ad"
   integrity sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==
 
+divipola@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/divipola/-/divipola-1.0.3.tgz#546c55d71d7de9cc0de782ab7d7b5b0eea66d259"
+  integrity sha512-DODNLjQi1GyQAY27h7eWL6h72jpHKrwuGMz1efF0DvJDo0I+jO4Q1/wpIxgw4jcA6ZhudN4BFuGbB7+/CBHuQg==
+
 doctrine@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/doctrine/-/doctrine-2.1.0.tgz#5cd01fc101621b42c4cd7f5d1a66243716d3f39d"

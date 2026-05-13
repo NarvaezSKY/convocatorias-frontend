@@ -17,7 +17,7 @@ import { PiMicrosoftExcelLogoBold } from "react-icons/pi";
 import { useConvocatorias } from "../hooks/UseConvocatorias";
 import { useAuthStore } from "@/app/shared/auth.store";
 import { useConvocatoriasStore } from "@/app/shared/convocatorias.store";
-import { getDepartments, getCitiesByDepartment } from 'colombia-cities';
+import { getDepartments, getCitiesByDepartment } from "../utils/colombiaLocations";
 import { poblacionTypes } from '../utils/Poblacion-types';
 import { programasFormacion } from "../utils/programasFormacion";
 

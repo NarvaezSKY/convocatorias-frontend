@@ -123,4 +123,28 @@ export const poblacionTypes = [
         id: 31,
         name: "Remitidos por el PAL",
     },
+    {
+        id: 32,
+        name: "Pueblos indígenas",
+    },
+    {
+        id: 33,
+        name: "Comunidades negras, afrocolombianas, raizales y palenqueras",
+    },
+    {
+        id: 34,
+        name: "Pueblo Rrom (gitano)",
+    },
+    {
+        id: 35,
+        name: "Personas con discapacidad",
+    },
+    {
+        id: 36,
+        name: "Migrantes, refugiados y retornados",
+    },
+    {
+        id: 37,
+        name: "Habitantes de calle",
+    },
 ];
