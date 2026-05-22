@@ -98,11 +98,36 @@ export function UploadConvocatoriaForm({
     name: "beneficiariosPorMunicipio",
     defaultValue: [],
   }) ?? [];
+  const valorSolicitado = useWatch({
+    control,
+    name: "valor_solicitado",
+  });
+  const valorAprobado = useWatch({
+    control,
+    name: "valor_aprobado",
+  });
 
   const toSafeNumber = (value: unknown) => {
     const parsed = Number(value);
     return Number.isFinite(parsed) ? parsed : 0;
   };
+
+  const toMoneyRaw = (value: string) => value.replace(/\D/g, "");
+
+  const formatMoneyInput = (value: unknown) => {
+    const raw = toMoneyRaw(String(value ?? ""));
+    if (!raw) {
+      return "";
+    }
+
+    return new Intl.NumberFormat("es-CO").format(Number(raw));
+  };
+
+  const formatMoneyDisplay = (value: number) =>
+    new Intl.NumberFormat("es-CO").format(value);
+
+  const diferenciaPresupuesto =
+    toSafeNumber(valorSolicitado) - toSafeNumber(valorAprobado);
 
   // Actualizar ciudades cuando cambian los departamentos seleccionados
   useEffect(() => {
@@ -166,22 +191,27 @@ export function UploadConvocatoriaForm({
       0,
     );
 
-    const payload = {
+    const basePayload = {
       ...data,
       user_id: userId,
-      caso_o_sentencia: casoOSentencia || undefined,
       beneficiariosPorMunicipio: beneficiariosLimpios,
       numeroBeneficiariosDirectos,
       numeroBeneficiariosIndirectos,
     };
 
     if (method === "upload") {
-      await uploadConvocatoria(payload);
+      await uploadConvocatoria({
+        ...basePayload,
+        caso_o_sentencia: casoOSentencia || undefined,
+      });
       if (onClose) {
         onClose();
       }
     } else if (method === "edit" && convocatoriaId !== undefined) {
-      await handlePatchConvocatorias(convocatoriaId, payload);
+      await handlePatchConvocatorias(convocatoriaId, {
+        ...basePayload,
+        caso_o_sentencia: casoOSentencia ? casoOSentencia : null,
+      });
     }
 
     reset();
@@ -389,6 +419,7 @@ export function UploadConvocatoriaForm({
         render={({ field }) => (
           <div className="space-y-2 w-full">
             <Select
+              isClearable
               label="Caso o sentencia"
               placeholder="Selecciona una opción"
               variant="bordered"
@@ -428,28 +459,50 @@ export function UploadConvocatoriaForm({
         )}
       />
 
-      <Input
-        isRequired
-        label="Valor solicitado"
-        placeholder="Ej: 10000000"
-        variant="bordered"
-        {...register("valor_solicitado", {
-          required: "Este campo es obligatorio",
-        })}
-        errorMessage={errors.valor_solicitado?.message}
-        isInvalid={!!errors.valor_solicitado}
+      <Controller
+        name="valor_solicitado"
+        control={control}
+        rules={{ required: "Este campo es obligatorio" }}
+        render={({ field }) => (
+          <Input
+            isRequired
+            label="Valor solicitado"
+            placeholder="Ej: 10.000.000"
+            variant="bordered"
+            inputMode="numeric"
+            value={formatMoneyInput(field.value)}
+            onChange={(event) => field.onChange(toMoneyRaw(event.target.value))}
+            errorMessage={errors.valor_solicitado?.message}
+            isInvalid={!!errors.valor_solicitado}
+          />
+        )}
+      />
+
+      <Controller
+        name="valor_aprobado"
+        control={control}
+        rules={{ required: "Este campo es obligatorio" }}
+        render={({ field }) => (
+          <Input
+            isRequired
+            label="Valor aprobado"
+            placeholder="Ej: 10.000.000"
+            variant="bordered"
+            inputMode="numeric"
+            value={formatMoneyInput(field.value)}
+            onChange={(event) => field.onChange(toMoneyRaw(event.target.value))}
+            errorMessage={errors.valor_aprobado?.message}
+            isInvalid={!!errors.valor_aprobado}
+          />
+        )}
       />
 
       <Input
-        isRequired
-        label="Valor_aprobado"
-        placeholder="Ej: 10000000"
+        label="Diferencia presupuesto"
+        placeholder="Se calcula automáticamente"
         variant="bordered"
-        {...register("valor_aprobado", {
-          required: "Este campo es obligatorio",
-        })}
-        errorMessage={errors.valor_aprobado?.message}
-        isInvalid={!!errors.valor_aprobado}
+        isReadOnly
+        value={formatMoneyDisplay(diferenciaPresupuesto)}
       />
 
       <Input
