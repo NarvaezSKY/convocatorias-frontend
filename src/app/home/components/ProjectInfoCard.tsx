@@ -9,6 +9,7 @@ import { MdLocationOn, MdDateRange, MdDescription } from "react-icons/md";
 import { HiDocumentText, HiOfficeBuilding } from "react-icons/hi";
 import { BsFileEarmarkText } from "react-icons/bs";
 import { IoMdPeople } from "react-icons/io";
+import { formatCurrency } from "../utils/FormatCurrency";
 
 interface ProjectInfoCardProps {
     project: any;
@@ -28,6 +29,10 @@ export function ProjectInfoCard({ project }: ProjectInfoCardProps) {
     const beneficiariosIndirectos = toBeneficiariosNumber(project?.numeroBeneficiariosIndirectos);
     const hasBeneficiarios =
         beneficiariosDirectos !== null || beneficiariosIndirectos !== null;
+    const hasBudgetValues =
+        project?.valor_solicitado !== undefined ||
+        project?.valor_aprobado !== undefined ||
+        project?.diferencia_presupuesto !== undefined;
 
     return (
         <Card className="bg-default-100">
@@ -58,6 +63,24 @@ export function ProjectInfoCard({ project }: ProjectInfoCardProps) {
 
                 {/* Grid de información principal */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Año */}
+                    <div className="bg-white dark:bg-default-100 rounded-lg p-4 shadow-sm">
+                        <div className="flex items-center gap-2 mb-2">
+                            <BsFileEarmarkText className="text-lg text-primary" />
+                            <p className="text-xs text-default-500 font-semibold">AÑO</p>
+                        </div>
+                        <p className="text-sm wrap-break-word">{project?.year || "N/A"}</p>
+                    </div>
+
+                    {/* Convocatoria */}
+                    <div className="bg-white dark:bg-default-100 rounded-lg p-4 shadow-sm">
+                        <div className="flex items-center gap-2 mb-2">
+                            <BsFileEarmarkText className="text-lg text-primary" />
+                            <p className="text-xs text-default-500 font-semibold">CONVOCATORIA</p>
+                        </div>
+                        <p className="text-sm wrap-break-word">{project?.convocatoria || "N/A"}</p>
+                    </div>
+
                     {/* Centro de Formación */}
                     <div className="bg-white dark:bg-default-100 rounded-lg p-4 shadow-sm">
                         <div className="flex items-center gap-2 mb-2">
@@ -93,6 +116,15 @@ export function ProjectInfoCard({ project }: ProjectInfoCardProps) {
                         </Chip>
                     </div>
 
+                    {/* Caso o sentencia */}
+                    <div className="bg-white dark:bg-default-100 rounded-lg p-4 shadow-sm">
+                        <div className="flex items-center gap-2 mb-2">
+                            <MdDescription className="text-lg text-primary" />
+                            <p className="text-xs text-default-500 font-semibold">CASO O SENTENCIA</p>
+                        </div>
+                        <p className="text-sm wrap-break-word">{project?.caso_o_sentencia || "N/A"}</p>
+                    </div>
+
                     {/* Fechas */}
                     <div className="bg-white dark:bg-default-100 rounded-lg p-4 shadow-sm">
                         <div className="flex items-center gap-2 mb-2">
@@ -105,12 +137,66 @@ export function ProjectInfoCard({ project }: ProjectInfoCardProps) {
                                 {project?.fecha_inicio || "N/A"}
                             </p>
                             <p>
+                                <span className="font-medium">Aprobación:</span>{" "}
+                                {project?.fecha_aprobacion || "N/A"}
+                            </p>
+                            <p>
                                 <span className="font-medium">Fin:</span>{" "}
                                 {project?.fecha_fin || "N/A"}
                             </p>
                         </div>
                     </div>
                 </div>
+
+                {/* Presupuesto */}
+                {hasBudgetValues && (
+                    <div className="bg-white dark:bg-default-100 rounded-lg p-4 shadow-sm">
+                        <p className="text-xs text-default-500 font-semibold mb-2">
+                            PRESUPUESTO
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                            <div>
+                                <p className="text-default-500">Solicitado</p>
+                                <p className="font-semibold wrap-break-word">
+                                    {project?.valor_solicitado !== undefined
+                                        ? formatCurrency(project.valor_solicitado)
+                                        : "N/A"}
+                                </p>
+                            </div>
+                            <div>
+                                <p className="text-default-500">Aprobado</p>
+                                <p className="font-semibold wrap-break-word">
+                                    {project?.valor_aprobado !== undefined
+                                        ? formatCurrency(project.valor_aprobado)
+                                        : "N/A"}
+                                </p>
+                            </div>
+                            <div>
+                                <p className="text-default-500">Diferencia</p>
+                                <p className="font-semibold wrap-break-word">
+                                    {project?.diferencia_presupuesto !== undefined
+                                        ? formatCurrency(project.diferencia_presupuesto)
+                                        : "N/A"}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* URL */}
+                {project?.url && (
+                    <div className="bg-white dark:bg-default-100 rounded-lg p-4 shadow-sm">
+                        <p className="text-xs text-default-500 font-semibold mb-2">URL</p>
+                        <a
+                            className="text-sm text-primary underline break-all"
+                            href={project.url}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                        >
+                            {project.url}
+                        </a>
+                    </div>
+                )}
 
                 {/* Observaciones */}
                 {project?.observaciones && (

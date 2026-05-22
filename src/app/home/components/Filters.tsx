@@ -36,6 +36,8 @@ export default function Filtros({ filtros, onChange, onReset, showDownload }: Fi
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [filteredCities, setFilteredCities] = useState<Array<{ codigo: string; nombre: string; departamento: string }>>([]);
   const [programasInputValue, setProgramasInputValue] = useState("");
+  const [selectedCasoSentenciaOption, setSelectedCasoSentenciaOption] = useState("");
+  const [casoSentenciaOtro, setCasoSentenciaOtro] = useState("");
 
   const selectedProgramas = Array.isArray(filtros.programasRelacionados)
     ? filtros.programasRelacionados
@@ -73,6 +75,26 @@ export default function Filtros({ filtros, onChange, onReset, showDownload }: Fi
     });
     setFilteredCities(cities);
   }, [selectedDepartments, departments]);
+
+  useEffect(() => {
+    const rawValue = Array.isArray(filtros.caso_o_sentencia)
+      ? (filtros.caso_o_sentencia[0] ?? "")
+      : (filtros.caso_o_sentencia ?? "");
+
+    if (!rawValue || rawValue === "Caso 5 (JEP)") {
+      setSelectedCasoSentenciaOption(rawValue);
+      setCasoSentenciaOtro("");
+      return;
+    }
+
+    if (rawValue === "Otro") {
+      setSelectedCasoSentenciaOption("Otro");
+      return;
+    }
+
+    setSelectedCasoSentenciaOption("Otro");
+    setCasoSentenciaOtro(rawValue);
+  }, [filtros.caso_o_sentencia]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -395,6 +417,56 @@ export default function Filtros({ filtros, onChange, onReset, showDownload }: Fi
                   </Chip>
                 ))}
               </div>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2 w-full max-w-xs">
+            <Select
+              fullWidth
+              label="Caso o sentencia"
+              placeholder="Selecciona una opción"
+              size="sm"
+              variant="bordered"
+              selectedKeys={selectedCasoSentenciaOption ? new Set([selectedCasoSentenciaOption]) : new Set()}
+              isClearable={true}
+              onSelectionChange={(keys) => {
+                const selected = Array.from(keys as Set<string>)[0] ?? "";
+                setSelectedCasoSentenciaOption(selected);
+                if (selected === "Caso 5 (JEP)") {
+                  setCasoSentenciaOtro("");
+                  onChange({ caso_o_sentencia: selected });
+                  return;
+                }
+
+                if (selected === "Otro") {
+                  onChange({ caso_o_sentencia: casoSentenciaOtro || "Otro" });
+                  return;
+                }
+
+                setCasoSentenciaOtro("");
+                onChange({ caso_o_sentencia: "" });
+              }}
+            >
+              <SelectItem key="Caso 5 (JEP)">Caso 5 (JEP)</SelectItem>
+              <SelectItem key="Otro">Otro</SelectItem>
+            </Select>
+
+            {selectedCasoSentenciaOption === "Otro" && (
+              <Input
+                label="Otro (manual)"
+                placeholder="Ingresa el caso o sentencia"
+                radius="sm"
+                size="sm"
+                maxLength={100}
+                value={casoSentenciaOtro}
+                variant="bordered"
+                onChange={(event) => {
+                  const manualValue = event.target.value.slice(0, 100);
+                  setCasoSentenciaOtro(manualValue);
+                  onChange({ caso_o_sentencia: manualValue || "Otro" });
+                }}
+                description={`${casoSentenciaOtro.length}/100`}
+              />
             )}
           </div>
 

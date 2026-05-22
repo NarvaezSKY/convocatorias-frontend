@@ -55,6 +55,8 @@ export function UploadConvocatoriaForm({
     reset,
     control,
     setValue,
+    clearErrors,
+    setError,
     formState: { errors },
   } = useForm<IUploadConvocatoriaReq>({
     defaultValues: initialValues,
@@ -79,6 +81,7 @@ export function UploadConvocatoriaForm({
     Array<{ codigo: string; nombre: string; departamento: string }>
   >([]);
   const [programasInputValue, setProgramasInputValue] = useState("");
+  const [casoSentenciaOtro, setCasoSentenciaOtro] = useState("");
   const programasLabelByValue = useMemo(() => {
     const entries = programasFormacion.map(
       (programa) => [programa.value, programa.label] as const,
@@ -126,6 +129,26 @@ export function UploadConvocatoriaForm({
   }, [selectedDepartments, departments]);
 
   const onSubmit = async (data: IUploadConvocatoriaReq) => {
+    let casoOSentencia = (data.caso_o_sentencia ?? "").trim();
+    if (casoOSentencia === "Otro") {
+      const manual = casoSentenciaOtro.trim();
+      if (!manual) {
+        setError("caso_o_sentencia", {
+          type: "manual",
+          message: "Ingresa el valor manual para Otro",
+        });
+        return;
+      }
+      if (manual.length > 100) {
+        setError("caso_o_sentencia", {
+          type: "maxLength",
+          message: "Máximo 100 caracteres",
+        });
+        return;
+      }
+      casoOSentencia = manual;
+    }
+
     const beneficiariosLimpios = (data.beneficiariosPorMunicipio ?? [])
       .filter((item) => item?.municipio)
       .map((item) => ({
@@ -146,6 +169,7 @@ export function UploadConvocatoriaForm({
     const payload = {
       ...data,
       user_id: userId,
+      caso_o_sentencia: casoOSentencia || undefined,
       beneficiariosPorMunicipio: beneficiariosLimpios,
       numeroBeneficiariosDirectos,
       numeroBeneficiariosIndirectos,
@@ -161,6 +185,7 @@ export function UploadConvocatoriaForm({
     }
 
     reset();
+    setCasoSentenciaOtro("");
   };
 
   useEffect(() => {
@@ -174,8 +199,16 @@ export function UploadConvocatoriaForm({
       ) {
         setSelectedDepartments(new Set(initialValues.departamentosDeImpacto));
       }
+
+      const initialCaso = (initialValues.caso_o_sentencia ?? "").trim();
+      if (initialCaso && initialCaso !== "Caso 5 (JEP)" && initialCaso !== "Otro") {
+        setValue("caso_o_sentencia", "Otro");
+        setCasoSentenciaOtro(initialCaso);
+      } else {
+        setCasoSentenciaOtro("");
+      }
     }
-  }, [initialValues, reset]);
+  }, [initialValues, reset, setValue]);
 
   useEffect(() => {
     const municipios = Array.isArray(selectedMunicipios)
@@ -348,6 +381,51 @@ export function UploadConvocatoriaForm({
         {...register("nombre", { required: "Este campo es obligatorio" })}
         errorMessage={errors.nombre?.message}
         isInvalid={!!errors.nombre}
+      />
+
+      <Controller
+        name="caso_o_sentencia"
+        control={control}
+        render={({ field }) => (
+          <div className="space-y-2 w-full">
+            <Select
+              label="Caso o sentencia"
+              placeholder="Selecciona una opción"
+              variant="bordered"
+              selectedKeys={field.value ? new Set([field.value]) : new Set()}
+              onSelectionChange={(keys) => {
+                const selected = Array.from(keys as Set<string>)[0] ?? "";
+                field.onChange(selected);
+                clearErrors("caso_o_sentencia");
+                if (selected !== "Otro") {
+                  setCasoSentenciaOtro("");
+                }
+              }}
+            >
+              <SelectItem key="Caso 5 (JEP)">Caso 5 (JEP)</SelectItem>
+              <SelectItem key="Otro">Otro</SelectItem>
+            </Select>
+
+            {field.value === "Otro" && (
+              <Input
+                label="Otro (manual)"
+                placeholder="Ingresa el caso o sentencia"
+                variant="bordered"
+                maxLength={100}
+                value={casoSentenciaOtro}
+                onChange={(event) => {
+                  setCasoSentenciaOtro(event.target.value);
+                  if (event.target.value.trim()) {
+                    clearErrors("caso_o_sentencia");
+                  }
+                }}
+                description={`${casoSentenciaOtro.length}/100`}
+                errorMessage={errors.caso_o_sentencia?.message}
+                isInvalid={!!errors.caso_o_sentencia}
+              />
+            )}
+          </div>
+        )}
       />
 
       <Input

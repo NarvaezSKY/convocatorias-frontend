@@ -12,6 +12,7 @@ export interface IGetAllConvocatoriasRes {
     fecha_inicio: string | null;
     fecha_fin: string | null;
     observaciones: string | null;
+    caso_o_sentencia?: string | null;
     user_id: number;
     url: string;
     valor_solicitado: number;

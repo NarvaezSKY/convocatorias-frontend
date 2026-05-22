@@ -12,6 +12,7 @@ export interface IPatchConvocatoriasReq {
     fecha_inicio?: string;
     fecha_fin?: string;
     observaciones?: string;
+    caso_o_sentencia?: string;
     user_id?: string;
     url?: string;
     valor_solicitado?: number | string;
