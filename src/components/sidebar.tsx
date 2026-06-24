@@ -8,7 +8,7 @@ import {
 } from "@heroui/react";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { IoCashOutline } from "react-icons/io5";
-import { FaUserAlt } from "react-icons/fa";
+import { FaUserAlt, FaGavel } from "react-icons/fa";
 import { PiSignOutBold } from "react-icons/pi";
 import { useAuthStore } from "@/app/shared/auth.store";
 import { toast } from "sonner";
@@ -52,6 +52,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             >
               <FaUserAlt className="w-4 h-4" />
               Gestión de Usuarios
+            </Link>
+            <Link
+              className={`font-semibold text-success hover:text-default-800 underline flex justify-start gap-1 transition-all py-2 px-2
+    ${currentPath === "/atencion-especial-judicial" ? "bg-success text-white rounded-md hover:text-white" : ""}`}
+              href="/atencion-especial-judicial"
+            >
+              <FaGavel className="w-5 h-5" />
+              Atención Especial - Judicial
             </Link>
             <Divider />
             <h1 className="font-bold text-lg">Reportes</h1>
@@ -107,6 +115,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               >
                 <FaUserAlt className="w-4 h-4" />
                 Gestión de Usuarios
+              </Link>
+              <Link
+                className="font-semibold text-success hover:text-default-800 underline flex justify-start gap-1 transition-all py-3 px-2"
+                href="/atencion-especial-judicial"
+                onClick={onClose}
+              >
+                <FaGavel className="w-5 h-5" />
+                Atención Especial - Judicial
               </Link>
               <Divider />
               <h1 className="font-bold">Reportes</h1>

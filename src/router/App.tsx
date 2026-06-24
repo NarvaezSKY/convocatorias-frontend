@@ -14,6 +14,7 @@ import { ChangePassword } from "@/app/recover-password/ChangePassword";
 import { UserList } from "@/app/users/UserList";
 import { useNavigate } from "react-router-dom";
 import { Profile } from "@/app/profiles";
+import { AtencionEspecialJudicial } from "@/app/atencion-especial-judicial";
 import { PublicRoute } from "./PublicRoute";
 import { Spinner } from "@heroui/react";
 
@@ -157,6 +158,17 @@ function App() {
           </ProtectedRoute>
         }
         path="/profile/:id"
+      />
+
+      <Route
+        element={
+          <ProtectedRoute>
+            <Page title="Atención Especial - Judicial | Innovación y Competitividad">
+              <AtencionEspecialJudicial />
+            </Page>
+          </ProtectedRoute>
+        }
+        path="/atencion-especial-judicial"
       />
     </Routes>
 
