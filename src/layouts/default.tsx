@@ -56,7 +56,7 @@ export default function DefaultLayout({
         >
           <span className="mt-6 mb-4">
             © Seguimiento Innovación y Competitividad -{" "}
-            <strong className="text-success">SENA</strong> Regional Cauca - 2025
+            <strong className="text-success">SENA</strong> Regional Cauca - 2026
           </span>
         </Link>
       </footer>

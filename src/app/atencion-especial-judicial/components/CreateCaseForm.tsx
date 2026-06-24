@@ -1,4 +1,12 @@
-import { Form, Input, Button, Select, SelectItem, Textarea, Divider } from "@heroui/react";
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  SelectItem,
+  Textarea,
+  Divider,
+} from "@heroui/react";
 import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import { useCreateCase } from "../hooks/useCreateCase";
 import { useEditCase } from "../hooks/useEditCase";
@@ -23,7 +31,12 @@ interface Props {
   initialValues?: ICaseRes;
 }
 
-export function CreateCaseForm({ onClose, method = "create", caseId, initialValues }: Props) {
+export function CreateCaseForm({
+  onClose,
+  method = "create",
+  caseId,
+  initialValues,
+}: Props) {
   const {
     register,
     handleSubmit,
@@ -36,7 +49,8 @@ export function CreateCaseForm({ onClose, method = "create", caseId, initialValu
       ? {
           caso_o_sentencia: initialValues.caso_o_sentencia,
           municipios: initialValues.municipios,
-          fecha_expedicion_requerimiento: initialValues.fecha_expedicion_requerimiento,
+          fecha_expedicion_requerimiento:
+            initialValues.fecha_expedicion_requerimiento,
           fecha_limite_requerimiento: initialValues.fecha_limite_requerimiento,
           case_estado: initialValues.case_estado,
           case_acciones: initialValues.case_acciones,
@@ -51,14 +65,23 @@ export function CreateCaseForm({ onClose, method = "create", caseId, initialValu
     name: "municipios",
   });
 
-  const { createCase, isLoading: isCreating, error: createError } = useCreateCase();
-  const { updateCase, isLoading: isUpdating, error: updateError } = useEditCase();
+  const {
+    createCase,
+    isLoading: isCreating,
+    error: createError,
+  } = useCreateCase();
+  const {
+    updateCase,
+    isLoading: isUpdating,
+    error: updateError,
+  } = useEditCase();
 
-  const selectedMunicipios = useWatch({
-    control,
-    name: "municipios",
-    defaultValue: [],
-  }) ?? [];
+  const selectedMunicipios =
+    useWatch({
+      control,
+      name: "municipios",
+      defaultValue: [],
+    }) ?? [];
 
   const selectedNames = useMemo(
     () => selectedMunicipios.map((item: any) => item.municipio).filter(Boolean),
@@ -85,7 +108,9 @@ export function CreateCaseForm({ onClose, method = "create", caseId, initialValu
       (field) => field.municipio && !currentNames.has(field.municipio),
     );
 
-    toAdd.forEach((city) => append({ municipio: city.nombre, aso_org_terri: "" }));
+    toAdd.forEach((city) =>
+      append({ municipio: city.nombre, aso_org_terri: "" }),
+    );
     toRemove.forEach((field) => {
       const idx = fields.findIndex((f) => f.id === field.id);
       if (idx !== -1) remove(idx);
@@ -94,14 +119,21 @@ export function CreateCaseForm({ onClose, method = "create", caseId, initialValu
 
   const onSubmit = async (data: any) => {
     const municipiosLimpios = (data.municipios ?? []).filter(
-      (item: any) => item.municipio?.trim() !== "" && item.aso_org_terri?.trim() !== "",
+      (item: any) =>
+        item.municipio?.trim() !== "" && item.aso_org_terri?.trim() !== "",
     );
     if (municipiosLimpios.length === 0) return;
 
     if (method === "edit" && caseId) {
-      await updateCase(caseId, { ...data, municipios: municipiosLimpios } as IUpdateCaseReq);
+      await updateCase(caseId, {
+        ...data,
+        municipios: municipiosLimpios,
+      } as IUpdateCaseReq);
     } else {
-      await createCase({ ...data, municipios: municipiosLimpios } as ICreateCaseReq);
+      await createCase({
+        ...data,
+        municipios: municipiosLimpios,
+      } as ICreateCaseReq);
     }
     reset({ municipios: [] });
     if (onClose) onClose();
@@ -119,8 +151,10 @@ export function CreateCaseForm({ onClose, method = "create", caseId, initialValu
             ? {
                 caso_o_sentencia: initialValues.caso_o_sentencia,
                 municipios: initialValues.municipios,
-                fecha_expedicion_requerimiento: initialValues.fecha_expedicion_requerimiento,
-                fecha_limite_requerimiento: initialValues.fecha_limite_requerimiento,
+                fecha_expedicion_requerimiento:
+                  initialValues.fecha_expedicion_requerimiento,
+                fecha_limite_requerimiento:
+                  initialValues.fecha_limite_requerimiento,
                 case_estado: initialValues.case_estado,
                 case_acciones: initialValues.case_acciones,
               }
@@ -212,7 +246,10 @@ export function CreateCaseForm({ onClose, method = "create", caseId, initialValu
               const selected = Array.from(keys as Set<string>);
               const current = field.value ?? [];
               const nuevos = selected
-                .filter((name) => !current.some((item: any) => item.municipio === name))
+                .filter(
+                  (name) =>
+                    !current.some((item: any) => item.municipio === name),
+                )
                 .map((name) => ({ municipio: name, aso_org_terri: "" }));
               const mantenidos = (current as any[]).filter((item: any) =>
                 selected.includes(item.municipio),
@@ -222,7 +259,9 @@ export function CreateCaseForm({ onClose, method = "create", caseId, initialValu
               });
             }}
             errorMessage={
-              selectedNames.length === 0 ? "Selecciona al menos un municipio" : undefined
+              selectedNames.length === 0
+                ? "Selecciona al menos un municipio"
+                : undefined
             }
             isInvalid={selectedNames.length === 0}
           >
@@ -236,7 +275,7 @@ export function CreateCaseForm({ onClose, method = "create", caseId, initialValu
       {fields.length > 0 && (
         <div className="space-y-3 w-full">
           <h3 className="font-semibold text-success">
-            ASO / Org. Territorial por municipio
+            Asociación, organización o territorio
           </h3>
           {fields.map((field, index) => (
             <div
@@ -252,15 +291,19 @@ export function CreateCaseForm({ onClose, method = "create", caseId, initialValu
                 />
                 <Input
                   isRequired
-                  label="ASO / Org. Territorial"
-                  placeholder="ASO u organización territorial"
+                  label="Asociación, organización o territorio"
+                  placeholder="Nombre..."
                   variant="bordered"
                   {...register(`municipios.${index}.aso_org_terri` as const, {
                     required: "Este campo es obligatorio",
                     maxLength: { value: 300, message: "Máximo 300 caracteres" },
                   })}
-                  errorMessage={(errors as any).municipios?.[index]?.aso_org_terri?.message}
-                  isInvalid={!!(errors as any).municipios?.[index]?.aso_org_terri}
+                  errorMessage={
+                    (errors as any).municipios?.[index]?.aso_org_terri?.message
+                  }
+                  isInvalid={
+                    !!(errors as any).municipios?.[index]?.aso_org_terri
+                  }
                 />
               </div>
             </div>
