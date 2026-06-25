@@ -5,7 +5,7 @@ import { Button } from "@heroui/button";
 import { FaSearch } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
 import { MdFileUpload } from "react-icons/md";
-import { Divider, Input } from "@heroui/react";
+import { Divider, Input, Select, SelectItem } from "@heroui/react";
 import { useAtencionEspecialJudicial } from "./hooks/useAtencionEspecialJudicial";
 import { IFilterCasesReq } from "@/core/atencionEspecialJudicial/domain/filter-cases";
 import { useAuthStore } from "../shared/auth.store";
@@ -16,6 +16,8 @@ export const AtencionEspecialJudicial = () => {
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [filtros, setFiltros] = useState<IFilterCasesReq>({});
+  const [selectedCasoSentenciaOption, setSelectedCasoSentenciaOption] = useState("");
+  const [casoSentenciaOtro, setCasoSentenciaOtro] = useState("");
   const { handleSearch } = useAtencionEspecialJudicial();
   const { role } = useAuthStore();
 
@@ -28,6 +30,21 @@ export const AtencionEspecialJudicial = () => {
     }, 500);
     return () => clearTimeout(delayDebounce);
   }, [filtros]);
+
+  useEffect(() => {
+    const rawValue = filtros.caso_o_sentencia ?? "";
+    if (!rawValue || rawValue === "Caso 5 (JEP)") {
+      setSelectedCasoSentenciaOption(rawValue);
+      setCasoSentenciaOtro("");
+      return;
+    }
+    if (rawValue === "Otro") {
+      setSelectedCasoSentenciaOption("Otro");
+      return;
+    }
+    setSelectedCasoSentenciaOption("Otro");
+    setCasoSentenciaOtro(rawValue);
+  }, [filtros.caso_o_sentencia]);
 
   const handleFilterChange = (key: keyof IFilterCasesReq, value: string) => {
     setFiltros((prev) => ({ ...prev, [key]: value }));
@@ -69,12 +86,55 @@ export const AtencionEspecialJudicial = () => {
           <>
             <Divider />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Input
-                label="Caso / Sentencia"
-                placeholder="Buscar por caso o sentencia..."
-                value={filtros.caso_o_sentencia || ""}
-                onChange={(e) => handleFilterChange("caso_o_sentencia", e.target.value)}
-              />
+              <div className="flex flex-col gap-2 w-full">
+                <Select
+                  label="Caso / Sentencia"
+                  placeholder="Selecciona una opción"
+                  variant="bordered"
+                  size="sm"
+                  selectedKeys={selectedCasoSentenciaOption ? new Set([selectedCasoSentenciaOption]) : new Set()}
+                  isClearable
+                  onSelectionChange={(keys) => {
+                    const selected = Array.from(keys as Set<string>)[0] ?? "";
+                    setSelectedCasoSentenciaOption(selected);
+                    if (selected === "Caso 5 (JEP)") {
+                      setCasoSentenciaOtro("");
+                      setFiltros((prev) => ({ ...prev, caso_o_sentencia: selected }));
+                      return;
+                    }
+                    if (selected === "Otro") {
+                      setFiltros((prev) => ({ ...prev, caso_o_sentencia: casoSentenciaOtro || "Otro" }));
+                      return;
+                    }
+                    setCasoSentenciaOtro("");
+                    setFiltros((prev) => {
+                      const rest = { ...prev };
+                      delete rest.caso_o_sentencia;
+                      return rest;
+                    });
+                  }}
+                >
+                  <SelectItem key="Caso 5 (JEP)">Caso 5 (JEP)</SelectItem>
+                  <SelectItem key="Otro">Otro</SelectItem>
+                </Select>
+
+                {selectedCasoSentenciaOption === "Otro" && (
+                  <Input
+                    label="Otro (manual)"
+                    placeholder="Ingresa el caso o sentencia"
+                    variant="bordered"
+                    size="sm"
+                    maxLength={100}
+                    value={casoSentenciaOtro}
+                    onChange={(event) => {
+                      const manualValue = event.target.value.slice(0, 100);
+                      setCasoSentenciaOtro(manualValue);
+                      setFiltros((prev) => ({ ...prev, caso_o_sentencia: manualValue || "Otro" }));
+                    }}
+                    description={`${casoSentenciaOtro.length}/100`}
+                  />
+                )}
+              </div>
               <Input
                 label="Municipio"
                 placeholder="Buscar por municipio..."

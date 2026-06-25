@@ -13,7 +13,7 @@ import { useEditCase } from "../hooks/useEditCase";
 import { ICreateCaseReq } from "@/core/atencionEspecialJudicial/domain/create-case";
 import { IUpdateCaseReq } from "@/core/atencionEspecialJudicial/domain/update-case";
 import { ICaseRes } from "@/core/atencionEspecialJudicial/domain/get-all-cases";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getCitiesByDepartment } from "@/app/home/utils/colombiaLocations";
 
 const estadoOptions = [
@@ -23,6 +23,11 @@ const estadoOptions = [
 ];
 
 const caucaCities = getCitiesByDepartment("Cauca");
+
+const casoOptions = [
+  { key: "Caso 5 (JEP)", label: "Caso 5 (JEP)" },
+  { key: "Otro", label: "Otro" },
+];
 
 interface Props {
   onClose?: () => void;
@@ -37,12 +42,16 @@ export function CreateCaseForm({
   caseId,
   initialValues,
 }: Props) {
+  const [casoSentenciaOtro, setCasoSentenciaOtro] = useState("");
+
   const {
     register,
     handleSubmit,
     reset,
     control,
     setValue,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<ICreateCaseReq | IUpdateCaseReq>({
     defaultValues: initialValues
@@ -117,7 +126,38 @@ export function CreateCaseForm({
     });
   }, [initialValues, selectedNames, fields, append, remove]);
 
+  useEffect(() => {
+    if (!initialValues?.caso_o_sentencia) return;
+    const initialCaso = initialValues.caso_o_sentencia.trim();
+    if (initialCaso && initialCaso !== "Caso 5 (JEP)" && initialCaso !== "Otro") {
+      setValue("caso_o_sentencia", "Otro");
+      setCasoSentenciaOtro(initialCaso);
+    } else {
+      setCasoSentenciaOtro("");
+    }
+  }, [initialValues, setValue]);
+
   const onSubmit = async (data: any) => {
+    let casoOSentencia = (data.caso_o_sentencia ?? "").trim();
+    if (casoOSentencia === "Otro") {
+      const manual = casoSentenciaOtro.trim();
+      if (!manual) {
+        setError("caso_o_sentencia", {
+          type: "manual",
+          message: "Ingresa el valor manual para Otro",
+        });
+        return;
+      }
+      if (manual.length > 100) {
+        setError("caso_o_sentencia", {
+          type: "maxLength",
+          message: "Máximo 100 caracteres",
+        });
+        return;
+      }
+      casoOSentencia = manual;
+    }
+
     const municipiosLimpios = (data.municipios ?? []).filter(
       (item: any) =>
         item.municipio?.trim() !== "" && item.aso_org_terri?.trim() !== "",
@@ -127,11 +167,13 @@ export function CreateCaseForm({
     if (method === "edit" && caseId) {
       await updateCase(caseId, {
         ...data,
+        caso_o_sentencia: casoOSentencia,
         municipios: municipiosLimpios,
       } as IUpdateCaseReq);
     } else {
       await createCase({
         ...data,
+        caso_o_sentencia: casoOSentencia,
         municipios: municipiosLimpios,
       } as ICreateCaseReq);
     }
@@ -163,17 +205,54 @@ export function CreateCaseForm({
       }
       onSubmit={handleSubmit(onSubmit)}
     >
-      <Input
-        isRequired
-        label="Caso / Sentencia"
-        placeholder="Nombre del caso o sentencia"
-        variant="bordered"
-        {...register("caso_o_sentencia", {
-          required: "Este campo es obligatorio",
-          maxLength: { value: 200, message: "Máximo 200 caracteres" },
-        })}
-        errorMessage={(errors as any).caso_o_sentencia?.message}
-        isInvalid={!!(errors as any).caso_o_sentencia}
+      <Controller
+        name="caso_o_sentencia"
+        control={control}
+        rules={{ required: "Este campo es obligatorio" }}
+        render={({ field }) => (
+          <div className="space-y-2 w-full">
+            <Select
+              isRequired
+              label="Caso / Sentencia"
+              placeholder="Selecciona una opción"
+              variant="bordered"
+              selectedKeys={field.value ? new Set([field.value]) : new Set()}
+              onSelectionChange={(keys) => {
+                const selected = Array.from(keys as Set<string>)[0] ?? "";
+                field.onChange(selected);
+                clearErrors("caso_o_sentencia");
+                if (selected !== "Otro") {
+                  setCasoSentenciaOtro("");
+                }
+              }}
+              errorMessage={(errors as any).caso_o_sentencia?.message}
+              isInvalid={!!(errors as any).caso_o_sentencia}
+            >
+              {casoOptions.map((opt) => (
+                <SelectItem key={opt.key}>{opt.label}</SelectItem>
+              ))}
+            </Select>
+
+            {field.value === "Otro" && (
+              <Input
+                label="Otro (manual)"
+                placeholder="Ingresa el caso o sentencia"
+                variant="bordered"
+                maxLength={100}
+                value={casoSentenciaOtro}
+                onChange={(event) => {
+                  setCasoSentenciaOtro(event.target.value);
+                  if (event.target.value.trim()) {
+                    clearErrors("caso_o_sentencia");
+                  }
+                }}
+                description={`${casoSentenciaOtro.length}/100`}
+                errorMessage={(errors as any).caso_o_sentencia?.message}
+                isInvalid={!!(errors as any).caso_o_sentencia}
+              />
+            )}
+          </div>
+        )}
       />
 
       <Input
